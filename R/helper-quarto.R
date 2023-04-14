@@ -47,7 +47,8 @@ quarto_multilingual_book <- function(parent_folder,
     "",
     "babelquarto:",
     sprintf("  mainlanguage: '%s'", main_language),
-    sprintf("  languages: [%s]", toString(sprintf("'%s'", further_languages)))
+    sprintf("  languages: [%s]", toString(sprintf("'%s'", further_languages))),
+    sprintf("lang: %s", main_language)
   )
 
   ## Save config

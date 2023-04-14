@@ -51,9 +51,6 @@ render_book <- function(book_folder = ".") {
 
   # render book ----
   withr::with_dir(book_folder, {
-    config <- yaml::read_yaml("_quarto.yml")
-    config$lang <- main_language
-    yaml::write_yaml(config, "_quarto.yml")
     quarto::quarto_render(as_job = FALSE)
   })
 
@@ -131,18 +128,19 @@ render_quarto_lang_book <- function(language_code, book_folder, output_dir) {
 }
 
 use_lang_chapter <- function(chapters_list, language_code, book_name, directory) {
+  withr::local_dir(file.path(directory, book_name))
 
     original_chapters_list <- chapters_list
 
     if (is.list(chapters_list)) {
+
       chapters_list$chapters <- gsub("\\.Rmd", sprintf(".%s.Rmd", language_code), chapters_list$chapters)
       chapters_list$chapters <- gsub("\\.qmd", sprintf(".%s.qmd", language_code), chapters_list$chapters)
       if (any(!fs::file_exists(chapters_list$chapters))) {
-        chapters_not_translated <- !fs::file_exists(file.path(directory, book_name, chapters_list$chapters))
-        chapters_list$chapters[chapters_not_translated]  <- original_chapters_list[chapters_not_translated]
+        chapters_not_translated <- !fs::file_exists(chapters_list$chapters)
+        chapters_list$chapters[chapters_not_translated]  <- original_chapters_list$chapters[chapters_not_translated]
       }
     } else {
-
       chapters_list <- gsub("\\.Rmd", sprintf(".%s.Rmd", language_code), chapters_list)
       chapters_list <- gsub("\\.qmd", sprintf(".%s.qmd", language_code), chapters_list)
       if (!fs::file_exists(file.path(directory, book_name, chapters_list))) {
