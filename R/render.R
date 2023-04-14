@@ -1,5 +1,7 @@
 #' Render a Quarto multilingual book
 #'
+#' @importFrom rlang `%||%`
+#'
 #' @details babelquarto expects a book folder with
 #' each qmd/Rmd present in as many languages as needed,
 #' with the same basename but,
@@ -133,6 +135,11 @@ use_lang_chapter <- function(chapters_list, language_code, book_name, directory)
     original_chapters_list <- chapters_list
 
     if (is.list(chapters_list)) {
+      # part translation
+      chapters_list[["part"]] <- chapters_list[[sprintf("part-%s", language_code)]] %||%
+        chapters_list[["part"]]
+
+      # chapters translation
 
       chapters_list$chapters <- gsub("\\.Rmd", sprintf(".%s.Rmd", language_code), chapters_list$chapters)
       chapters_list$chapters <- gsub("\\.qmd", sprintf(".%s.qmd", language_code), chapters_list$chapters)
