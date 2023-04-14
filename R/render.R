@@ -30,7 +30,7 @@
 #' }
 #' }
 #'
-render_book <- function(book_folder) {
+render_book <- function(book_folder = ".") {
   # configuration ----
   config <- file.path(book_folder, "_quarto.yml")
   config_contents <- yaml::read_yaml(config)

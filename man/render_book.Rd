@@ -4,7 +4,7 @@
 \alias{render_book}
 \title{Render a Quarto multilingual book}
 \usage{
-render_book(book_folder)
+render_book(book_folder = ".")
 }
 \arguments{
 \item{book_folder}{Path where the book source is located}
