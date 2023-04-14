@@ -1,0 +1,59 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# babelquarto
+
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/ropensci-review-tools/quartobabel/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ropensci-review-tools/quartobabel/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
+
+The goal of babelquarto is to render a Quarto multilingual book structured like the 
+rOpenSci dev guide:
+
+- each qmd is present once for the main language,
+- and once more for each other language with an extension à la `.es.qmd`
+
+## Installation
+
+You can install the development version of babelquarto from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("ropensci-review-tools/quartobabel")
+```
+
+## Example
+
+Create a starter/example book.
+
+```{r}
+parent_folder <- withr::local_tempdir()
+babelquarto::quarto_multilingual_book(parent_folder = parent_folder, book_folder = "blop")
+fs::dir_tree(file.path(parent_folder, "blop"))
+```
+
+Render it. 
+We end up with three books, that cross-link to each other from the left sidebar.
+
+```{r}
+babelquarto::render_book(file.path(parent_folder, "blop"))
+fs::dir_tree(file.path(parent_folder, "blop", "_book"))
+# if (require("servr") && rlang::is_interactive()) {
+#   servr::httw(file.path(parent_folder, "blop", "_book"))
+# }
+```
+
+Note that this does not _translate_ the content!
+Translation tooling will live in [babeldown](https://docs.ropensci.org/babeldown).
