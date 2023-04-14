@@ -7,7 +7,7 @@ test_that("quarto_multilingual_book() works", {
     main_language = "en"
   )
   expect_true(fs::dir_exists(file.path(parent_folder, "blop")))
-  expect_equal(
+  expect_setequal(
     fs::dir_ls(file.path(parent_folder, "blop")) |> fs::path_file(),
     c(
       "_quarto.yml", "cover.png", "index.es.qmd", "index.fr.qmd",
