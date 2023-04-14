@@ -1,4 +1,4 @@
-Package: quartobabel
+Package: babelquarto
 Title: Renders a Multilingual Quarto Book
 Version: 0.0.0.9000
 Authors@R: 
@@ -23,5 +23,5 @@ Imports:
     yaml
 Suggests: 
     servr
-URL: https://github.com/ropensci-review-tools/quartobabel
-BugReports: https://github.com/ropensci-review-tools/quartobabel/issues
+URL: https://github.com/ropensci-review-tools/babelquarto
+BugReports: https://github.com/ropensci-review-tools/babelquarto/issues

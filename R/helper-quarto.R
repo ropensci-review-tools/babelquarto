@@ -1,28 +1,28 @@
 #' Create a starter/example quarto multilingual book
 #'
-#' @param dir Folder where to create the book folder.
-#' @param subdir Book folder name.
+#' @param parent_folder Folder where to create the book folder.
+#' @param book_folder Book folder name.
 #' @param further_languages Codes for not main languages.
 #' @param main_language Code for main languages.
 #'
 #' @return Nothing, creates the book folder.
 #' @export
 #'
-quarto_multilingual_book <- function(dir,
-                                     subdir,
+quarto_multilingual_book <- function(parent_folder,
+                                     book_folder,
                                      further_languages = c("es", "fr"),
                                      main_language = "en") {
 
   # Vanilla book from Quarto CLI ----
-  if (dir != getwd()) withr::local_dir(dir)
+  if (parent_folder != getwd()) withr::local_dir(parent_folder)
   quarto_bin <- quarto::quarto_path()
   sys::exec_wait(
     quarto_bin,
-    args = c("create-project", subdir, "--type", "book")
+    args = c("create-project", book_folder, "--type", "book")
   )
 
   # Duplicated files for the different languages ----
-  qmds <- dir(subdir, pattern = "\\.qmd", full.names = TRUE)
+  qmds <- dir(book_folder, pattern = "\\.qmd", full.names = TRUE)
 
   create_new_lang_file <- function(qmd_file, language) {
     new_path <- fs::path_ext_set(qmd_file, sprintf(".%s.qmd", language))
@@ -35,7 +35,7 @@ quarto_multilingual_book <- function(dir,
   )
 
   # Config edits ----
-  config <- file.path(subdir, "_quarto.yml")
+  config <- file.path(book_folder, "_quarto.yml")
   config_lines <- brio::read_lines(config)
 
   ## Remove LaTeX lines ----
@@ -45,7 +45,7 @@ quarto_multilingual_book <- function(dir,
   config_lines <- c(
     config_lines,
     "",
-    "babeldown:",
+    "babelquarto:",
     sprintf("  mainlanguage: '%s'", main_language),
     sprintf("  languages: [%s]", toString(sprintf("'%s'", further_languages)))
   )

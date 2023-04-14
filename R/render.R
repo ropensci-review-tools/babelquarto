@@ -1,6 +1,6 @@
 #' Render a Quarto multilingual book
 #'
-#' @details babeldown expects a book folder with
+#' @details babelquarto expects a book folder with
 #' each qmd/Rmd present in as many languages as needed,
 #' with the same basename but,
 #' - once with only `.qmd` as extension for the main language,
@@ -9,7 +9,7 @@
 #' You also need to register the language in the configuration file:
 #'
 #' ```yaml
-#' babeldown:
+#' babelquarto:
 #'   mainlanguage: 'en'
 #'   languages: ['es', 'fr']
 #' ```
@@ -22,28 +22,28 @@
 #'
 #' @examples
 #' directory <- withr::local_tempdir()
-#' babeldown:::quarto_multilingual_book(directory, subdir = "blop")
-#' render_quarto_multilingual_book(file.path(directory, "blop"))
+#' quarto_multilingual_book(parent_folder = directory, book_folder = "blop")
+#' render_book(file.path(directory, "blop"))
 #' \dontrun{
 #' if (require("servr") && rlang::is_interactive()) {
 #'   servr::httw(file.path(directory, "blop", "_book"))
 #' }
 #' }
 #'
-render_quarto_multilingual_book <- function(book_folder) {
+render_book <- function(book_folder) {
   # configuration ----
   config <- file.path(book_folder, "_quarto.yml")
   config_contents <- yaml::read_yaml(config)
 
   output_dir <- config_contents[["project"]][["output-dir"]] %||% "_book"
 
-  language_codes <- config_contents[["babeldown"]][["languages"]]
+  language_codes <- config_contents[["babelquarto"]][["languages"]]
   if (is.null(language_codes)) {
-    cli::cli_abort("Can't find {.field babeldown/languages} in {.field _quarto.yml}")
+    cli::cli_abort("Can't find {.field babelquarto/languages} in {.field _quarto.yml}")
   }
-  main_language <- config_contents[["babeldown"]][["mainlanguage"]]
+  main_language <- config_contents[["babelquarto"]][["mainlanguage"]]
   if (is.null(main_language)) {
-    cli::cli_abort("Can't find {.field babeldown/mainlanguage} in {.field _quarto.yml}")
+    cli::cli_abort("Can't find {.field babelquarto/mainlanguage} in {.field _quarto.yml}")
   }
 
   book_output_folder <- file.path(book_folder, output_dir)
