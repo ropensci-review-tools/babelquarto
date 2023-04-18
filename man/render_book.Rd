@@ -4,10 +4,10 @@
 \alias{render_book}
 \title{Render a Quarto multilingual book}
 \usage{
-render_book(book_folder = ".")
+render_book(book_path = ".")
 }
 \arguments{
-\item{book_folder}{Path where the book source is located}
+\item{book_path}{Path where the book source is located}
 }
 \description{
 Render a Quarto multilingual book
@@ -30,7 +30,7 @@ You also need to register the language in the configuration file:
 }
 \examples{
 directory <- withr::local_tempdir()
-quarto_multilingual_book(parent_folder = directory, book_folder = "blop")
+quarto_multilingual_book(parent_dir = directory, book_dir = "blop")
 render_book(file.path(directory, "blop"))
 \dontrun{
 if (require("servr") && rlang::is_interactive()) {

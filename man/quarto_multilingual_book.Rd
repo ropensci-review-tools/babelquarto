@@ -5,16 +5,16 @@
 \title{Create a starter/example quarto multilingual book}
 \usage{
 quarto_multilingual_book(
-  parent_folder,
-  book_folder,
+  parent_dir,
+  book_dir,
   further_languages = c("es", "fr"),
   main_language = "en"
 )
 }
 \arguments{
-\item{parent_folder}{Folder where to create the book folder.}
+\item{parent_dir}{Folder where to create the book folder.}
 
-\item{book_folder}{Book folder name.}
+\item{book_dir}{Book folder name.}
 
 \item{further_languages}{Codes for not main languages.}
 

@@ -18,13 +18,13 @@
 #'
 #' @importFrom rlang `%||%`
 #'
-#' @param book_folder Path where the book source is located
+#' @param book_path Path where the book source is located
 #'
 #' @export
 #'
 #' @examples
 #' directory <- withr::local_tempdir()
-#' quarto_multilingual_book(parent_folder = directory, book_folder = "blop")
+#' quarto_multilingual_book(parent_dir = directory, book_dir = "blop")
 #' render_book(file.path(directory, "blop"))
 #' \dontrun{
 #' if (require("servr") && rlang::is_interactive()) {
@@ -32,9 +32,9 @@
 #' }
 #' }
 #'
-render_book <- function(book_folder = ".") {
+render_book <- function(book_path = ".") {
   # configuration ----
-  config <- file.path(book_folder, "_quarto.yml")
+  config <- file.path(book_path, "_quarto.yml")
   config_contents <- yaml::read_yaml(config)
 
   output_dir <- config_contents[["project"]][["output-dir"]] %||% "_book"
@@ -48,18 +48,18 @@ render_book <- function(book_folder = ".") {
     cli::cli_abort("Can't find {.field babelquarto/mainlanguage} in {.field _quarto.yml}")
   }
 
-  book_output_folder <- file.path(book_folder, output_dir)
+  book_output_folder <- file.path(book_path, output_dir)
   if (fs::dir_exists(book_output_folder)) fs::dir_delete(book_output_folder)
 
   # render book ----
-  withr::with_dir(book_folder, {
+  withr::with_dir(book_path, {
     quarto::quarto_render(as_job = FALSE)
   })
 
   purrr::walk(
     language_codes,
     render_quarto_lang_book,
-    book_folder = book_folder,
+    book_path = book_path,
     output_dir = output_dir
   )
 
@@ -91,11 +91,11 @@ render_book <- function(book_folder = ".") {
 
 }
 
-render_quarto_lang_book <- function(language_code, book_folder, output_dir) {
+render_quarto_lang_book <- function(language_code, book_path, output_dir) {
 
   temporary_directory <- withr::local_tempdir()
-  fs::dir_copy(book_folder, temporary_directory)
-  book_name <- fs::path_file(book_folder)
+  fs::dir_copy(book_path, temporary_directory)
+  book_name <- fs::path_file(book_path)
 
   config <- yaml::read_yaml(file.path(temporary_directory, book_name, "_quarto.yml"))
   config$lang <- language_code
@@ -127,7 +127,7 @@ render_quarto_lang_book <- function(language_code, book_folder, output_dir) {
   # Copy it to local not temporary _book/<language-code>
   fs::dir_copy(
     file.path(temporary_directory, book_name, output_dir),
-    file.path(book_folder, output_dir, language_code)
+    file.path(book_path, output_dir, language_code)
   )
 
 }

@@ -29,10 +29,10 @@ devtools::install_github("ropensci-review-tools/quartobabel")
 Create a starter/example book.
 
 ``` r
-parent_folder <- withr::local_tempdir()
-babelquarto::quarto_multilingual_book(parent_folder = parent_folder, book_folder = "blop")
-fs::dir_tree(file.path(parent_folder, "blop"))
-#> /tmp/RtmpMa96BG/fileb4934c085607/blop
+parent_dir <- withr::local_tempdir()
+babelquarto::quarto_multilingual_book(parent_dir = parent_dir, book_dir = "blop")
+fs::dir_tree(file.path(parent_dir, "blop"))
+#> /tmp/RtmpEx5EcX/file1035f761adad/blop
 #> ├── _quarto.yml
 #> ├── cover.png
 #> ├── index.es.qmd
@@ -54,7 +54,7 @@ Render it. We end up with three books, that cross-link to each other
 from the left sidebar.
 
 ``` r
-babelquarto::render_book(file.path(parent_folder, "blop"))
+babelquarto::render_book(book_path = file.path(parent_dir, "blop"))
 #> [1m[34m[1/4] index.qmd[39m[22m
 #> [1m[34m[2/4] intro.qmd[39m[22m
 #> [1m[34m[3/4] summary.qmd[39m[22m
@@ -75,8 +75,8 @@ babelquarto::render_book(file.path(parent_folder, "blop"))
 #> [1m[34m[4/4] references.fr.qmd[39m[22m
 #> 
 #> Output created: _book/index.fr.html
-fs::dir_tree(file.path(parent_folder, "blop", "_book"))
-#> /tmp/RtmpMa96BG/fileb4934c085607/blop/_book
+fs::dir_tree(file.path(parent_dir, "blop", "_book"))
+#> /tmp/RtmpEx5EcX/file1035f761adad/blop/_book
 #> ├── es
 #> │   ├── index.es.html
 #> │   ├── index.html
@@ -163,7 +163,7 @@ fs::dir_tree(file.path(parent_folder, "blop", "_book"))
 #> │       └── quarto-search.js
 #> └── summary.html
 # if (require("servr") && rlang::is_interactive()) {
-#   servr::httw(file.path(parent_folder, "blop", "_book"))
+#   servr::httw(file.path(parent_dir, "blop", "_book"))
 # }
 ```
 
