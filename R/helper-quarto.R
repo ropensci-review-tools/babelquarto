@@ -10,8 +10,8 @@
 #'
 quarto_multilingual_book <- function(parent_dir,
                                      book_dir,
-                                     further_languages = c("es", "fr"),
-                                     main_language = "en") {
+                                     main_language = "en",
+                                     further_languages = c("es", "fr")) {
 
   # Vanilla book from Quarto CLI ----
   if (parent_dir != getwd()) withr::local_dir(parent_dir)

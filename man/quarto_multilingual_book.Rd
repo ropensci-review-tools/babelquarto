@@ -7,8 +7,8 @@
 quarto_multilingual_book(
   parent_dir,
   book_dir,
-  further_languages = c("es", "fr"),
-  main_language = "en"
+  main_language = "en",
+  further_languages = c("es", "fr")
 )
 }
 \arguments{
@@ -16,9 +16,9 @@ quarto_multilingual_book(
 
 \item{book_dir}{Book folder name.}
 
-\item{further_languages}{Codes for not main languages.}
-
 \item{main_language}{Code for main languages.}
+
+\item{further_languages}{Codes for not main languages.}
 }
 \value{
 Nothing, creates the book folder.
