@@ -40,7 +40,7 @@ quarto_multilingual_book <- function(parent_folder,
 
   ## Remove LaTeX lines ----
   config_lines <- config_lines[1:(which(grepl("pdf:", config_lines)) - 1)]
-
+browser()
   ## "Register" languages ----
   config_lines <- c(
     config_lines,
@@ -48,7 +48,10 @@ quarto_multilingual_book <- function(parent_folder,
     "babelquarto:",
     sprintf("  mainlanguage: '%s'", main_language),
     sprintf("  languages: [%s]", toString(sprintf("'%s'", further_languages))),
-    sprintf("lang: %s", main_language)
+    sprintf("lang: %s", main_language),
+    purrr::map_chr(further_languages, ~sprintf("title-%s: title in %s", .x, .x)),
+    purrr::map_chr(further_languages, ~sprintf("description-%s: description in %s", .x, .x)),
+    purrr::map_chr(further_languages, ~sprintf("author-%s: author in %s", .x, .x))
   )
 
   ## Save config

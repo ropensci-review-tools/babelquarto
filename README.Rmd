@@ -57,3 +57,30 @@ fs::dir_tree(file.path(parent_folder, "blop", "_book"))
 
 Note that this does not _translate_ the content!
 Translation tooling will live in [babeldown](https://docs.ropensci.org/babeldown).
+
+### Content translation
+
+From a book whose main language is English...
+
+- qmd/Rmd files. `bla.qmd` translation in Spanish would live in `bla.es.qmd`.
+- parts. The part title translation needs to be stored in `_quarto.yml` like so:
+
+```yml
+  - part: Building Your Package
+    part-es: Construyendo tu paquete
+    chapters:
+    - pkg_building.Rmd
+    - pkg_ci.Rmd
+    - pkg_security.Rmd
+```
+
+- title, author, description. Their translation needs to be stored in `_quarto.yml` like so (NOT in the `book` list):
+
+```yml
+book:
+  title: Cool book
+  author: Myself
+
+title-es: Libro genial
+author-es: Yo misma
+```
