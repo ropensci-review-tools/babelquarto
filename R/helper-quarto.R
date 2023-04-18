@@ -40,7 +40,7 @@ quarto_multilingual_book <- function(parent_folder,
 
   ## Remove LaTeX lines ----
   config_lines <- config_lines[1:(which(grepl("pdf:", config_lines)) - 1)]
-browser()
+
   ## "Register" languages ----
   config_lines <- c(
     config_lines,

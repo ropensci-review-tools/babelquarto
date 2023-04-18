@@ -31,18 +31,8 @@ Create a starter/example book.
 ``` r
 parent_folder <- withr::local_tempdir()
 babelquarto::quarto_multilingual_book(parent_folder = parent_folder, book_folder = "blop")
-#> Called from: babelquarto::quarto_multilingual_book(parent_folder = parent_folder, 
-#>     book_folder = "blop")
-#> debug at /home/maelle/Documents/ropensci/SOFTWARE-REVIEW/babelquarto/R/helper-quarto.R#45: config_lines <- c(config_lines, "", "babelquarto:", sprintf("  mainlanguage: '%s'", 
-#>     main_language), sprintf("  languages: [%s]", toString(sprintf("'%s'", 
-#>     further_languages))), sprintf("lang: %s", main_language), 
-#>     purrr::map_chr(further_languages, ~sprintf("title-%s: title in %s", 
-#>         .x, .x)), purrr::map_chr(further_languages, ~sprintf("description-%s: description in %s", 
-#>         .x, .x)), purrr::map_chr(further_languages, ~sprintf("author-%s: author in %s", 
-#>         .x, .x)))
-#> debug at /home/maelle/Documents/ropensci/SOFTWARE-REVIEW/babelquarto/R/helper-quarto.R#58: brio::write_lines(config_lines, path = config)
 fs::dir_tree(file.path(parent_folder, "blop"))
-#> /tmp/RtmpEfjUVo/filea587bfa8357/blop
+#> /tmp/RtmpWdUEuY/fileb251610415c1/blop
 #> ├── _quarto.yml
 #> ├── cover.png
 #> ├── index.es.qmd
@@ -86,7 +76,7 @@ babelquarto::render_book(file.path(parent_folder, "blop"))
 #> 
 #> Output created: _book/index.fr.html
 fs::dir_tree(file.path(parent_folder, "blop", "_book"))
-#> /tmp/RtmpEfjUVo/filea587bfa8357/blop/_book
+#> /tmp/RtmpWdUEuY/fileb251610415c1/blop/_book
 #> ├── es
 #> │   ├── index.es.html
 #> │   ├── index.html
