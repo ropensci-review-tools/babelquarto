@@ -32,7 +32,7 @@ Create a starter/example book.
 parent_folder <- withr::local_tempdir()
 babelquarto::quarto_multilingual_book(parent_folder = parent_folder, book_folder = "blop")
 fs::dir_tree(file.path(parent_folder, "blop"))
-#> /tmp/RtmpWdUEuY/fileb251610415c1/blop
+#> /tmp/RtmpMa96BG/fileb4934c085607/blop
 #> ├── _quarto.yml
 #> ├── cover.png
 #> ├── index.es.qmd
@@ -76,7 +76,7 @@ babelquarto::render_book(file.path(parent_folder, "blop"))
 #> 
 #> Output created: _book/index.fr.html
 fs::dir_tree(file.path(parent_folder, "blop", "_book"))
-#> /tmp/RtmpWdUEuY/fileb251610415c1/blop/_book
+#> /tmp/RtmpMa96BG/fileb4934c085607/blop/_book
 #> ├── es
 #> │   ├── index.es.html
 #> │   ├── index.html
@@ -176,8 +176,8 @@ From a book whose main language is English…
 
 - qmd/Rmd files. `bla.qmd` translation in Spanish would live in
   `bla.es.qmd`.
-- parts. The part title translation needs to be stored in `_quarto.yml`
-  like so:
+- parts. The part title translation can be stored in `_quarto.yml` like
+  so:
 
 ``` yml
   - part: Building Your Package
@@ -188,7 +188,10 @@ From a book whose main language is English…
     - pkg_security.Rmd
 ```
 
-- title, author, description. Their translation needs to be stored in
+If it does not exist, babelquarto falls back to the part title in the
+main language.
+
+- title, author, description. Their translation can be stored in
   `_quarto.yml` like so (NOT in the `book` list):
 
 ``` yml
@@ -199,3 +202,6 @@ book:
 title-es: Libro genial
 author-es: Yo misma
 ```
+
+If these fields do not exist, babelquarto falls back to their text in
+the main language.

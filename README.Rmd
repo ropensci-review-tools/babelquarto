@@ -63,7 +63,7 @@ Translation tooling will live in [babeldown](https://docs.ropensci.org/babeldown
 From a book whose main language is English...
 
 - qmd/Rmd files. `bla.qmd` translation in Spanish would live in `bla.es.qmd`.
-- parts. The part title translation needs to be stored in `_quarto.yml` like so:
+- parts. The part title translation can be stored in `_quarto.yml` like so:
 
 ```yml
   - part: Building Your Package
@@ -74,7 +74,9 @@ From a book whose main language is English...
     - pkg_security.Rmd
 ```
 
-- title, author, description. Their translation needs to be stored in `_quarto.yml` like so (NOT in the `book` list):
+If it does not exist, babelquarto falls back to the part title in the main language.
+
+- title, author, description. Their translation can be stored in `_quarto.yml` like so (NOT in the `book` list):
 
 ```yml
 book:
@@ -84,3 +86,5 @@ book:
 title-es: Libro genial
 author-es: Yo misma
 ```
+
+If these fields do not exist, babelquarto falls back to their text in the main language.
