@@ -99,6 +99,9 @@ render_quarto_lang_book <- function(language_code, book_folder, output_dir) {
 
   config <- yaml::read_yaml(file.path(temporary_directory, book_name, "_quarto.yml"))
   config$lang <- language_code
+  config[["book"]][["title"]] <- config[[sprintf("title-%s", language_code)]] %||% config[["book"]][["title"]]
+  config[["book"]][["author"]] <- config[[sprintf("author-%s", language_code)]] %||% config[["book"]][["author"]]
+  config[["book"]][["description"]] <- config[[sprintf("description-%s", language_code)]] %||% config[["book"]][["description"]]
 
   config$book$chapters <- purrr::map(
     config$book$chapters,
