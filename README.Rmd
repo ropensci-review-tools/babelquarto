@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 <!-- badges: end -->
 
 The goal of babelquarto is to render a Quarto multilingual book structured like the 
-rOpenSci dev guide:
+[rOpenSci dev guide](https://devdevguide.netlify.app/):
 
 - each qmd is present once for the main language,
 - and once more for each other language with an extension à la `.es.qmd`

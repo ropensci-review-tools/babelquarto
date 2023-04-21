@@ -9,7 +9,8 @@
 <!-- badges: end -->
 
 The goal of babelquarto is to render a Quarto multilingual book
-structured like the rOpenSci dev guide:
+structured like the [rOpenSci dev
+guide](https://devdevguide.netlify.app/):
 
 - each qmd is present once for the main language,
 - and once more for each other language with an extension à la `.es.qmd`
@@ -48,7 +49,7 @@ readLines(file.path(parent_dir, "blop", "_quarto.yml"))
 #> [27] "description-fr: description in fr" "author-es: author in es"          
 #> [29] "author-fr: author in fr"
 fs::dir_tree(file.path(parent_dir, "blop"))
-#> /tmp/RtmpIRu1j6/file827d2df61274/blop
+#> /tmp/RtmpyJ7bhh/file95c4335e59e9/blop
 #> ├── _quarto.yml
 #> ├── cover.png
 #> ├── index.es.qmd
@@ -92,7 +93,7 @@ babelquarto::render_book(book_path = file.path(parent_dir, "blop"))
 #> 
 #> Output created: _book/index.fr.html
 fs::dir_tree(file.path(parent_dir, "blop", "_book"))
-#> /tmp/RtmpIRu1j6/file827d2df61274/blop/_book
+#> /tmp/RtmpyJ7bhh/file95c4335e59e9/blop/_book
 #> ├── es
 #> │   ├── index.es.html
 #> │   ├── index.html
