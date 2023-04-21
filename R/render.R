@@ -148,13 +148,23 @@ use_lang_chapter <- function(chapters_list, language_code, book_name, directory)
       chapters_list$chapters <- gsub("\\.qmd", sprintf(".%s.qmd", language_code), chapters_list$chapters)
       if (any(!fs::file_exists(chapters_list$chapters))) {
         chapters_not_translated <- !fs::file_exists(chapters_list$chapters)
-        chapters_list$chapters[chapters_not_translated]  <- original_chapters_list$chapters[chapters_not_translated]
+        fs::file_move(
+          original_chapters_list$chapters[chapters_not_translated],
+          gsub("\\.Rmd", sprintf(".%s.Rmd", language_code) ,
+            gsub(
+              "\\.qmd", sprintf(".%s.qmd", language_code),
+              original_chapters_list$chapters[chapters_not_translated])
+            )
+        )
       }
     } else {
       chapters_list <- gsub("\\.Rmd", sprintf(".%s.Rmd", language_code), chapters_list)
       chapters_list <- gsub("\\.qmd", sprintf(".%s.qmd", language_code), chapters_list)
       if (!fs::file_exists(file.path(directory, book_name, chapters_list))) {
-        chapters_list <- original_chapters_list
+        fs::file_move(
+          original_chapters_list,
+          chapters_list
+        )
       }
     }
 
