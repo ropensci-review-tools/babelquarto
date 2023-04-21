@@ -31,8 +31,24 @@ Create a starter/example book.
 ``` r
 parent_dir <- withr::local_tempdir()
 babelquarto::quarto_multilingual_book(parent_dir = parent_dir, book_dir = "blop")
+readLines(file.path(parent_dir, "blop", "_quarto.yml"))
+#>  [1] "project:"                          "  type: book"                     
+#>  [3] ""                                  "book:"                            
+#>  [5] "  title: \"blop\""                 "  author: \"Jane Doe\""           
+#>  [7] "  date: \"4/21/2023\""             "  chapters:"                      
+#>  [9] "    - index.qmd"                   "    - intro.qmd"                  
+#> [11] "    - summary.qmd"                 "    - references.qmd"             
+#> [13] ""                                  "bibliography: references.bib"     
+#> [15] ""                                  "format:"                          
+#> [17] "  html:"                           "    theme: cosmo"                 
+#> [19] ""                                  "babelquarto:"                     
+#> [21] "  mainlanguage: 'en'"              "  languages: ['es', 'fr']"        
+#> [23] "lang: en"                          "title-es: title in es"            
+#> [25] "title-fr: title in fr"             "description-es: description in es"
+#> [27] "description-fr: description in fr" "author-es: author in es"          
+#> [29] "author-fr: author in fr"
 fs::dir_tree(file.path(parent_dir, "blop"))
-#> /tmp/RtmpEx5EcX/file1035f761adad/blop
+#> /tmp/RtmpIRu1j6/file827d2df61274/blop
 #> ├── _quarto.yml
 #> ├── cover.png
 #> ├── index.es.qmd
@@ -76,7 +92,7 @@ babelquarto::render_book(book_path = file.path(parent_dir, "blop"))
 #> 
 #> Output created: _book/index.fr.html
 fs::dir_tree(file.path(parent_dir, "blop", "_book"))
-#> /tmp/RtmpEx5EcX/file1035f761adad/blop/_book
+#> /tmp/RtmpIRu1j6/file827d2df61274/blop/_book
 #> ├── es
 #> │   ├── index.es.html
 #> │   ├── index.html
@@ -173,6 +189,14 @@ will live in [babeldown](https://docs.ropensci.org/babeldown).
 ### Content translation
 
 From a book whose main language is English…
+
+- Register languages in the Quarto configuration, for instance
+
+``` yml
+babelquarto:
+  mainlanguage: 'en'
+  languages: ['es', 'fr']
+```
 
 - qmd/Rmd files. `bla.qmd` translation in Spanish would live in
   `bla.es.qmd`.

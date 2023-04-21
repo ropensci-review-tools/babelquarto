@@ -41,6 +41,7 @@ Create a starter/example book.
 ```{r}
 parent_dir <- withr::local_tempdir()
 babelquarto::quarto_multilingual_book(parent_dir = parent_dir, book_dir = "blop")
+readLines(file.path(parent_dir, "blop", "_quarto.yml"))
 fs::dir_tree(file.path(parent_dir, "blop"))
 ```
 
@@ -61,6 +62,14 @@ Translation tooling will live in [babeldown](https://docs.ropensci.org/babeldown
 ### Content translation
 
 From a book whose main language is English...
+
+- Register languages in the Quarto configuration, for instance
+
+```yml
+babelquarto:
+  mainlanguage: 'en'
+  languages: ['es', 'fr']
+```
 
 - qmd/Rmd files. `bla.qmd` translation in Spanish would live in `bla.es.qmd`.
 - parts. The part title translation can be stored in `_quarto.yml` like so:
