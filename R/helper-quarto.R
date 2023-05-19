@@ -35,26 +35,15 @@ quarto_multilingual_book <- function(parent_dir,
   )
 
   # Config edits ----
-  config <- file.path(book_dir, "_quarto.yml")
-  config_lines <- brio::read_lines(config)
 
   ## Remove LaTeX lines ----
+  config_path <- file.path(book_dir, "_quarto.yml")
+  config_lines <- brio::read_lines(config_path)
   config_lines <- config_lines[1:(which(grepl("pdf:", config_lines)) - 1)]
+  brio::write_lines(config_lines, path = config_path)
 
   ## "Register" languages ----
-  config_lines <- c(
-    config_lines,
-    "",
-    "babelquarto:",
-    sprintf("  mainlanguage: '%s'", main_language),
-    sprintf("  languages: [%s]", toString(sprintf("'%s'", further_languages))),
-    sprintf("lang: %s", main_language),
-    purrr::map_chr(further_languages, ~sprintf("title-%s: title in %s", .x, .x)),
-    purrr::map_chr(further_languages, ~sprintf("description-%s: description in %s", .x, .x)),
-    purrr::map_chr(further_languages, ~sprintf("author-%s: author in %s", .x, .x))
-  )
-
-  ## Save config
-  brio::write_lines(config_lines, path = config)
+  register_main_language(main_language, book_path = book_dir)
+  register_further_languages(further_languages, book_path = book_dir)
 
 }
