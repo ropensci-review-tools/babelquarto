@@ -1,6 +1,6 @@
 #' Register main language in Quarto config
 #'
-#' @param main_language Main language code (string, like `"en"`)
+#' @param main_language Main language code (character, like `"en"`)
 #' @inheritParams render_book
 #' @return Nothing
 #' @export
@@ -29,6 +29,14 @@ register_main_language <- function(main_language = "en", book_path = ".") {
   brio::write_lines(config_lines, path = config_path)
 }
 
+#' Register further languages in Quarto config
+#'
+#' @param further_languages Languages to be registered (character vector)
+#' @inheritParams render_book
+#'
+#' @return Nothing
+#' @export
+#'
 register_further_languages <- function(further_languages, book_path) {
 
   config_path <- file.path(book_path, "_quarto.yml")

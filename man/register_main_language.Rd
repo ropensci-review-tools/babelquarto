@@ -7,7 +7,7 @@
 register_main_language(main_language = "en", book_path = ".")
 }
 \arguments{
-\item{main_language}{Main language code (string, like \code{"en"})}
+\item{main_language}{Main language code (character, like \code{"en"})}
 
 \item{book_path}{Path where the book source is located}
 }
