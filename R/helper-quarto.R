@@ -4,6 +4,7 @@
 #' @param book_dir Book folder name.
 #' @param further_languages Codes for not main languages.
 #' @param main_language Code for main languages.
+#' @param register_languages Whether to register languages (logical).
 #'
 #' @return Nothing, creates the book folder.
 #' @export
@@ -11,7 +12,8 @@
 quarto_multilingual_book <- function(parent_dir,
                                      book_dir,
                                      main_language = "en",
-                                     further_languages = c("es", "fr")) {
+                                     further_languages = c("es", "fr"),
+                                     register_languages = TRUE) {
 
   # Vanilla book from Quarto CLI ----
   if (parent_dir != getwd()) withr::local_dir(parent_dir)
@@ -43,7 +45,9 @@ quarto_multilingual_book <- function(parent_dir,
   brio::write_lines(config_lines, path = config_path)
 
   ## "Register" languages ----
-  register_main_language(main_language, book_path = book_dir)
-  register_further_languages(further_languages, book_path = book_dir)
+  if (register_languages) {
+    register_main_language(main_language, book_path = book_dir)
+    register_further_languages(further_languages, book_path = book_dir)
+  }
 
 }

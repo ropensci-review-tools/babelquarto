@@ -9,9 +9,13 @@ register_main_language <- function(main_language = "en", book_path = ".") {
 
   config <- yaml::read_yaml(config_path)
   if (!is.null(config[["babelquarto"]][["mainlanguage"]])) {
-    if (config[["babelquarto"]][["mainlanguage"]] != language_code) {
-      cli::cli_abort("Can't register {language_code} as main language",
-        'Main language registered as {config[["babelquarto"]][["mainlanguage"]]}')
+    if (config[["babelquarto"]][["mainlanguage"]] != main_language) {
+      cli::cli_abort(
+        c(
+          "Can't register {main_language} as main language.",
+          'Main language registered as {config[["babelquarto"]][["mainlanguage"]]}.'
+        )
+      )
     } else {
       cli::cli_alert_info("Main language already registered.")
       return(invisible())

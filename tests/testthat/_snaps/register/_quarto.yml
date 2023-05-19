@@ -1,0 +1,22 @@
+project:
+  type: book
+
+book:
+  title: "blop"
+  author: "Jane Doe"
+  date: "5/19/2023"
+  chapters:
+    - index.qmd
+    - intro.qmd
+    - summary.qmd
+    - references.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    theme: cosmo
+
+babelquarto:
+  mainlanguage: 'en'
+lang: en
