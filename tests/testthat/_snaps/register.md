@@ -13,3 +13,16 @@
     Message <cliMessage>
       i Main language already registered.
 
+# register_further_languages() works
+
+    Code
+      register_further_languages(c("es", "fr"), book_path)
+    Error <rlang_error>
+      Can't register further languages before a main language
+      i Call `register_main_language()` first.
+
+---
+
+    Code
+      register_further_languages(c("es", "fr"), book_path)
+
