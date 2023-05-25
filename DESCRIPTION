@@ -18,6 +18,7 @@ Imports:
     quarto,
     rlang,
     sys,
+    whoami,
     withr,
     xml2,
     yaml

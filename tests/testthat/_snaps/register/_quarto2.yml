@@ -1,0 +1,29 @@
+project:
+  type: book
+
+book:
+  title: "blop"
+  author: "Firstname Lastname"
+  date: "01/01/2023"
+  chapters:
+    - index.qmd
+    - intro.qmd
+    - summary.qmd
+    - references.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    theme: cosmo
+
+babelquarto:
+  mainlanguage: 'en'
+  languages: ['es', 'fr']
+title-es: title in es
+title-fr: title in fr
+description-es: description in es
+description-fr: description in fr
+author-es: author in es
+author-fr: author in fr
+lang: en

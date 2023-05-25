@@ -4,6 +4,7 @@
 #' @param book_dir Book folder name.
 #' @param further_languages Codes for not main languages.
 #' @param main_language Code for main languages.
+#' @param register_languages Whether to register languages (logical).
 #'
 #' @return Nothing, creates the book folder.
 #' @export
@@ -11,7 +12,8 @@
 quarto_multilingual_book <- function(parent_dir,
                                      book_dir,
                                      main_language = "en",
-                                     further_languages = c("es", "fr")) {
+                                     further_languages = c("es", "fr"),
+                                     register_languages = TRUE) {
 
   # Vanilla book from Quarto CLI ----
   if (parent_dir != getwd()) withr::local_dir(parent_dir)
@@ -35,26 +37,31 @@ quarto_multilingual_book <- function(parent_dir,
   )
 
   # Config edits ----
-  config <- file.path(book_dir, "_quarto.yml")
-  config_lines <- brio::read_lines(config)
+  config_path <- file.path(book_dir, "_quarto.yml")
+  config_lines <- brio::read_lines(config_path)
 
   ## Remove LaTeX lines ----
   config_lines <- config_lines[1:(which(grepl("pdf:", config_lines)) - 1)]
 
-  ## "Register" languages ----
-  config_lines <- c(
-    config_lines,
-    "",
-    "babelquarto:",
-    sprintf("  mainlanguage: '%s'", main_language),
-    sprintf("  languages: [%s]", toString(sprintf("'%s'", further_languages))),
-    sprintf("lang: %s", main_language),
-    purrr::map_chr(further_languages, ~sprintf("title-%s: title in %s", .x, .x)),
-    purrr::map_chr(further_languages, ~sprintf("description-%s: description in %s", .x, .x)),
-    purrr::map_chr(further_languages, ~sprintf("author-%s: author in %s", .x, .x))
-  )
+  ## Change author ----
+  author <- if (nzchar(Sys.getenv("QUARTOBABELAUTHOR"))) {
+    Sys.getenv("QUARTOBABELAUTHOR")
+  } else {
+    whoami::fullname(fallback = "Firstname Lastname")
+  }
+  config_lines[grepl("author:", config_lines)] <- sprintf('  author: "%s"', author)
 
-  ## Save config
-  brio::write_lines(config_lines, path = config)
+  ## Change date ----
+  if (nzchar(Sys.getenv("QUARTOBABELDATE"))) {
+    config_lines[grepl("date:", config_lines)] <- sprintf('  date: "%s"', Sys.getenv("QUARTOBABELDATE"))
+  }
+
+  brio::write_lines(config_lines, path = config_path)
+
+  ## "Register" languages ----
+  if (register_languages) {
+    register_main_language(main_language, book_path = book_dir)
+    register_further_languages(further_languages, book_path = book_dir)
+  }
 
 }
