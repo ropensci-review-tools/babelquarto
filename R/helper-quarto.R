@@ -37,11 +37,16 @@ quarto_multilingual_book <- function(parent_dir,
   )
 
   # Config edits ----
-
-  ## Remove LaTeX lines ----
   config_path <- file.path(book_dir, "_quarto.yml")
   config_lines <- brio::read_lines(config_path)
+
+  ## Remove LaTeX lines ----
   config_lines <- config_lines[1:(which(grepl("pdf:", config_lines)) - 1)]
+
+  ## Change date ----
+  if (nzchar(Sys.getenv("QUARTOBABELDATE"))) {
+    config_lines[grepl("date:", config_lines)] <- sprintf('  date: "%s"', Sys.getenv("QUARTOBABELDATE"))
+  }
   brio::write_lines(config_lines, path = config_path)
 
   ## "Register" languages ----

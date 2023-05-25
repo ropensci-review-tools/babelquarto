@@ -4,7 +4,7 @@ project:
 book:
   title: "blop"
   author: "Jane Doe"
-  date: "5/19/2023"
+  date: "01/01/2023"
   chapters:
     - index.qmd
     - intro.qmd
