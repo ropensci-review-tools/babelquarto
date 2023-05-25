@@ -1,6 +1,7 @@
 test_that("register_main_language() works", {
 
   withr::local_envvar(QUARTOBABELDATE = "01/01/2023")
+  withr::local_envvar(QUARTOBABELAUTHOR = "Firstname Lastname")
 
   parent_dir <- withr::local_tempdir()
   quarto_multilingual_book(
@@ -21,6 +22,7 @@ test_that("register_main_language() works", {
 
 test_that("register_further_languages() works", {
   withr::local_envvar(QUARTOBABELDATE = "01/01/2023")
+  withr::local_envvar(QUARTOBABELAUTHOR = "Firstname Lastname")
   parent_dir <- withr::local_tempdir()
   quarto_multilingual_book(
     parent_dir = parent_dir,

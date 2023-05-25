@@ -3,7 +3,7 @@ project:
 
 book:
   title: "blop"
-  author: "Jane Doe"
+  author: "Firstname Lastname"
   date: "01/01/2023"
   chapters:
     - index.qmd

@@ -43,10 +43,19 @@ quarto_multilingual_book <- function(parent_dir,
   ## Remove LaTeX lines ----
   config_lines <- config_lines[1:(which(grepl("pdf:", config_lines)) - 1)]
 
+  ## Change author ----
+  author <- if (nzchar(Sys.getenv("QUARTOBABELAUTHOR"))) {
+    Sys.getenv("QUARTOBABELAUTHOR")
+  } else {
+    whoami::fullname()
+  }
+  config_lines[grepl("author:", config_lines)] <- sprintf('  author: "%s"', author)
+
   ## Change date ----
   if (nzchar(Sys.getenv("QUARTOBABELDATE"))) {
     config_lines[grepl("date:", config_lines)] <- sprintf('  date: "%s"', Sys.getenv("QUARTOBABELDATE"))
   }
+
   brio::write_lines(config_lines, path = config_path)
 
   ## "Register" languages ----
