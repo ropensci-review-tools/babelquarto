@@ -47,7 +47,7 @@ quarto_multilingual_book <- function(parent_dir,
   author <- if (nzchar(Sys.getenv("QUARTOBABELAUTHOR"))) {
     Sys.getenv("QUARTOBABELAUTHOR")
   } else {
-    whoami::fullname()
+    whoami::fullname(fallback = "Firstname Lastname")
   }
   config_lines[grepl("author:", config_lines)] <- sprintf('  author: "%s"', author)
 
