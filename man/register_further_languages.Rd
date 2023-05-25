@@ -4,7 +4,7 @@
 \alias{register_further_languages}
 \title{Register further languages in Quarto config}
 \usage{
-register_further_languages(further_languages, book_path)
+register_further_languages(further_languages, book_path = ".")
 }
 \arguments{
 \item{further_languages}{Languages to be registered (character vector)}
