@@ -27,11 +27,17 @@ The goal of babelquarto is to render a Quarto multilingual book structured like 
 
 ## Installation
 
-You can install the development version of babelquarto from [GitHub](https://github.com/) with:
+You can install the development version of babelquarto from rOpenSci R-universe:
+
+```r
+install.packages('babelquarto', repos = c('https://ropensci.r-universe.dev', 'https://cloud.r-project.org'))
+```
+
+Or from [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("ropensci-review-tools/quartobabel")
+# install.packages("pak")
+pak::pak("ropensci-review-tools/babelquarto")
 ```
 
 ## Example
@@ -47,14 +53,7 @@ fs::dir_tree(file.path(parent_dir, "blop"))
 
 Render it. 
 We end up with three books, that cross-link to each other from the left sidebar.
-
-```{r}
-babelquarto::render_book(book_path = file.path(parent_dir, "blop"))
-fs::dir_tree(file.path(parent_dir, "blop", "_book"))
-# if (require("servr") && rlang::is_interactive()) {
-#   servr::httw(file.path(parent_dir, "blop", "_book"))
-# }
-```
+[Example](https://devdevguide.netlify.app).
 
 Note that this does not _translate_ the content!
 Translation tooling will live in [babeldown](https://docs.ropensci.org/babeldown).
@@ -63,15 +62,41 @@ Translation tooling will live in [babeldown](https://docs.ropensci.org/babeldown
 
 From a book whose main language is English...
 
-- Register languages in the Quarto configuration, for instance
-
-```yml
-babelquarto:
-  mainlanguage: 'en'
-  languages: ['es', 'fr']
+```{r}
+parent_dir <- withr::local_tempdir()
+book_dir <- "babelbook"
+quarto_bin <- quarto::quarto_path()
+withr::with_dir(parent_dir, {
+  sys::exec_wait(
+    quarto_bin,
+    args = c("create-project", book_dir, "--type", "book")
+  )
+})
 ```
 
-- qmd/Rmd files. `bla.qmd` translation in Spanish would live in `bla.es.qmd`.
+- Register languages in the Quarto configuration, for instance
+
+```{r}
+book_path <- file.path(parent_dir, book_dir)
+babelquarto::register_main_language(main_language = "en", book_path = book_path)
+babelquarto::register_further_languages(further_languages = "es", book_path = book_path)
+```
+
+
+This is how the config file now looks like:
+
+````{r, results='asis', echo=FALSE}
+c(
+  "```yaml",
+  readLines(file.path(book_path, "_quarto.yml")),
+  "```"
+) |> 
+  paste(collapse = "\n") |> 
+  cat()
+````
+
+
+- qmd/Rmd files. `bla.qmd` translation in Spanish would live in `bla.es.qmd`. See [babeldown](https://docs.ropensci.org/babeldown) for getting an automated translation.
 - parts. The part title translation can be stored in `_quarto.yml` like so:
 
 ```yml

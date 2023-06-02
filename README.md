@@ -17,12 +17,18 @@ guide](https://devdevguide.netlify.app/):
 
 ## Installation
 
-You can install the development version of babelquarto from
-[GitHub](https://github.com/) with:
+You can install the development version of babelquarto from rOpenSci
+R-universe:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("ropensci-review-tools/quartobabel")
+install.packages('babelquarto', repos = c('https://ropensci.r-universe.dev', 'https://cloud.r-project.org'))
+```
+
+Or from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("pak")
+pak::pak("ropensci-review-tools/babelquarto")
 ```
 
 ## Example
@@ -35,8 +41,8 @@ babelquarto::quarto_multilingual_book(parent_dir = parent_dir, book_dir = "blop"
 readLines(file.path(parent_dir, "blop", "_quarto.yml"))
 #>  [1] "project:"                          "  type: book"                     
 #>  [3] ""                                  "book:"                            
-#>  [5] "  title: \"blop\""                 "  author: \"Jane Doe\""           
-#>  [7] "  date: \"4/21/2023\""             "  chapters:"                      
+#>  [5] "  title: \"blop\""                 "  author: \"Maëlle Salmon\""      
+#>  [7] "  date: \"6/2/2023\""              "  chapters:"                      
 #>  [9] "    - index.qmd"                   "    - intro.qmd"                  
 #> [11] "    - summary.qmd"                 "    - references.qmd"             
 #> [13] ""                                  "bibliography: references.bib"     
@@ -44,12 +50,12 @@ readLines(file.path(parent_dir, "blop", "_quarto.yml"))
 #> [17] "  html:"                           "    theme: cosmo"                 
 #> [19] ""                                  "babelquarto:"                     
 #> [21] "  mainlanguage: 'en'"              "  languages: ['es', 'fr']"        
-#> [23] "lang: en"                          "title-es: title in es"            
-#> [25] "title-fr: title in fr"             "description-es: description in es"
-#> [27] "description-fr: description in fr" "author-es: author in es"          
-#> [29] "author-fr: author in fr"
+#> [23] "title-es: title in es"             "title-fr: title in fr"            
+#> [25] "description-es: description in es" "description-fr: description in fr"
+#> [27] "author-es: author in es"           "author-fr: author in fr"          
+#> [29] "lang: en"
 fs::dir_tree(file.path(parent_dir, "blop"))
-#> /tmp/RtmpyJ7bhh/file95c4335e59e9/blop
+#> /tmp/Rtmp2xyc3G/file9ed48117a92/blop
 #> ├── _quarto.yml
 #> ├── cover.png
 #> ├── index.es.qmd
@@ -68,121 +74,7 @@ fs::dir_tree(file.path(parent_dir, "blop"))
 ```
 
 Render it. We end up with three books, that cross-link to each other
-from the left sidebar.
-
-``` r
-babelquarto::render_book(book_path = file.path(parent_dir, "blop"))
-#> [1m[34m[1/4] index.qmd[39m[22m
-#> [1m[34m[2/4] intro.qmd[39m[22m
-#> [1m[34m[3/4] summary.qmd[39m[22m
-#> [1m[34m[4/4] references.qmd[39m[22m
-#> 
-#> Output created: _book/index.html
-#> 
-#> [1m[34m[1/4] index.es.qmd[39m[22m
-#> [1m[34m[2/4] intro.es.qmd[39m[22m
-#> [1m[34m[3/4] summary.es.qmd[39m[22m
-#> [1m[34m[4/4] references.es.qmd[39m[22m
-#> 
-#> Output created: _book/index.es.html
-#> 
-#> [1m[34m[1/4] index.fr.qmd[39m[22m
-#> [1m[34m[2/4] intro.fr.qmd[39m[22m
-#> [1m[34m[3/4] summary.fr.qmd[39m[22m
-#> [1m[34m[4/4] references.fr.qmd[39m[22m
-#> 
-#> Output created: _book/index.fr.html
-fs::dir_tree(file.path(parent_dir, "blop", "_book"))
-#> /tmp/RtmpyJ7bhh/file95c4335e59e9/blop/_book
-#> ├── es
-#> │   ├── index.es.html
-#> │   ├── index.html
-#> │   ├── intro.es.html
-#> │   ├── references.es.html
-#> │   ├── search.json
-#> │   ├── site_libs
-#> │   │   ├── bootstrap
-#> │   │   │   ├── bootstrap-icons.css
-#> │   │   │   ├── bootstrap-icons.woff
-#> │   │   │   ├── bootstrap.min.css
-#> │   │   │   └── bootstrap.min.js
-#> │   │   ├── clipboard
-#> │   │   │   └── clipboard.min.js
-#> │   │   ├── quarto-html
-#> │   │   │   ├── anchor.min.js
-#> │   │   │   ├── popper.min.js
-#> │   │   │   ├── quarto-syntax-highlighting.css
-#> │   │   │   ├── quarto.js
-#> │   │   │   ├── tippy.css
-#> │   │   │   └── tippy.umd.min.js
-#> │   │   ├── quarto-nav
-#> │   │   │   ├── headroom.min.js
-#> │   │   │   └── quarto-nav.js
-#> │   │   └── quarto-search
-#> │   │       ├── autocomplete.umd.js
-#> │   │       ├── fuse.min.js
-#> │   │       └── quarto-search.js
-#> │   └── summary.es.html
-#> ├── fr
-#> │   ├── index.fr.html
-#> │   ├── index.html
-#> │   ├── intro.fr.html
-#> │   ├── references.fr.html
-#> │   ├── search.json
-#> │   ├── site_libs
-#> │   │   ├── bootstrap
-#> │   │   │   ├── bootstrap-icons.css
-#> │   │   │   ├── bootstrap-icons.woff
-#> │   │   │   ├── bootstrap.min.css
-#> │   │   │   └── bootstrap.min.js
-#> │   │   ├── clipboard
-#> │   │   │   └── clipboard.min.js
-#> │   │   ├── quarto-html
-#> │   │   │   ├── anchor.min.js
-#> │   │   │   ├── popper.min.js
-#> │   │   │   ├── quarto-syntax-highlighting.css
-#> │   │   │   ├── quarto.js
-#> │   │   │   ├── tippy.css
-#> │   │   │   └── tippy.umd.min.js
-#> │   │   ├── quarto-nav
-#> │   │   │   ├── headroom.min.js
-#> │   │   │   └── quarto-nav.js
-#> │   │   └── quarto-search
-#> │   │       ├── autocomplete.umd.js
-#> │   │       ├── fuse.min.js
-#> │   │       └── quarto-search.js
-#> │   └── summary.fr.html
-#> ├── index.html
-#> ├── intro.html
-#> ├── references.html
-#> ├── search.json
-#> ├── site_libs
-#> │   ├── bootstrap
-#> │   │   ├── bootstrap-icons.css
-#> │   │   ├── bootstrap-icons.woff
-#> │   │   ├── bootstrap.min.css
-#> │   │   └── bootstrap.min.js
-#> │   ├── clipboard
-#> │   │   └── clipboard.min.js
-#> │   ├── quarto-html
-#> │   │   ├── anchor.min.js
-#> │   │   ├── popper.min.js
-#> │   │   ├── quarto-syntax-highlighting.css
-#> │   │   ├── quarto.js
-#> │   │   ├── tippy.css
-#> │   │   └── tippy.umd.min.js
-#> │   ├── quarto-nav
-#> │   │   ├── headroom.min.js
-#> │   │   └── quarto-nav.js
-#> │   └── quarto-search
-#> │       ├── autocomplete.umd.js
-#> │       ├── fuse.min.js
-#> │       └── quarto-search.js
-#> └── summary.html
-# if (require("servr") && rlang::is_interactive()) {
-#   servr::httw(file.path(parent_dir, "blop", "_book"))
-# }
-```
+from the left sidebar. [Example](https://devdevguide.netlify.app).
 
 Note that this does not *translate* the content! Translation tooling
 will live in [babeldown](https://docs.ropensci.org/babeldown).
@@ -191,16 +83,66 @@ will live in [babeldown](https://docs.ropensci.org/babeldown).
 
 From a book whose main language is English…
 
+``` r
+parent_dir <- withr::local_tempdir()
+book_dir <- "babelbook"
+quarto_bin <- quarto::quarto_path()
+withr::with_dir(parent_dir, {
+  sys::exec_wait(
+    quarto_bin,
+    args = c("create-project", book_dir, "--type", "book")
+  )
+})
+#> [1] 0
+```
+
 - Register languages in the Quarto configuration, for instance
 
-``` yml
+``` r
+book_path <- file.path(parent_dir, book_dir)
+babelquarto::register_main_language(main_language = "en", book_path = book_path)
+babelquarto::register_further_languages(further_languages = "es", book_path = book_path)
+```
+
+This is how the config file now looks like:
+
+``` yaml
+project:
+  type: book
+
+book:
+  title: "babelbook"
+  author: "Jane Doe"
+  date: "6/2/2023"
+  chapters:
+    - index.qmd
+    - intro.qmd
+    - summary.qmd
+    - references.qmd
+
+bibliography: references.bib
+
+format:
+  html:
+    theme: cosmo
+  pdf:
+    documentclass: scrreprt
+
+
+
+
 babelquarto:
   mainlanguage: 'en'
-  languages: ['es', 'fr']
+  languages: ['es']
+title-es: title in es
+description-es: description in es
+author-es: author in es
+lang: en
 ```
 
 - qmd/Rmd files. `bla.qmd` translation in Spanish would live in
-  `bla.es.qmd`.
+  `bla.es.qmd`. See [babeldown](https://docs.ropensci.org/babeldown) for
+  getting an automated translation.
 - parts. The part title translation can be stored in `_quarto.yml` like
   so:
 
