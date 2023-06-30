@@ -25,4 +25,6 @@
 
     Code
       register_further_languages(c("es", "fr"), book_path)
+    Message <cliMessage>
+      i All languages already registered.
 

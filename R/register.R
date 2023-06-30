@@ -46,8 +46,8 @@ register_further_languages <- function(further_languages, book_path = ".") {
   config_path <- file.path(book_path, "_quarto.yml")
 
   config <- yaml::read_yaml(config_path)
-  if (!is.null(config[["babelquarto"]][["further_languages"]])) {
-    if (all(further_languages %in% config[["babelquarto"]][["further_languages"]])) {
+  if (!is.null(config[["babelquarto"]][["languages"]])) {
+    if (all(further_languages %in% config[["babelquarto"]][["languages"]])) {
       cli::cli_alert_info("All languages already registered.")
       return(invisible())
     }
@@ -63,11 +63,13 @@ register_further_languages <- function(further_languages, book_path = ".") {
   }
 
   config_lines <- brio::read_lines(config_path)
+  config_lines <- config_lines[!grepl("languages\\:", config_lines)]
   which_main <- which(trimws(config_lines) == "babelquarto:") + 1
+  languages <- sprintf("'%s'",union(config[["babelquarto"]][["languages"]], further_languages))
   config_lines <- append(
     config_lines,
     c(
-      sprintf("  languages: [%s]", toString(sprintf("'%s'", further_languages))),
+      sprintf("  languages: [%s]", toString(languages)),
       purrr::map_chr(further_languages, ~sprintf("title-%s: title in %s", .x, .x)),
       purrr::map_chr(further_languages, ~sprintf("description-%s: description in %s", .x, .x)),
       purrr::map_chr(further_languages, ~sprintf("author-%s: author in %s", .x, .x))
