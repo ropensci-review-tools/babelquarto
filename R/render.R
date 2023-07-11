@@ -111,6 +111,12 @@ render_quarto_lang_book <- function(language_code, book_path, output_dir) {
     directory = temporary_directory
   )
 
+  config$book$navbar$left <- purrr::map(
+    config$book$navbar$left,
+    use_lang_navbar,
+    language_code = language_code
+  )
+
   yaml::write_yaml(config, file.path(temporary_directory, book_name, "_quarto.yml"))
 
   # fix for Boolean that is yes and should be true
@@ -222,4 +228,9 @@ add_link <- function(path, main_language = main_language, language_code) {
   xml2::xml_add_child(just_added_link_item, "i", class = "bi bi-globe2", .where = 0)
 
   xml2::write_html(html, path)
+}
+
+use_lang_navbar <- function(navbar_left, language_code) {
+  navbar_left <- gsub("\\.qmd", sprintf(".%s.qmd", language_code), navbar_left)
+  navbar_left
 }
