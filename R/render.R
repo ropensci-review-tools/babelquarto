@@ -68,10 +68,11 @@ render_book <- function(book_path = ".") {
   purrr::walk(
     language_codes,
     ~ purrr::walk(
-      fs::dir_ls(book_output_folder, glob = "*.html"),
+      fs::dir_ls(book_output_folder, glob = "*.html", recurse = TRUE),
       add_link,
       main_language = main_language,
-      language_code = .x
+      language_code = .x,
+      main_language
     )
   )
 
@@ -81,15 +82,16 @@ render_book <- function(book_path = ".") {
     purrr::walk(
       languages_to_add,
       ~ purrr::walk(
-        fs::dir_ls(file.path(book_output_folder, other_lang), glob = "*.html"),
+        fs::dir_ls(file.path(book_output_folder, other_lang), glob = "*.html", recurse = TRUE),
         add_link,
         main_language = main_language,
-        language_code = .x
-        )
+        language_code = .x,
+        current_code = other_lang
+      )
     )
   }
-
 }
+
 
 render_quarto_lang_book <- function(language_code, book_path, output_dir) {
 
@@ -177,7 +179,7 @@ use_lang_chapter <- function(chapters_list, language_code, book_name, directory)
     chapters_list
 }
 
-add_link <- function(path, main_language = main_language, language_code) {
+add_link <- function(path, main_language = main_language, language_code, current_code) {
   html <- xml2::read_html(path)
 
   left_sidebar <- xml2::xml_find_first(html, "//div[@class='sidebar-menu-container']")
@@ -201,14 +203,25 @@ add_link <- function(path, main_language = main_language, language_code) {
   }
 
   languages_links <- xml2::xml_find_first(html, "//ul[@id='language-links-ul']")
+  base_dir <- dirname(path)
 
-  if (language_code == main_language) {
+  if (language_code == main_language) { 
     new_path <- sub("\\..*\\.html", ".html", basename(path))
-    href <- sprintf("/%s", new_path)
-  } else {
+    result <- strsplit(base_dir, "/_book/[a-zA-Z]{2}/")[[1]][2]
+    if (is.na(result[[1]])) {
+      href <- sprintf("/%s", new_path)
+    } else {
+      href <- sprintf("/%s/%s", result, new_path)
+    }
+  } else { # creating a link for alternative
     base_path <- sub("\\..*\\.html", ".html", basename(path))
     new_path <- fs::path_ext_set(base_path, sprintf(".%s.html", language_code))
-    href <- sprintf("/%s/%s", language_code, new_path)
+    result <- strsplit(base_dir, "/_book/")[[1]][2]
+    if (is.na(result[[1]])) {
+      href <- sprintf("/%s/%s", language_code, new_path)
+    } else {
+      href <- sprintf("/%s/%s/%s", language_code, result, new_path)
+    }
   }
 
   xml2::xml_add_child(
@@ -219,6 +232,15 @@ add_link <- function(path, main_language = main_language, language_code) {
     href = href,
     id = sprintf("language-link-%s", language_code)
   )
+
+  # Check previous links and remove if the previous link's language code matches the specified code
+  previous_link_items <- xml2::xml_find_all(html, "//li[starts-with(@id, 'language-link-li-')]")
+  for (prev_link_item in previous_link_items) {
+    prev_lang_code <- substr(xml2::xml_attr(prev_link_item, "id"), 18, nchar(xml2::xml_attr(prev_link_item, "id")))
+    if (prev_lang_code == current_code) {
+      xml2::xml_remove(prev_link_item)
+    }
+  }
 
   just_added_link <- xml2::xml_find_first(html, sprintf("//a[@id='language-link-%s']", language_code))
   xml2::xml_add_parent(just_added_link, "li", id = sprintf("language-link-li-%s", language_code))
