@@ -46,12 +46,13 @@ Create a starter/example book.
 
 ```{r}
 parent_dir <- withr::local_tempdir()
-babelquarto::quarto_multilingual_book(parent_dir = parent_dir, book_dir = "blop")
-readLines(file.path(parent_dir, "blop", "_quarto.yml"))
-fs::dir_tree(file.path(parent_dir, "blop"))
+book_dir <- "blop"
+babelquarto::quarto_multilingual_book(parent_dir = parent_dir, book_dir = book_dir)
+readLines(file.path(parent_dir, book_dir, "_quarto.yml"))
+fs::dir_tree(file.path(parent_dir, book_dir))
+babelquarto::render_book(file.path(parent_dir, book_dir))
 ```
 
-Render it. 
 We end up with three books, that cross-link to each other from the left sidebar.
 [Example](https://devdevguide.netlify.app).
 
