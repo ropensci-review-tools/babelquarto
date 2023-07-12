@@ -37,12 +37,13 @@ Create a starter/example book.
 
 ``` r
 parent_dir <- withr::local_tempdir()
-babelquarto::quarto_multilingual_book(parent_dir = parent_dir, book_dir = "blop")
-readLines(file.path(parent_dir, "blop", "_quarto.yml"))
+book_dir <- "blop"
+babelquarto::quarto_multilingual_book(parent_dir = parent_dir, book_dir = book_dir)
+readLines(file.path(parent_dir, book_dir, "_quarto.yml"))
 #>  [1] "project:"                          "  type: book"                     
 #>  [3] ""                                  "book:"                            
-#>  [5] "  title: \"blop\""                 "  author: \"Maëlle Salmon\""      
-#>  [7] "  date: \"6/2/2023\""              "  chapters:"                      
+#>  [5] "  title: \"blop\""                 "  author: \"Ranke Johannes\""     
+#>  [7] "  date: \"7/12/2023\""             "  chapters:"                      
 #>  [9] "    - index.qmd"                   "    - intro.qmd"                  
 #> [11] "    - summary.qmd"                 "    - references.qmd"             
 #> [13] ""                                  "bibliography: references.bib"     
@@ -54,8 +55,8 @@ readLines(file.path(parent_dir, "blop", "_quarto.yml"))
 #> [25] "description-es: description in es" "description-fr: description in fr"
 #> [27] "author-es: author in es"           "author-fr: author in fr"          
 #> [29] "lang: en"
-fs::dir_tree(file.path(parent_dir, "blop"))
-#> /tmp/Rtmp2xyc3G/file9ed48117a92/blop
+fs::dir_tree(file.path(parent_dir, book_dir))
+#> /tmp/RtmpIr6orn/file38b0062b872699/blop
 #> ├── _quarto.yml
 #> ├── cover.png
 #> ├── index.es.qmd
@@ -71,10 +72,31 @@ fs::dir_tree(file.path(parent_dir, "blop"))
 #> ├── summary.es.qmd
 #> ├── summary.fr.qmd
 #> └── summary.qmd
+babelquarto::render_book(file.path(parent_dir, book_dir))
+#> [1m[34m[1/4] index.qmd[39m[22m
+#> [1m[34m[2/4] intro.qmd[39m[22m
+#> [1m[34m[3/4] summary.qmd[39m[22m
+#> [1m[34m[4/4] references.qmd[39m[22m
+#> 
+#> Output created: _book/index.html
+#> 
+#> [1m[34m[1/4] index.es.qmd[39m[22m
+#> [1m[34m[2/4] intro.es.qmd[39m[22m
+#> [1m[34m[3/4] summary.es.qmd[39m[22m
+#> [1m[34m[4/4] references.es.qmd[39m[22m
+#> 
+#> Output created: _book/index.es.html
+#> 
+#> [1m[34m[1/4] index.fr.qmd[39m[22m
+#> [1m[34m[2/4] intro.fr.qmd[39m[22m
+#> [1m[34m[3/4] summary.fr.qmd[39m[22m
+#> [1m[34m[4/4] references.fr.qmd[39m[22m
+#> 
+#> Output created: _book/index.fr.html
 ```
 
-Render it. We end up with three books, that cross-link to each other
-from the left sidebar. [Example](https://devdevguide.netlify.app).
+We end up with three books, that cross-link to each other from the left
+sidebar. [Example](https://devdevguide.netlify.app).
 
 Note that this does not *translate* the content! Translation tooling
 will live in [babeldown](https://docs.ropensci.org/babeldown).
@@ -112,8 +134,8 @@ project:
 
 book:
   title: "babelbook"
-  author: "Jane Doe"
-  date: "6/2/2023"
+  author: "Norah Jones"
+  date: "7/12/2023"
   chapters:
     - index.qmd
     - intro.qmd
