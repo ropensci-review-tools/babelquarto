@@ -50,6 +50,9 @@ book_dir <- "blop"
 babelquarto::quarto_multilingual_book(parent_dir = parent_dir, book_dir = book_dir)
 readLines(file.path(parent_dir, book_dir, "_quarto.yml"))
 fs::dir_tree(file.path(parent_dir, book_dir))
+```
+
+```{r, results='hide'}
 babelquarto::render_book(file.path(parent_dir, book_dir))
 ```
 

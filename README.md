@@ -42,8 +42,8 @@ babelquarto::quarto_multilingual_book(parent_dir = parent_dir, book_dir = book_d
 readLines(file.path(parent_dir, book_dir, "_quarto.yml"))
 #>  [1] "project:"                          "  type: book"                     
 #>  [3] ""                                  "book:"                            
-#>  [5] "  title: \"blop\""                 "  author: \"Ranke Johannes\""     
-#>  [7] "  date: \"7/12/2023\""             "  chapters:"                      
+#>  [5] "  title: \"blop\""                 "  author: \"Maëlle Salmon\""      
+#>  [7] "  date: \"7/13/2023\""             "  chapters:"                      
 #>  [9] "    - index.qmd"                   "    - intro.qmd"                  
 #> [11] "    - summary.qmd"                 "    - references.qmd"             
 #> [13] ""                                  "bibliography: references.bib"     
@@ -56,7 +56,7 @@ readLines(file.path(parent_dir, book_dir, "_quarto.yml"))
 #> [27] "author-es: author in es"           "author-fr: author in fr"          
 #> [29] "lang: en"
 fs::dir_tree(file.path(parent_dir, book_dir))
-#> /tmp/RtmpIr6orn/file38b0062b872699/blop
+#> /tmp/Rtmp5thWaD/file52e23e5b1314/blop
 #> ├── _quarto.yml
 #> ├── cover.png
 #> ├── index.es.qmd
@@ -72,27 +72,10 @@ fs::dir_tree(file.path(parent_dir, book_dir))
 #> ├── summary.es.qmd
 #> ├── summary.fr.qmd
 #> └── summary.qmd
+```
+
+``` r
 babelquarto::render_book(file.path(parent_dir, book_dir))
-#> [1m[34m[1/4] index.qmd[39m[22m
-#> [1m[34m[2/4] intro.qmd[39m[22m
-#> [1m[34m[3/4] summary.qmd[39m[22m
-#> [1m[34m[4/4] references.qmd[39m[22m
-#> 
-#> Output created: _book/index.html
-#> 
-#> [1m[34m[1/4] index.es.qmd[39m[22m
-#> [1m[34m[2/4] intro.es.qmd[39m[22m
-#> [1m[34m[3/4] summary.es.qmd[39m[22m
-#> [1m[34m[4/4] references.es.qmd[39m[22m
-#> 
-#> Output created: _book/index.es.html
-#> 
-#> [1m[34m[1/4] index.fr.qmd[39m[22m
-#> [1m[34m[2/4] intro.fr.qmd[39m[22m
-#> [1m[34m[3/4] summary.fr.qmd[39m[22m
-#> [1m[34m[4/4] references.fr.qmd[39m[22m
-#> 
-#> Output created: _book/index.fr.html
 ```
 
 We end up with three books, that cross-link to each other from the left
@@ -134,8 +117,8 @@ project:
 
 book:
   title: "babelbook"
-  author: "Norah Jones"
-  date: "7/12/2023"
+  author: "Jane Doe"
+  date: "7/13/2023"
   chapters:
     - index.qmd
     - intro.qmd
