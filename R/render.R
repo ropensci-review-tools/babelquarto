@@ -19,6 +19,7 @@
 #' @importFrom rlang `%||%`
 #'
 #' @param book_path Path where the book source is located
+#' @param site_url Base URL of the book.
 #'
 #' @export
 #'
@@ -32,10 +33,20 @@
 #' }
 #' }
 #'
-render_book <- function(book_path = ".") {
+render_book <- function(book_path = ".", site_url = NULL) {
   # configuration ----
   config <- file.path(book_path, "_quarto.yml")
   config_contents <- yaml::read_yaml(config)
+
+  if (on_ci()) {
+    # for deploy previews
+    # either root website (Netlify deploys)
+    # or something else
+    site_url <- Sys.getenv("BABELQUARTO_CI_URL", "")
+  } else {
+    site_url <- site_url %||% config_contents[["book"]][["site-url"]] %||% ""
+    site_url <- sub("/$", "", site_url) # no end slash
+  }
 
   output_dir <- config_contents[["project"]][["output-dir"]] %||% "_book"
 
@@ -71,7 +82,8 @@ render_book <- function(book_path = ".") {
       fs::dir_ls(book_output_folder, glob = "*.html"),
       add_link,
       main_language = main_language,
-      language_code = .x
+      language_code = .x,
+      site_url = site_url
     )
   )
 
@@ -84,7 +96,8 @@ render_book <- function(book_path = ".") {
         fs::dir_ls(file.path(book_output_folder, other_lang), glob = "*.html"),
         add_link,
         main_language = main_language,
-        language_code = .x
+        language_code = .x,
+        site_url = site_url
         )
     )
   }
@@ -171,7 +184,7 @@ use_lang_chapter <- function(chapters_list, language_code, book_name, directory)
     chapters_list
 }
 
-add_link <- function(path, main_language = main_language, language_code) {
+add_link <- function(path, main_language = main_language, language_code, site_url) {
   html <- xml2::read_html(path)
 
   left_sidebar <- xml2::xml_find_first(html, "//div[@class='sidebar-menu-container']")
@@ -198,11 +211,11 @@ add_link <- function(path, main_language = main_language, language_code) {
 
   if (language_code == main_language) {
     new_path <- sub("\\..*\\.html", ".html", basename(path))
-    href <- sprintf("/%s", new_path)
+    href <- sprintf("%s/%s", site_url, new_path)
   } else {
     base_path <- sub("\\..*\\.html", ".html", basename(path))
     new_path <- fs::path_ext_set(base_path, sprintf(".%s.html", language_code))
-    href <- sprintf("/%s/%s", language_code, new_path)
+    href <- sprintf("%s/%s/%s",site_url, language_code, new_path)
   }
 
   xml2::xml_add_child(
@@ -222,4 +235,9 @@ add_link <- function(path, main_language = main_language, language_code) {
   xml2::xml_add_child(just_added_link_item, "i", class = "bi bi-globe2", .where = 0)
 
   xml2::write_html(html, path)
+}
+
+# as in testthat
+on_ci <- function() {
+  isTRUE(as.logical(Sys.getenv("CI", "false")))
 }

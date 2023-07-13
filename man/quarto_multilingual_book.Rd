@@ -9,7 +9,8 @@ quarto_multilingual_book(
   book_dir,
   main_language = "en",
   further_languages = c("es", "fr"),
-  register_languages = TRUE
+  register_languages = TRUE,
+  site_url = "https://example.com"
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ quarto_multilingual_book(
 \item{further_languages}{Codes for not main languages.}
 
 \item{register_languages}{Whether to register languages (logical).}
+
+\item{site_url}{Site URL for the book/site-url part of the Quarto configuration.}
 }
 \value{
 Nothing, creates the book folder.
