@@ -42,21 +42,21 @@ babelquarto::quarto_multilingual_book(parent_dir = parent_dir, book_dir = book_d
 readLines(file.path(parent_dir, book_dir, "_quarto.yml"))
 #>  [1] "project:"                          "  type: book"                     
 #>  [3] ""                                  "book:"                            
-#>  [5] "  title: \"blop\""                 "  author: \"Maëlle Salmon\""      
-#>  [7] "  date: \"7/13/2023\""             "  chapters:"                      
-#>  [9] "    - index.qmd"                   "    - intro.qmd"                  
-#> [11] "    - summary.qmd"                 "    - references.qmd"             
-#> [13] ""                                  "bibliography: references.bib"     
-#> [15] ""                                  "format:"                          
-#> [17] "  html:"                           "    theme: cosmo"                 
-#> [19] ""                                  "babelquarto:"                     
-#> [21] "  mainlanguage: 'en'"              "  languages: ['es', 'fr']"        
-#> [23] "title-es: title in es"             "title-fr: title in fr"            
-#> [25] "description-es: description in es" "description-fr: description in fr"
-#> [27] "author-es: author in es"           "author-fr: author in fr"          
-#> [29] "lang: en"
+#>  [5] "  site-url: https://example.com"   "  title: \"blop\""                
+#>  [7] "  author: \"Maëlle Salmon\""       "  date: \"7/13/2023\""            
+#>  [9] "  chapters:"                       "    - index.qmd"                  
+#> [11] "    - intro.qmd"                   "    - summary.qmd"                
+#> [13] "    - references.qmd"              ""                                 
+#> [15] "bibliography: references.bib"      ""                                 
+#> [17] "format:"                           "  html:"                          
+#> [19] "    theme: cosmo"                  ""                                 
+#> [21] "babelquarto:"                      "  mainlanguage: 'en'"             
+#> [23] "  languages: ['es', 'fr']"         "title-es: title in es"            
+#> [25] "title-fr: title in fr"             "description-es: description in es"
+#> [27] "description-fr: description in fr" "author-es: author in es"          
+#> [29] "author-fr: author in fr"           "lang: en"
 fs::dir_tree(file.path(parent_dir, book_dir))
-#> /tmp/Rtmp5thWaD/file52e23e5b1314/blop
+#> /tmp/RtmpCOL4fU/file73c178bdd45/blop
 #> ├── _quarto.yml
 #> ├── cover.png
 #> ├── index.es.qmd
@@ -83,6 +83,15 @@ sidebar. [Example](https://devdevguide.netlify.app).
 
 Note that this does not *translate* the content! Translation tooling
 will live in [babeldown](https://docs.ropensci.org/babeldown).
+
+### Configure the base URL
+
+Use the [usual Quarto
+field](https://quarto.org/docs/websites/website-tools.html), or use the
+`site_url` argument of `babelquarto::render_book()`.
+
+    book:
+      site-url: https://example.com
 
 ### Content translation
 

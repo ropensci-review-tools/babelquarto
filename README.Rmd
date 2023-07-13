@@ -62,6 +62,15 @@ We end up with three books, that cross-link to each other from the left sidebar.
 Note that this does not _translate_ the content!
 Translation tooling will live in [babeldown](https://docs.ropensci.org/babeldown).
 
+### Configure the base URL
+
+Use the [usual Quarto field](https://quarto.org/docs/websites/website-tools.html), or use the `site_url` argument of `babelquarto::render_book()`.
+
+```
+book:
+  site-url: https://example.com
+```
+
 ### Content translation
 
 From a book whose main language is English...
