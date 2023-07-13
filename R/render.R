@@ -38,7 +38,7 @@ render_book <- function(book_path = ".", site_url = NULL) {
   config <- file.path(book_path, "_quarto.yml")
   config_contents <- yaml::read_yaml(config)
 
-  if (on_ci()) {
+  if (!nzchar("BABELQUARTO_TESTS_URL") || on_ci()) {
     # for deploy previews
     # either root website (Netlify deploys)
     # or something else

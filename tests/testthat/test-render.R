@@ -1,4 +1,6 @@
 test_that("render_book() works", {
+  withr::local_envvar("BABELQUARTO_TESTS_URL" = "true")
+
   parent_dir <- withr::local_tempdir()
   book_dir <- "blop"
   quarto_multilingual_book(
@@ -17,6 +19,8 @@ test_that("render_book() works", {
 })
 
 test_that("render_book() works - change link", {
+  withr::local_envvar("BABELQUARTO_TESTS_URL" = "true")
+
   parent_dir <- withr::local_tempdir()
   book_dir <- "blop"
   quarto_multilingual_book(
