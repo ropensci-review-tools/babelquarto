@@ -73,24 +73,24 @@ fs::dir_tree(file.path(parent_dir, book_dir))
 #> ├── summary.fr.qmd
 #> └── summary.qmd
 babelquarto::render_book(file.path(parent_dir, book_dir))
-#> [1m[34m[1/4] index.qmd[39m[22m
-#> [1m[34m[2/4] intro.qmd[39m[22m
-#> [1m[34m[3/4] summary.qmd[39m[22m
-#> [1m[34m[4/4] references.qmd[39m[22m
+#> index.qmd
+#> intro.qmd
+#> summary.qmd
+#> references.qmd
 #> 
 #> Output created: _book/index.html
 #> 
-#> [1m[34m[1/4] index.es.qmd[39m[22m
-#> [1m[34m[2/4] intro.es.qmd[39m[22m
-#> [1m[34m[3/4] summary.es.qmd[39m[22m
-#> [1m[34m[4/4] references.es.qmd[39m[22m
+#> index.es.qmd
+#> intro.es.qmd
+#> summary.es.qmd
+#> references.es.qmd
 #> 
 #> Output created: _book/index.es.html
 #> 
-#> [1m[34m[1/4] index.fr.qmd[39m[22m
-#> [1m[34m[2/4] intro.fr.qmd[39m[22m
-#> [1m[34m[3/4] summary.fr.qmd[39m[22m
-#> [1m[34m[4/4] references.fr.qmd[39m[22m
+#> index.fr.qmd
+#> intro.fr.qmd
+#> summary.fr.qmd
+#> references.fr.qmd
 #> 
 #> Output created: _book/index.fr.html
 ```
