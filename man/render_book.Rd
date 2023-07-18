@@ -4,10 +4,12 @@
 \alias{render_book}
 \title{Render a Quarto multilingual book}
 \usage{
-render_book(book_path = ".")
+render_book(book_path = ".", site_url = NULL)
 }
 \arguments{
 \item{book_path}{Path where the book source is located}
+
+\item{site_url}{Base URL of the book.}
 }
 \description{
 Render a Quarto multilingual book

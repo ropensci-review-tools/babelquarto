@@ -2,6 +2,7 @@ project:
   type: book
 
 book:
+  site-url: https://example.com
   title: "blop"
   author: "Firstname Lastname"
   date: "01/01/2023"
