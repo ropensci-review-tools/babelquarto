@@ -38,15 +38,17 @@ render_book <- function(book_path = ".", site_url = NULL) {
   config <- file.path(book_path, "_quarto.yml")
   config_contents <- yaml::read_yaml(config)
 
-  if (nzchar("BABELQUARTO_TESTS_URL") || !on_ci()) {
-    site_url <- site_url %||% config_contents[["book"]][["site-url"]] %||% ""
-    site_url <- sub("/$", "", site_url)
-  } else {
-    # no end slash
-    # for deploy previews
-    # either root website (Netlify deploys)
-    # or something else
-    site_url <- Sys.getenv("BABELQUARTO_CI_URL", "")
+  if (is.null(site_url)) {
+    if (nzchar("BABELQUARTO_TESTS_URL") || !on_ci()) {
+      site_url <- site_url %||% config_contents[["book"]][["site-url"]] %||% ""
+      site_url <- sub("/$", "", site_url)
+    } else {
+      # no end slash
+      # for deploy previews
+      # either root website (Netlify deploys)
+      # or something else
+      site_url <- Sys.getenv("BABELQUARTO_CI_URL", "")
+    }
   }
 
   output_dir <- config_contents[["project"]][["output-dir"]] %||% "_book"
