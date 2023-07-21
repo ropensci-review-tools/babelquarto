@@ -39,7 +39,7 @@ render_book <- function(book_path = ".", site_url = NULL) {
   config_contents <- yaml::read_yaml(config)
 
   if (is.null(site_url)) {
-    if (nzchar("BABELQUARTO_TESTS_URL") || !on_ci()) {
+    if (nzchar(Sys.getenv("BABELQUARTO_TESTS_URL")) || !on_ci()) {
       site_url <- site_url %||% config_contents[["book"]][["site-url"]] %||% ""
       site_url <- sub("/$", "", site_url)
     } else {
