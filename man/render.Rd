@@ -2,20 +2,25 @@
 % Please edit documentation in R/render.R
 \name{render_book}
 \alias{render_book}
-\title{Render a Quarto multilingual book}
+\alias{render_website}
+\title{Render a Quarto multilingual project}
 \usage{
 render_book(book_path = ".", site_url = NULL)
+
+render_website(website_path = ".", site_url = NULL)
 }
 \arguments{
 \item{book_path}{Path where the book source is located}
 
-\item{site_url}{Base URL of the book.}
+\item{site_url}{Base URL of the book/website.}
+
+\item{website_path}{Path where the website source is located}
 }
 \description{
-Render a Quarto multilingual book
+Render a Quarto multilingual project
 }
 \details{
-babelquarto expects a book folder with
+babelquarto expects a book/website folder with
 each qmd/Rmd present in as many languages as needed,
 with the same basename but,
 \itemize{
@@ -23,7 +28,9 @@ with the same basename but,
 \item once with \code{.es.qmd} (using the language code) for each other language.
 }
 
-You also need to register the language in the configuration file:
+You also need to register the language in the configuration file,
+see \code{\link[=register_main_language]{register_main_language()}}
+and \code{\link[=register_further_languages]{register_further_languages()}}:
 
 \if{html}{\out{<div class="sourceCode yaml">}}\preformatted{babelquarto:
   mainlanguage: 'en'

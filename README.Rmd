@@ -19,11 +19,14 @@ knitr::opts_chunk$set(
 [![R-CMD-check](https://github.com/ropensci-review-tools/quartobabel/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ropensci-review-tools/quartobabel/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-The goal of babelquarto is to render a Quarto multilingual book structured like the 
+The goal of babelquarto is to render a Quarto multilingual project, book or website.
+
+The project has to be structured like the 
 [rOpenSci dev guide](https://devdevguide.netlify.app/):
 
 - each qmd is present once for the main language,
-- and once more for each other language with an extension à la `.es.qmd`
+- and once more for each other language with an extension à la `.es.qmd`; although 
+babelquarto will fall back to the file version in the other language.
 
 ## Installation
 

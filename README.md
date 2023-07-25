@@ -8,12 +8,16 @@
 [![R-CMD-check](https://github.com/ropensci-review-tools/quartobabel/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ropensci-review-tools/quartobabel/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-The goal of babelquarto is to render a Quarto multilingual book
-structured like the [rOpenSci dev
+The goal of babelquarto is to render a Quarto multilingual project, book
+or website.
+
+The project has to be structured like the [rOpenSci dev
 guide](https://devdevguide.netlify.app/):
 
 - each qmd is present once for the main language,
-- and once more for each other language with an extension à la `.es.qmd`
+- and once more for each other language with an extension à la
+  `.es.qmd`; although babelquarto will fall back to the file version in
+  the other language.
 
 ## Installation
 
@@ -43,7 +47,7 @@ readLines(file.path(parent_dir, book_dir, "_quarto.yml"))
 #>  [1] "project:"                          "  type: book"                     
 #>  [3] ""                                  "book:"                            
 #>  [5] "  site-url: https://example.com"   "  title: \"blop\""                
-#>  [7] "  author: \"Maëlle Salmon\""       "  date: \"7/13/2023\""            
+#>  [7] "  author: \"Maëlle Salmon\""       "  date: \"7/25/2023\""            
 #>  [9] "  chapters:"                       "    - index.qmd"                  
 #> [11] "    - intro.qmd"                   "    - summary.qmd"                
 #> [13] "    - references.qmd"              ""                                 
@@ -56,7 +60,7 @@ readLines(file.path(parent_dir, book_dir, "_quarto.yml"))
 #> [27] "description-fr: description in fr" "author-es: author in es"          
 #> [29] "author-fr: author in fr"           "lang: en"
 fs::dir_tree(file.path(parent_dir, book_dir))
-#> /tmp/RtmpCOL4fU/file73c178bdd45/blop
+#> /tmp/RtmpaOPNVU/file104d03c488b6b/blop
 #> ├── _quarto.yml
 #> ├── cover.png
 #> ├── index.es.qmd
@@ -126,8 +130,8 @@ project:
 
 book:
   title: "babelbook"
-  author: "Jane Doe"
-  date: "7/13/2023"
+  author: "Norah Jones"
+  date: "7/25/2023"
   chapters:
     - index.qmd
     - intro.qmd
