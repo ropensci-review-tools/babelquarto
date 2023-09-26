@@ -56,6 +56,6 @@ test_that("render_website() works", {
 
   index <- xml2::read_html(file.path(parent_dir, project_dir, "_site", "index.html"))
   spanish_link <- xml2::xml_find_first(index, '//a[@id="language-link-es"]')
-  expect_equal(xml2::xml_attr(spanish_link, "href"), "https://example.com/es/index.es.html")
+  expect_equal(xml2::xml_attr(spanish_link, "href"), "https://example.com/es/index.html")
 
 })
