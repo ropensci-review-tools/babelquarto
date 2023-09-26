@@ -46,4 +46,10 @@ test_that("register_further_languages() works", {
   expect_snapshot_file(file.path(book_path, "_quarto2.yml"), compare = testthat::compare_file_text)
 
   expect_snapshot(register_further_languages(c("es", "fr"), book_path))
+
+  file.copy(
+    file.path(book_path, "_quarto.yml"),
+    file.path(book_path, "_quarto3.yml")
+  )
+  expect_snapshot_file(file.path(book_path, "_quarto3.yml"), compare = testthat::compare_file_text)
 })
