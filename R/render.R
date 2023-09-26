@@ -82,9 +82,16 @@ render <- function(path = ".", site_url = NULL, type = c("book", "website")) {
   if (fs::dir_exists(output_folder)) fs::dir_delete(output_folder)
 
   # render project ----
-  withr::with_dir(path, {
+  temporary_directory <- withr::local_tempdir()
+  fs::dir_copy(path, temporary_directory)
+  withr::with_dir(file.path(temporary_directory, fs::path_file(path)), {
+    fs::file_delete(fs::dir_ls(regexp = "\\...\\.qmd"))
     quarto::quarto_render(as_job = FALSE)
   })
+  fs::dir_copy(
+    file.path(temporary_directory, fs::path_file(path), output_dir),
+    path
+  )
 
   purrr::walk(
     language_codes,
@@ -150,26 +157,22 @@ render_quarto_lang <- function(language_code, path, output_dir, type) {
   }
 
   if (type == "website") {
-    yaml::write_yaml(config, file.path(temporary_directory, project_name, "_quarto.yml"))
-    config_text <- brio::read_lines(file.path(temporary_directory, project_name, "_quarto.yml"))
-    paths_m <- gregexpr("[a-zA-Z\\-\\_\\.]*\\.qmd", config_text)
-    paths <- unlist(regmatches(config_text, paths_m))
-    # for not to replace twice
-    paths <- paths[order(nchar(paths), decreasing = TRUE)]
 
-    for (qmd_path in paths) {
-      target_path <- fs::path_ext_set(
-        file.path(temporary_directory, project_name, qmd_path),
-        sprintf(".%s.qmd", language_code)
+    # only keep what's needed
+    qmds <- fs::dir_ls(
+      file.path(temporary_directory, fs::path_file(path)),
+      glob = "*.qmd"
+    )
+    language_qmds <- qmds[grepl(sprintf("%s.qmd", language_code), qmds)]
+    fs::file_delete(qmds[!(qmds %in% language_qmds)])
+    for (qmd_path in language_qmds) {
+      fs::file_move(
+        qmd_path,
+        sub(sprintf("%s.qmd", language_code), "qmd", qmd_path)
       )
-      if (fs::file_exists(target_path)) {
-        regex_path <- gsub("\\.", "\\\\.", qmd_path)
-        regex_target_path <- gsub("\\.", "\\\\.", fs::path_file(target_path))
-        config_text <- gsub(regex_path, regex_target_path, config_text)
-      }
     }
 
-    brio::write_lines(config_text, file.path(temporary_directory, project_name, "_quarto.yml"))
+    yaml::write_yaml(config, file.path(temporary_directory, project_name, "_quarto.yml"))
   }
 
   # fix for Boolean that is yes and should be true
@@ -235,11 +238,19 @@ add_link <- function(path, main_language = main_language, language_code, site_ur
   html <- xml2::read_html(path)
 
   if (language_code == main_language) {
-    new_path <- sub("\\..*\\.html", ".html", basename(path))
+    new_path <-  if (type == "book") {
+      sub("\\..*\\.html", ".html", basename(path))
+    } else {
+      basename(path)
+    }
     href <- sprintf("%s/%s", site_url, new_path)
   } else {
     base_path <- sub("\\..*\\.html", ".html", basename(path))
-    new_path <- fs::path_ext_set(base_path, sprintf(".%s.html", language_code))
+    new_path <- if (type == "book") {
+      fs::path_ext_set(base_path, sprintf(".%s.html", language_code))
+    } else {
+      base_path
+    }
     href <- sprintf("%s/%s/%s",site_url, language_code, new_path)
   }
 
