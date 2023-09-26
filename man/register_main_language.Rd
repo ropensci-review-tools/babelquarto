@@ -9,7 +9,7 @@ register_main_language(main_language = "en", project_path = ".")
 \arguments{
 \item{main_language}{Main language code (character, like \code{"en"})}
 
-\item{project_path}{Path where the book source is located}
+\item{project_path}{Path where the book/website source is located}
 }
 \value{
 Nothing

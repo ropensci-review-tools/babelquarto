@@ -10,11 +10,9 @@ render_book(project_path = ".", site_url = NULL)
 render_website(project_path = ".", site_url = NULL)
 }
 \arguments{
-\item{project_path}{Path where the book source is located}
+\item{project_path}{Path where the book/website source is located}
 
 \item{site_url}{Base URL of the book/website.}
-
-\item{website_path}{Path where the website source is located}
 }
 \description{
 Render a Quarto multilingual project
@@ -39,7 +37,7 @@ and \code{\link[=register_further_languages]{register_further_languages()}}:
 }
 \examples{
 directory <- withr::local_tempdir()
-quarto_multilingual_book(parent_dir = directory, book_dir = "blop")
+quarto_multilingual_book(parent_dir = directory, project_dir = "blop")
 render_book(file.path(directory, "blop"))
 \dontrun{
 if (require("servr") && rlang::is_interactive()) {

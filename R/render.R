@@ -20,15 +20,14 @@
 #'
 #' @importFrom rlang `%||%`
 #'
-#' @param project_path Path where the book source is located
-#' @param website_path Path where the website source is located
+#' @param project_path Path where the book/website source is located
 #' @param site_url Base URL of the book/website.
 #'
 #' @export
 #'
 #' @examples
 #' directory <- withr::local_tempdir()
-#' quarto_multilingual_book(parent_dir = directory, book_dir = "blop")
+#' quarto_multilingual_book(parent_dir = directory, project_dir = "blop")
 #' render_book(file.path(directory, "blop"))
 #' \dontrun{
 #' if (require("servr") && rlang::is_interactive()) {
