@@ -111,7 +111,8 @@ render <- function(path = ".", site_url = NULL, type = c("book", "website")) {
       main_language = main_language,
       language_code = .x,
       site_url = site_url,
-      type = type
+      type = type,
+      config = config_contents
     )
   )
 
@@ -126,7 +127,8 @@ render <- function(path = ".", site_url = NULL, type = c("book", "website")) {
         main_language = main_language,
         language_code = .x,
         site_url = site_url,
-        type = type
+        type = type,
+        config = config_contents
         )
     )
   }
@@ -234,8 +236,13 @@ use_lang_chapter <- function(chapters_list, language_code, book_name, directory)
     chapters_list
 }
 
-add_link <- function(path, main_language = main_language, language_code, site_url, type) {
+add_link <- function(path, main_language = main_language, language_code, site_url, type, config) {
   html <- xml2::read_html(path)
+
+  codes <- config[["babelquarto"]][["languagecodes"]]
+  current_lang <- purrr::keep(codes, ~.x[["name"]] == language_code)
+  version_text <- current_lang[[1]][["text"]] %||%
+    sprintf("Version in %s", toupper(language_code))
 
   if (language_code == main_language) {
     new_path <-  if (type == "book") {
@@ -281,7 +288,7 @@ add_link <- function(path, main_language = main_language, language_code, site_ur
     xml2::xml_add_child(
       languages_links,
       "a",
-      sprintf("Version in %s", toupper(language_code)),
+      version_text,
       class = "toc-action",
       href = href,
       id = sprintf("language-link-%s", language_code)
@@ -299,7 +306,7 @@ add_link <- function(path, main_language = main_language, language_code, site_ur
       navbar,
       "a",
       style = "text-decoration: none; color:inherit;",
-      sprintf("Version in %s", toupper(language_code)),
+      version_text,
       class = "nav-item",
       href = href,
       id = sprintf("language-link-%s", language_code),

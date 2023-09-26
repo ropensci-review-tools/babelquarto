@@ -51,11 +51,17 @@ test_that("render_website() works", {
     main_language = "en"
   )
 
+  config_path <- file.path(parent_dir, project_dir, "_quarto.yml")
+  config <- brio::read_lines(config_path)
+  config[config == '    text: "Version in es"'] <- '    text: "Version en Español"'
+  brio::write_lines(config, config_path)
+
   withr::with_dir(parent_dir, render_website(project_dir))
   expect_true(fs::dir_exists(file.path(parent_dir, project_dir, "_site")))
 
   index <- xml2::read_html(file.path(parent_dir, project_dir, "_site", "index.html"))
   spanish_link <- xml2::xml_find_first(index, '//a[@id="language-link-es"]')
   expect_equal(xml2::xml_attr(spanish_link, "href"), "https://example.com/es/index.html")
+  expect_equal(xml2::xml_text(spanish_link), "Version en Español")
 
 })
