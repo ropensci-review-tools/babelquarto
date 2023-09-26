@@ -19,11 +19,14 @@ knitr::opts_chunk$set(
 [![R-CMD-check](https://github.com/ropensci-review-tools/quartobabel/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ropensci-review-tools/quartobabel/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-The goal of babelquarto is to render a Quarto multilingual book structured like the 
+The goal of babelquarto is to render a Quarto multilingual project, book or website.
+
+The project has to be structured like the 
 [rOpenSci dev guide](https://devdevguide.netlify.app/):
 
 - each qmd is present once for the main language,
-- and once more for each other language with an extension à la `.es.qmd`
+- and once more for each other language with an extension à la `.es.qmd`; although 
+babelquarto will fall back to the file version in the other language.
 
 ## Installation
 
@@ -46,14 +49,14 @@ Create a starter/example book.
 
 ```{r}
 parent_dir <- withr::local_tempdir()
-book_dir <- "blop"
-babelquarto::quarto_multilingual_book(parent_dir = parent_dir, book_dir = book_dir)
-readLines(file.path(parent_dir, book_dir, "_quarto.yml"))
-fs::dir_tree(file.path(parent_dir, book_dir))
+project_dir <- "blop"
+babelquarto::quarto_multilingual_book(parent_dir = parent_dir, project_dir = project_dir)
+readLines(file.path(parent_dir, project_dir, "_quarto.yml"))
+fs::dir_tree(file.path(parent_dir, project_dir))
 ```
 
 ```{r, results='hide'}
-babelquarto::render_book(file.path(parent_dir, book_dir))
+babelquarto::render_book(file.path(parent_dir, project_dir))
 ```
 
 We end up with three books, that cross-link to each other from the left sidebar.
@@ -77,12 +80,12 @@ From a book whose main language is English...
 
 ```{r}
 parent_dir <- withr::local_tempdir()
-book_dir <- "babelbook"
+project_dir <- "babelbook"
 quarto_bin <- quarto::quarto_path()
 withr::with_dir(parent_dir, {
   sys::exec_wait(
     quarto_bin,
-    args = c("create-project", book_dir, "--type", "book")
+    args = c("create-project", project_dir, "--type", "book")
   )
 })
 ```
@@ -90,9 +93,9 @@ withr::with_dir(parent_dir, {
 - Register languages in the Quarto configuration, for instance
 
 ```{r}
-book_path <- file.path(parent_dir, book_dir)
-babelquarto::register_main_language(main_language = "en", book_path = book_path)
-babelquarto::register_further_languages(further_languages = "es", book_path = book_path)
+project_path <- file.path(parent_dir, project_dir)
+babelquarto::register_main_language(main_language = "en", project_path = project_path)
+babelquarto::register_further_languages(further_languages = "es", project_path = project_path)
 ```
 
 
@@ -101,7 +104,7 @@ This is how the config file now looks like:
 ````{r, results='asis', echo=FALSE}
 c(
   "```yaml",
-  readLines(file.path(book_path, "_quarto.yml")),
+  readLines(file.path(project_path, "_quarto.yml")),
   "```"
 ) |> 
   paste(collapse = "\n") |> 

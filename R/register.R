@@ -4,8 +4,8 @@
 #' @inheritParams render_book
 #' @return Nothing
 #' @export
-register_main_language <- function(main_language = "en", book_path = ".") {
-  config_path <- file.path(book_path, "_quarto.yml")
+register_main_language <- function(main_language = "en", project_path = ".") {
+  config_path <- file.path(project_path, "_quarto.yml")
 
   config <- yaml::read_yaml(config_path)
   if (!is.null(config[["babelquarto"]][["mainlanguage"]])) {
@@ -41,9 +41,9 @@ register_main_language <- function(main_language = "en", book_path = ".") {
 #' @return Nothing
 #' @export
 #'
-register_further_languages <- function(further_languages, book_path = ".") {
+register_further_languages <- function(further_languages, project_path = ".") {
 
-  config_path <- file.path(book_path, "_quarto.yml")
+  config_path <- file.path(project_path, "_quarto.yml")
 
   config <- yaml::read_yaml(config_path)
   if (!is.null(config[["babelquarto"]][["languages"]])) {

@@ -2,11 +2,21 @@
 % Please edit documentation in R/helper-quarto.R
 \name{quarto_multilingual_book}
 \alias{quarto_multilingual_book}
-\title{Create a starter/example quarto multilingual book}
+\alias{quarto_multilingual_website}
+\title{Create a starter/example quarto multilingual book or website}
 \usage{
 quarto_multilingual_book(
   parent_dir,
-  book_dir,
+  project_dir,
+  main_language = "en",
+  further_languages = c("es", "fr"),
+  register_languages = TRUE,
+  site_url = "https://example.com"
+)
+
+quarto_multilingual_website(
+  parent_dir,
+  project_dir,
   main_language = "en",
   further_languages = c("es", "fr"),
   register_languages = TRUE,
@@ -14,9 +24,9 @@ quarto_multilingual_book(
 )
 }
 \arguments{
-\item{parent_dir}{Folder where to create the book folder.}
+\item{parent_dir}{Folder where to create the project folder.}
 
-\item{book_dir}{Book folder name.}
+\item{project_dir}{Project (book, webiste) folder name.}
 
 \item{main_language}{Code for main languages.}
 
@@ -24,11 +34,12 @@ quarto_multilingual_book(
 
 \item{register_languages}{Whether to register languages (logical).}
 
-\item{site_url}{Site URL for the book/site-url part of the Quarto configuration.}
+\item{site_url}{Site URL for the book/site-url
+or website/site-url part of the Quarto configuration.}
 }
 \value{
-Nothing, creates the book folder.
+The path to the created project.
 }
 \description{
-Create a starter/example quarto multilingual book
+Create a starter/example quarto multilingual book or website
 }
