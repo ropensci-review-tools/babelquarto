@@ -26,13 +26,6 @@ babelquarto:
     text: "Version in fr"
   - name: en
     text: "Version in en"
-  languagecodes:
-  - name: es
-    text: "Version in es"
-  - name: fr
-    text: "Version in fr"
-  - name: en
-    text: "Version in en"
   mainlanguage: 'en'
   languages: ['es', 'fr']
 title-es: title in es
