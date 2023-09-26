@@ -21,13 +21,6 @@ knitr::opts_chunk$set(
 
 The goal of babelquarto is to render a Quarto multilingual project, book or website.
 
-The project has to be structured like the 
-[rOpenSci dev guide](https://devdevguide.netlify.app/):
-
-- each qmd is present once for the main language,
-- and once more for each other language with an extension à la `.es.qmd`; although 
-babelquarto will fall back to the file version in the other language.
-
 ## Installation
 
 You can install the development version of babelquarto from rOpenSci R-universe:
@@ -43,7 +36,7 @@ Or from [GitHub](https://github.com/) with:
 pak::pak("ropensci-review-tools/babelquarto")
 ```
 
-## Example
+## Example book
 
 Create a starter/example book.
 
@@ -62,10 +55,28 @@ babelquarto::render_book(file.path(parent_dir, project_dir))
 We end up with three books, that cross-link to each other from the left sidebar.
 [Example](https://devdevguide.netlify.app).
 
-Note that this does not _translate_ the content!
-Translation tooling will live in [babeldown](https://docs.ropensci.org/babeldown).
 
-### Configure the base URL
+## Example website
+
+
+Create a starter/example website.
+
+```{r}
+parent_dir <- withr::local_tempdir()
+project_dir <- "blop"
+babelquarto::quarto_multilingual_website(parent_dir = parent_dir, project_dir = project_dir)
+readLines(file.path(parent_dir, project_dir, "_quarto.yml"))
+fs::dir_tree(file.path(parent_dir, project_dir))
+```
+
+```{r, results='hide'}
+babelquarto::render_website(file.path(parent_dir, project_dir))
+```
+
+[Example](https://maelle.github.io/babelsite), [source](https://github.com/maelle/babelsite)
+
+
+## Configure the base URL
 
 Use the [usual Quarto field](https://quarto.org/docs/websites/website-tools.html), or use the `site_url` argument of `babelquarto::render_book()`.
 
@@ -74,7 +85,7 @@ book:
   site-url: https://example.com
 ```
 
-### Content translation
+## Content translation
 
 From a book whose main language is English...
 
@@ -138,3 +149,6 @@ author-es: Yo misma
 ```
 
 If these fields do not exist, babelquarto falls back to their text in the main language.
+
+Note that babelquarto does not _translate_ the content!
+Translation tooling lives in [babeldown](https://docs.ropensci.org/babeldown).
