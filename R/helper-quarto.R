@@ -29,6 +29,7 @@ quarto_multilingual_book <- function(parent_dir,
 }
 
 #' @rdname quarto_multilingual_book
+#' @export
 quarto_multilingual_website <- function(parent_dir,
                                        project_dir,
                                        main_language = "en",
