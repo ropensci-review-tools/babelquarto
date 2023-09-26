@@ -82,7 +82,7 @@ render <- function(path = ".", site_url = NULL, type = c("book", "website")) {
   output_folder <- file.path(path, output_dir)
   if (fs::dir_exists(output_folder)) fs::dir_delete(output_folder)
 
-  # render book ----
+  # render project ----
   withr::with_dir(path, {
     quarto::quarto_render(as_job = FALSE)
   })
