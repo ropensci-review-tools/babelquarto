@@ -5,12 +5,12 @@
 \alias{render_website}
 \title{Render a Quarto multilingual project}
 \usage{
-render_book(book_path = ".", site_url = NULL)
+render_book(project_path = ".", site_url = NULL)
 
-render_website(website_path = ".", site_url = NULL)
+render_website(project_path = ".", site_url = NULL)
 }
 \arguments{
-\item{book_path}{Path where the book source is located}
+\item{project_path}{Path where the book source is located}
 
 \item{site_url}{Base URL of the book/website.}
 

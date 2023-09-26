@@ -8,6 +8,8 @@ register_further_languages(further_languages, project_path = ".")
 }
 \arguments{
 \item{further_languages}{Languages to be registered (character vector)}
+
+\item{project_path}{Path where the book source is located}
 }
 \value{
 Nothing

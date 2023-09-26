@@ -20,7 +20,7 @@
 #'
 #' @importFrom rlang `%||%`
 #'
-#' @param book_path Path where the book source is located
+#' @param project_path Path where the book source is located
 #' @param website_path Path where the website source is located
 #' @param site_url Base URL of the book/website.
 #'
@@ -37,13 +37,13 @@
 #' }
 #'
 #' @rdname render
-render_book <- function(book_path = ".", site_url = NULL) {
-  render(path = book_path, site_url = site_url, type = "book")
+render_book <- function(project_path = ".", site_url = NULL) {
+  render(path = project_path, site_url = site_url, type = "book")
 }
 #' @export
 #' @rdname render
-render_website <- function(website_path = ".", site_url = NULL) {
-  render(path = website_path, site_url = site_url, type = "website")
+render_website <- function(project_path = ".", site_url = NULL) {
+  render(path = project_path, site_url = site_url, type = "website")
 }
 render <- function(path = ".", site_url = NULL, type = c("book", "website")) {
   # configuration ----
