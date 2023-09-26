@@ -41,13 +41,14 @@ Create a starter/example book.
 
 ``` r
 parent_dir <- withr::local_tempdir()
-book_dir <- "blop"
-babelquarto::quarto_multilingual_book(parent_dir = parent_dir, book_dir = book_dir)
-readLines(file.path(parent_dir, book_dir, "_quarto.yml"))
+project_dir <- "blop"
+babelquarto::quarto_multilingual_book(parent_dir = parent_dir, project_dir = project_dir)
+#> [1] "/tmp/RtmpnnmNId/filee0edd34d628/blop"
+readLines(file.path(parent_dir, project_dir, "_quarto.yml"))
 #>  [1] "project:"                          "  type: book"                     
 #>  [3] ""                                  "book:"                            
 #>  [5] "  site-url: https://example.com"   "  title: \"blop\""                
-#>  [7] "  author: \"Maëlle Salmon\""       "  date: \"7/25/2023\""            
+#>  [7] "  author: \"Maëlle Salmon\""       "  date: \"9/26/2023\""            
 #>  [9] "  chapters:"                       "    - index.qmd"                  
 #> [11] "    - intro.qmd"                   "    - summary.qmd"                
 #> [13] "    - references.qmd"              ""                                 
@@ -59,8 +60,8 @@ readLines(file.path(parent_dir, book_dir, "_quarto.yml"))
 #> [25] "title-fr: title in fr"             "description-es: description in es"
 #> [27] "description-fr: description in fr" "author-es: author in es"          
 #> [29] "author-fr: author in fr"           "lang: en"
-fs::dir_tree(file.path(parent_dir, book_dir))
-#> /tmp/RtmpaOPNVU/file104d03c488b6b/blop
+fs::dir_tree(file.path(parent_dir, project_dir))
+#> /tmp/RtmpnnmNId/filee0edd34d628/blop
 #> ├── _quarto.yml
 #> ├── cover.png
 #> ├── index.es.qmd
@@ -79,7 +80,7 @@ fs::dir_tree(file.path(parent_dir, book_dir))
 ```
 
 ``` r
-babelquarto::render_book(file.path(parent_dir, book_dir))
+babelquarto::render_book(file.path(parent_dir, project_dir))
 ```
 
 We end up with three books, that cross-link to each other from the left
@@ -103,12 +104,12 @@ From a book whose main language is English…
 
 ``` r
 parent_dir <- withr::local_tempdir()
-book_dir <- "babelbook"
+project_dir <- "babelbook"
 quarto_bin <- quarto::quarto_path()
 withr::with_dir(parent_dir, {
   sys::exec_wait(
     quarto_bin,
-    args = c("create-project", book_dir, "--type", "book")
+    args = c("create-project", project_dir, "--type", "book")
   )
 })
 #> [1] 0
@@ -117,9 +118,9 @@ withr::with_dir(parent_dir, {
 - Register languages in the Quarto configuration, for instance
 
 ``` r
-book_path <- file.path(parent_dir, book_dir)
-babelquarto::register_main_language(main_language = "en", book_path = book_path)
-babelquarto::register_further_languages(further_languages = "es", book_path = book_path)
+project_path <- file.path(parent_dir, project_dir)
+babelquarto::register_main_language(main_language = "en", project_path = project_path)
+babelquarto::register_further_languages(further_languages = "es", project_path = project_path)
 ```
 
 This is how the config file now looks like:
@@ -131,7 +132,7 @@ project:
 book:
   title: "babelbook"
   author: "Norah Jones"
-  date: "7/25/2023"
+  date: "9/26/2023"
   chapters:
     - index.qmd
     - intro.qmd

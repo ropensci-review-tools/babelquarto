@@ -4,12 +4,10 @@
 \alias{register_main_language}
 \title{Register main language in Quarto config}
 \usage{
-register_main_language(main_language = "en", book_path = ".")
+register_main_language(main_language = "en", project_path = ".")
 }
 \arguments{
 \item{main_language}{Main language code (character, like \code{"en"})}
-
-\item{book_path}{Path where the book source is located}
 }
 \value{
 Nothing

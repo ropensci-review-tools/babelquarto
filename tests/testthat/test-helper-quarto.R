@@ -2,7 +2,7 @@ test_that("quarto_multilingual_book() works", {
   parent_dir <- withr::local_tempdir()
   quarto_multilingual_book(
     parent_dir = parent_dir,
-    book_dir = "blop",
+    project_dir = "blop",
     further_languages = c("es", "fr"),
     main_language = "en"
   )
