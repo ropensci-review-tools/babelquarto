@@ -129,7 +129,7 @@ render <- function(path = ".", site_url = NULL, type = c("book", "website")) {
         site_url = site_url,
         type = type,
         config = config_contents
-        )
+      )
     )
   }
 
@@ -200,40 +200,40 @@ render_quarto_lang <- function(language_code, path, output_dir, type) {
 use_lang_chapter <- function(chapters_list, language_code, book_name, directory) {
   withr::local_dir(file.path(directory, book_name))
 
-    original_chapters_list <- chapters_list
+  original_chapters_list <- chapters_list
 
-    if (is.list(chapters_list)) {
-      # part translation
-      chapters_list[["part"]] <- chapters_list[[sprintf("part-%s", language_code)]] %||%
-        chapters_list[["part"]]
+  if (is.list(chapters_list)) {
+    # part translation
+    chapters_list[["part"]] <- chapters_list[[sprintf("part-%s", language_code)]] %||%
+      chapters_list[["part"]]
 
-      # chapters translation
+    # chapters translation
 
-      chapters_list$chapters <- gsub("\\.Rmd", sprintf(".%s.Rmd", language_code), chapters_list$chapters)
-      chapters_list$chapters <- gsub("\\.qmd", sprintf(".%s.qmd", language_code), chapters_list$chapters)
-      if (any(!fs::file_exists(chapters_list$chapters))) {
-        chapters_not_translated <- !fs::file_exists(chapters_list$chapters)
-        fs::file_move(
-          original_chapters_list$chapters[chapters_not_translated],
-          gsub("\\.Rmd", sprintf(".%s.Rmd", language_code) ,
-            gsub(
-              "\\.qmd", sprintf(".%s.qmd", language_code),
-              original_chapters_list$chapters[chapters_not_translated])
-            )
+    chapters_list$chapters <- gsub("\\.Rmd", sprintf(".%s.Rmd", language_code), chapters_list$chapters)
+    chapters_list$chapters <- gsub("\\.qmd", sprintf(".%s.qmd", language_code), chapters_list$chapters)
+    if (any(!fs::file_exists(chapters_list$chapters))) {
+      chapters_not_translated <- !fs::file_exists(chapters_list$chapters)
+      fs::file_move(
+        original_chapters_list$chapters[chapters_not_translated],
+        gsub("\\.Rmd", sprintf(".%s.Rmd", language_code) ,
+          gsub(
+            "\\.qmd", sprintf(".%s.qmd", language_code),
+            original_chapters_list$chapters[chapters_not_translated])
         )
-      }
-    } else {
-      chapters_list <- gsub("\\.Rmd", sprintf(".%s.Rmd", language_code), chapters_list)
-      chapters_list <- gsub("\\.qmd", sprintf(".%s.qmd", language_code), chapters_list)
-      if (!fs::file_exists(file.path(directory, book_name, chapters_list))) {
-        fs::file_move(
-          original_chapters_list,
-          chapters_list
-        )
-      }
+      )
     }
+  } else {
+    chapters_list <- gsub("\\.Rmd", sprintf(".%s.Rmd", language_code), chapters_list)
+    chapters_list <- gsub("\\.qmd", sprintf(".%s.qmd", language_code), chapters_list)
+    if (!fs::file_exists(file.path(directory, book_name, chapters_list))) {
+      fs::file_move(
+        original_chapters_list,
+        chapters_list
+      )
+    }
+  }
 
-    chapters_list
+  chapters_list
 }
 
 add_link <- function(path, main_language = main_language, language_code, site_url, type, config) {
@@ -241,8 +241,13 @@ add_link <- function(path, main_language = main_language, language_code, site_ur
 
   codes <- config[["babelquarto"]][["languagecodes"]]
   current_lang <- purrr::keep(codes, ~.x[["name"]] == language_code)
-  version_text <- current_lang[[1]][["text"]] %||%
+
+  version_text <- if (length(current_lang) > 0) {
+    current_lang[[1]][["text"]] %||%
+      sprintf("Version in %s", toupper(language_code))
+  } else {
     sprintf("Version in %s", toupper(language_code))
+  }
 
   if (language_code == main_language) {
     new_path <-  if (type == "book") {
