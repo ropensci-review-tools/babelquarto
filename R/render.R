@@ -146,6 +146,13 @@ render_quarto_lang <- function(language_code, path, output_dir, type) {
   config[[type]][["title"]] <- config[[sprintf("title-%s", language_code)]] %||% config[[type]][["title"]]
   config[[type]][["description"]] <- config[[sprintf("description-%s", language_code)]] %||% config[[type]][["description"]]
 
+  # overwrite some fields with language-specific fields
+  language_specific_fields <- config[[sprintf("^babelquarto-%s", language_code)]]
+  if (length(language_specific_fields) > 0) {
+    config <- config[names(config) != sprintf("^babelquarto-%s", language_code)]
+    config <- utils::modifyList(config, language_specific_fields)
+  }
+
   if (type == "book") {
     config[[type]][["author"]] <- config[[sprintf("author-%s", language_code)]] %||% config[[type]][["author"]]
     config[["book"]][["chapters"]] <- purrr::map(
