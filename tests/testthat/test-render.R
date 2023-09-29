@@ -86,7 +86,11 @@ test_that("render_website() works -- specific language fields", {
     "",
     "babelquarto-ja:",
     "  website:",
-    "    title: ニッタ ジョエル"
+    "    title: ニッタ ジョエル",
+    "    navbar:",
+    "      left:",
+    "      - href: about.qmd",
+    "        text: 発表"
   )
   brio::write_lines(config, config_path)
 
@@ -96,4 +100,7 @@ test_that("render_website() works -- specific language fields", {
   ja_index <- xml2::read_html(file.path(parent_dir, project_dir, "_site", "ja", "index.html"))
   ja_title <- xml2::xml_find_first(ja_index, "//span[@class='navbar-title']")
   expect_equal(xml2::xml_text(ja_title), "ニッタ ジョエル")
+
+  navbar_links <- xml2::xml_find_all(ja_index, "//a[@class='nav-link']")
+  expect_equal(xml2::xml_text(tail(navbar_links, n = 1)), "発表")
 })
