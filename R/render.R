@@ -173,15 +173,14 @@ render_quarto_lang <- function(language_code, path, output_dir, type) {
         sub(sprintf("%s.qmd", language_code), "qmd", qmd_path)
       )
     }
-
+    # Replace TRUE and FALSE with 'true' and 'false'
+    # to avoid converting to "yes" and "no"
+    config <- replace_true_false(config)
+    
     yaml::write_yaml(config, file.path(temporary_directory, project_name, "_quarto.yml"))
   }
 
-  # fix for Boolean that is yes and should be true
   config_lines <- brio::read_lines(file.path(temporary_directory, project_name, "_quarto.yml"))
-  config_lines[grepl("code-link", config_lines)] <- sub("yes", "true", config_lines[grepl("code-link", config_lines)])
-  config_lines[grepl("reader-mode", config_lines)] <- sub("yes", "true", config_lines[grepl("reader-mode", config_lines)])
-  config_lines[grepl("toc", config_lines)] <- sub("yes", "true", config_lines[grepl("toc", config_lines)])
   brio::write_lines(config_lines, file.path(temporary_directory, project_name, "_quarto.yml"))
 
   # Render language book
