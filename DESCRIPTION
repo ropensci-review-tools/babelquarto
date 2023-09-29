@@ -4,7 +4,9 @@ Version: 0.0.0.9000
 Authors@R: c(
     person("Maëlle", "Salmon", , "msmaellesalmon@gmail.com", role = c("cre", "aut"),
            comment = c(ORCID = "0000-0002-2815-0399")),
-    person("Johannes", "Ranke", role = "ctb")
+    person("Johannes", "Ranke", role = "ctb"),
+    person(given = "Joel H.", family = "Nitta", email = "joelnitta@gmail.com",
+           role = "ctb", comment = c(ORCID = "0000-0003-4719-7472"))
   )
 Description: Automate rendering and cross-linking of Quarto books following a 
     prescribed structure.
