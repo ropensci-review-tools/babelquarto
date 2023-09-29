@@ -65,3 +65,35 @@ test_that("render_website() works", {
   expect_equal(xml2::xml_text(spanish_link), "Version en Español")
 
 })
+
+
+test_that("render_website() works -- specific language fields", {
+  withr::local_envvar("BABELQUARTO_TESTS_URL" = "true")
+
+  parent_dir <- withr::local_tempdir()
+  project_dir <- "blop"
+  quarto_multilingual_website(
+    parent_dir = parent_dir,
+    project_dir = project_dir,
+    further_languages = "ja",
+    main_language = "en"
+  )
+
+  config_path <- file.path(parent_dir, project_dir, "_quarto.yml")
+  config <- brio::read_lines(config_path)
+  config <- c(
+    config,
+    "",
+    "babelquarto-ja:",
+    "  website:",
+    "    title: ニッタ ジョエル"
+  )
+  brio::write_lines(config, config_path)
+
+  withr::with_dir(parent_dir, render_website(project_dir))
+  expect_true(fs::dir_exists(file.path(parent_dir, project_dir, "_site")))
+
+  ja_index <- xml2::read_html(file.path(parent_dir, project_dir, "_site", "ja", "index.html"))
+  ja_title <- xml2::xml_find_first(ja_index, "//span[@class='navbar-title']")
+  expect_equal(xml2::xml_text(ja_title), "ニッタ ジョエル")
+})
