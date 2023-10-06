@@ -149,8 +149,7 @@ render_quarto_lang <- function(language_code, path, output_dir, type) {
   # overwrite some fields with language-specific fields
   language_specific_fields <- config[[sprintf("babelquarto-%s", language_code)]]
   if (length(language_specific_fields) > 0) {
-    config <- config[names(config) != sprintf("babelquarto-%s", language_code)]
-    config <- utils::modifyList(config, language_specific_fields)
+    config <- babelquarto_modify_list(config, language_specific_fields)
   }
 
   if (type == "book") {
