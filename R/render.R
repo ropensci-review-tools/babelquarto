@@ -312,7 +312,7 @@ add_link <- function(path, main_language = main_language, language_code, site_ur
     xml2::xml_add_child(
       navbar,
       "a",
-      style = "text-decoration: none; color: inherit; padding-right: 5px;",
+      style = "text-decoration: none; color: inherit; padding: 0.5em;",
       version_text,
       class = "nav-item",
       href = href,
