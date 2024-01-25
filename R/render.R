@@ -288,12 +288,20 @@ add_link <- function(path, main_language = main_language, language_code, site_ur
       xml2::xml_add_child(
         parent,
         "button",
-        "Other languages",
+        "",
         class = "btn btn-primary dropdown-toggle",
         type="button",
         `data-bs-toggle` = "dropdown",
-        `aria-expanded` = "false"
+        `aria-expanded` = "false",
+        id = "languages-button"
       )
+
+      xml2::xml_add_child(
+        xml2::xml_find_first(html, "//button[@id='languages-button']"),
+        "i",
+        class = "bi bi-globe2"
+      )
+
       xml2::xml_add_child(
         parent,
         "ul",
