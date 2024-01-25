@@ -85,6 +85,21 @@ book:
   site-url: https://example.com
 ```
 
+## Configure the version text
+
+If you want the choice to be between, say "English" and "Español" rather than "Version in EN" and "Version in ES", add these fields under the babelquarto YAML key, in `_quarto.yml`:
+
+```yaml
+babelquarto:
+  languagecodes:
+  - name: es
+    text: "Español"
+  - name: en
+    text: "English"
+```
+
+Using `babelquarto::register_main_language()` and `babelquarto::register_further_languages()` will create the boilertemplate for these fields.
+
 ## Content translation
 
 From a book whose main language is English...
