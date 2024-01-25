@@ -2,29 +2,31 @@
 
     Code
       register_main_language("fr", book_path)
-    Error <rlang_error>
-      Can't register fr as main language.
+    Condition
+      Error in `register_main_language()`:
+      ! Can't register fr as main language.
       Main language registered as en.
 
 ---
 
     Code
       register_main_language("en", book_path)
-    Message <cliMessage>
+    Message
       i Main language already registered.
 
 # register_further_languages() works
 
     Code
       register_further_languages(c("es", "fr"), book_path)
-    Error <rlang_error>
-      Can't register further languages before a main language
+    Condition
+      Error in `register_further_languages()`:
+      ! Can't register further languages before a main language
       i Call `register_main_language()` first.
 
 ---
 
     Code
       register_further_languages(c("es", "fr"), book_path)
-    Message <cliMessage>
+    Message
       i All languages already registered.
 
