@@ -326,16 +326,60 @@ add_link <- function(path, main_language = main_language, language_code, site_ur
     )
 
   } else {
-    navbar <- xml2::xml_find_first(html, "//div[@id='navbarCollapse']")
+
+    languages_links <- xml2::xml_find_first(html, "//ul[@id='languages-links']")
+    languages_links_div_exists <- (length(languages_links) > 0)
+
+    if (!languages_links_div_exists) {
+      navbar <- xml2::xml_find_first(html, "//div[@id='navbarCollapse']")
+
+      xml2::xml_add_child(
+        navbar,
+        "div",
+        class = "dropdown",
+        id = "languages-links-parent",
+        .where = 0
+      )
+
+      parent <- xml2::xml_find_first(html, "//div[@id='languages-links-parent']")
+      xml2::xml_add_child(
+        parent,
+        "button",
+        "",
+        class = "btn btn-primary dropdown-toggle",
+        type="button",
+        `data-bs-toggle` = "dropdown",
+        `aria-expanded` = "false",
+        id = "languages-button"
+      )
+
+      xml2::xml_add_child(
+        xml2::xml_find_first(html, "//button[@id='languages-button']"),
+        "i",
+        class = "bi bi-globe2"
+      )
+
+      xml2::xml_add_child(
+        parent,
+        "ul",
+        class = "dropdown-menu",
+        id = "languages-links"
+      )
+
+      languages_links <- xml2::xml_find_first(html, "//ul[@id='languages-links']")
+    }
     xml2::xml_add_child(
-      navbar,
+      languages_links,
       "a",
-      style = "text-decoration: none; color:inherit;",
       version_text,
-      class = "nav-item",
+      class = "dropdown-item",
       href = href,
       id = sprintf("language-link-%s", language_code),
       .where = 0
+    )
+    xml2::xml_add_parent(
+      xml2::xml_find_first(html, sprintf("//a[@id='language-link-%s']", language_code)),
+      "li"
     )
   }
 
