@@ -1,14 +1,16 @@
-#' Render a Quarto multilingual book
+#' Render a Quarto multilingual project
 #'
 #' @importFrom rlang `%||%`
 #'
-#' @details babelquarto expects a book folder with
+#' @details babelquarto expects a book/website folder with
 #' each qmd/Rmd present in as many languages as needed,
 #' with the same basename but,
 #' - once with only `.qmd` as extension for the main language,
 #' - once with `.es.qmd` (using the language code) for each other language.
 #'
-#' You also need to register the language in the configuration file:
+#' You also need to register the language in the configuration file,
+#' see [babelquarto::register_main_language()]
+#' and [babelquarto::register_further_languages()]:
 #'
 #' ```yaml
 #' babelquarto:
@@ -18,13 +20,14 @@
 #'
 #' @importFrom rlang `%||%`
 #'
-#' @param book_path Path where the book source is located
+#' @param project_path Path where the book/website source is located
+#' @param site_url Base URL of the book/website.
 #'
 #' @export
 #'
 #' @examples
 #' directory <- withr::local_tempdir()
-#' quarto_multilingual_book(parent_dir = directory, book_dir = "blop")
+#' quarto_multilingual_book(parent_dir = directory, project_dir = "blop")
 #' render_book(file.path(directory, "blop"))
 #' \dontrun{
 #' if (require("servr") && rlang::is_interactive()) {
@@ -32,12 +35,39 @@
 #' }
 #' }
 #'
-render_book <- function(book_path = ".") {
+#' @rdname render
+render_book <- function(project_path = ".", site_url = NULL) {
+  render(path = project_path, site_url = site_url, type = "book")
+}
+#' @export
+#' @rdname render
+render_website <- function(project_path = ".", site_url = NULL) {
+  render(path = project_path, site_url = site_url, type = "website")
+}
+render <- function(path = ".", site_url = NULL, type = c("book", "website")) {
   # configuration ----
-  config <- file.path(book_path, "_quarto.yml")
+  config <- file.path(path, "_quarto.yml")
   config_contents <- yaml::read_yaml(config)
 
-  output_dir <- config_contents[["project"]][["output-dir"]] %||% "_book"
+  if (is.null(site_url)) {
+    if (nzchar(Sys.getenv("BABELQUARTO_TESTS_URL")) || !on_ci()) {
+      site_url <- site_url %||% config_contents[[type]][["site-url"]] %||% ""
+      site_url <- sub("/$", "", site_url)
+    } else {
+      # no end slash
+      # for deploy previews
+      # either root website (Netlify deploys)
+      # or something else
+      site_url <- Sys.getenv("BABELQUARTO_CI_URL", "")
+    }
+  }
+
+  output_dir <- config_contents[["project"]][["output-dir"]] %||%
+    switch(
+      type,
+      book = "_book",
+      website = "_site"
+    )
 
   language_codes <- config_contents[["babelquarto"]][["languages"]]
   if (is.null(language_codes)) {
@@ -48,19 +78,27 @@ render_book <- function(book_path = ".") {
     cli::cli_abort("Can't find {.field babelquarto/mainlanguage} in {.field _quarto.yml}")
   }
 
-  book_output_folder <- file.path(book_path, output_dir)
-  if (fs::dir_exists(book_output_folder)) fs::dir_delete(book_output_folder)
+  output_folder <- file.path(path, output_dir)
+  if (fs::dir_exists(output_folder)) fs::dir_delete(output_folder)
 
-  # render book ----
-  withr::with_dir(book_path, {
+  # render project ----
+  temporary_directory <- withr::local_tempdir()
+  fs::dir_copy(path, temporary_directory)
+  withr::with_dir(file.path(temporary_directory, fs::path_file(path)), {
+    fs::file_delete(fs::dir_ls(regexp = "\\...\\.qmd"))
     quarto::quarto_render(as_job = FALSE)
   })
+  fs::dir_copy(
+    file.path(temporary_directory, fs::path_file(path), output_dir),
+    path
+  )
 
   purrr::walk(
     language_codes,
-    render_quarto_lang_book,
-    book_path = book_path,
-    output_dir = output_dir
+    render_quarto_lang,
+    path = path,
+    output_dir = output_dir,
+    type = type
   )
 
   # Add the language switching link to the sidebar ----
@@ -68,11 +106,13 @@ render_book <- function(book_path = ".") {
   purrr::walk(
     language_codes,
     ~ purrr::walk(
-      fs::dir_ls(book_output_folder, glob = "*.html", recurse = TRUE),
+      fs::dir_ls(output_folder, glob = "*.html"),
       add_link,
       main_language = main_language,
       language_code = .x,
-      main_language
+      site_url = site_url,
+      type = type,
+      config = config_contents
     )
   )
 
@@ -82,60 +122,78 @@ render_book <- function(book_path = ".") {
     purrr::walk(
       languages_to_add,
       ~ purrr::walk(
-        fs::dir_ls(file.path(book_output_folder, other_lang), glob = "*.html", recurse = TRUE),
+        fs::dir_ls(file.path(output_folder, other_lang), glob = "*.html"),
         add_link,
         main_language = main_language,
         language_code = .x,
-        current_code = other_lang
+        site_url = site_url,
+        type = type,
+        config = config_contents
       )
     )
   }
 }
 
-
-render_quarto_lang_book <- function(language_code, book_path, output_dir) {
+render_quarto_lang <- function(language_code, path, output_dir, type) {
 
   temporary_directory <- withr::local_tempdir()
-  fs::dir_copy(book_path, temporary_directory)
-  book_name <- fs::path_file(book_path)
+  fs::dir_copy(path, temporary_directory)
+  project_name <- fs::path_file(path)
 
-  config <- yaml::read_yaml(file.path(temporary_directory, book_name, "_quarto.yml"))
+  config <- yaml::read_yaml(file.path(temporary_directory, project_name, "_quarto.yml"))
   config$lang <- language_code
-  config[["book"]][["title"]] <- config[[sprintf("title-%s", language_code)]] %||% config[["book"]][["title"]]
-  config[["book"]][["author"]] <- config[[sprintf("author-%s", language_code)]] %||% config[["book"]][["author"]]
-  config[["book"]][["description"]] <- config[[sprintf("description-%s", language_code)]] %||% config[["book"]][["description"]]
+  config[[type]][["title"]] <- config[[sprintf("title-%s", language_code)]] %||% config[[type]][["title"]]
+  config[[type]][["description"]] <- config[[sprintf("description-%s", language_code)]] %||% config[[type]][["description"]]
 
-  config$book$chapters <- purrr::map(
-    config$book$chapters,
-    use_lang_chapter,
-    language_code = language_code,
-    book_name = book_name,
-    directory = temporary_directory
-  )
+  if (type == "book") {
+    config[[type]][["author"]] <- config[[sprintf("author-%s", language_code)]] %||% config[[type]][["author"]]
+    config[["book"]][["chapters"]] <- purrr::map(
+      config[["book"]][["chapters"]],
+      use_lang_chapter,
+      language_code = language_code,
+      book_name = project_name,
+      directory = temporary_directory
+    )
+    # Replace TRUE and FALSE with 'true' and 'false'
+    # to avoid converting to "yes" and "no"
+    config <- replace_true_false(config)
+    yaml::write_yaml(config, file.path(temporary_directory, project_name, "_quarto.yml"))
+  }
 
-  config$book$navbar$left <- purrr::map(
-    config$book$navbar$left,
-    use_lang_navbar,
-    language_code = language_code
-  )
+  if (type == "website") {
 
-  yaml::write_yaml(config, file.path(temporary_directory, book_name, "_quarto.yml"))
+    # only keep what's needed
+    qmds <- fs::dir_ls(
+      file.path(temporary_directory, fs::path_file(path)),
+      glob = "*.qmd"
+    )
+    language_qmds <- qmds[grepl(sprintf("%s.qmd", language_code), qmds)]
+    fs::file_delete(qmds[!(qmds %in% language_qmds)])
+    for (qmd_path in language_qmds) {
+      fs::file_move(
+        qmd_path,
+        sub(sprintf("%s.qmd", language_code), "qmd", qmd_path)
+      )
+    }
+    # Replace TRUE and FALSE with 'true' and 'false'
+    # to avoid converting to "yes" and "no"
+    config <- replace_true_false(config)
 
-  # fix for Boolean that is yes and should be true
-  config_lines <- brio::read_lines(file.path(temporary_directory, book_name, "_quarto.yml"))
-  config_lines[grepl("code-link", config_lines)] <- sub("yes", "true", config_lines[grepl("code-link", config_lines)])
-  config_lines[grepl("reader-mode", config_lines)] <- sub("yes", "true", config_lines[grepl("reader-mode", config_lines)])
-  brio::write_lines(config_lines, file.path(temporary_directory, book_name, "_quarto.yml"))
+    yaml::write_yaml(config, file.path(temporary_directory, project_name, "_quarto.yml"))
+  }
+
+  config_lines <- brio::read_lines(file.path(temporary_directory, project_name, "_quarto.yml"))
+  brio::write_lines(config_lines, file.path(temporary_directory, project_name, "_quarto.yml"))
 
   # Render language book
-  withr::with_dir(file.path(temporary_directory, book_name), {
+  withr::with_dir(file.path(temporary_directory, project_name), {
     quarto::quarto_render(as_job = FALSE)
   })
 
   # Copy it to local not temporary _book/<language-code>
   fs::dir_copy(
-    file.path(temporary_directory, book_name, output_dir),
-    file.path(book_path, output_dir, language_code)
+    file.path(temporary_directory, project_name, output_dir),
+    file.path(path, output_dir, language_code)
   )
 
 }
@@ -143,116 +201,191 @@ render_quarto_lang_book <- function(language_code, book_path, output_dir) {
 use_lang_chapter <- function(chapters_list, language_code, book_name, directory) {
   withr::local_dir(file.path(directory, book_name))
 
-    original_chapters_list <- chapters_list
+  original_chapters_list <- chapters_list
 
-    if (is.list(chapters_list)) {
-      # part translation
-      chapters_list[["part"]] <- chapters_list[[sprintf("part-%s", language_code)]] %||%
-        chapters_list[["part"]]
+  if (is.list(chapters_list)) {
+    # part translation
+    chapters_list[["part"]] <- chapters_list[[sprintf("part-%s", language_code)]] %||%
+      chapters_list[["part"]]
 
-      # chapters translation
+    # chapters translation
 
-      chapters_list$chapters <- gsub("\\.Rmd", sprintf(".%s.Rmd", language_code), chapters_list$chapters)
-      chapters_list$chapters <- gsub("\\.qmd", sprintf(".%s.qmd", language_code), chapters_list$chapters)
-      if (any(!fs::file_exists(chapters_list$chapters))) {
-        chapters_not_translated <- !fs::file_exists(chapters_list$chapters)
-        fs::file_move(
-          original_chapters_list$chapters[chapters_not_translated],
-          gsub("\\.Rmd", sprintf(".%s.Rmd", language_code) ,
-            gsub(
-              "\\.qmd", sprintf(".%s.qmd", language_code),
-              original_chapters_list$chapters[chapters_not_translated])
-            )
+    chapters_list$chapters <- gsub("\\.Rmd", sprintf(".%s.Rmd", language_code), chapters_list$chapters)
+    chapters_list$chapters <- gsub("\\.qmd", sprintf(".%s.qmd", language_code), chapters_list$chapters)
+    if (any(!fs::file_exists(chapters_list$chapters))) {
+      chapters_not_translated <- !fs::file_exists(chapters_list$chapters)
+      fs::file_move(
+        original_chapters_list$chapters[chapters_not_translated],
+        gsub("\\.Rmd", sprintf(".%s.Rmd", language_code) ,
+          gsub(
+            "\\.qmd", sprintf(".%s.qmd", language_code),
+            original_chapters_list$chapters[chapters_not_translated])
         )
-      }
-    } else {
-      chapters_list <- gsub("\\.Rmd", sprintf(".%s.Rmd", language_code), chapters_list)
-      chapters_list <- gsub("\\.qmd", sprintf(".%s.qmd", language_code), chapters_list)
-      if (!fs::file_exists(file.path(directory, book_name, chapters_list))) {
-        fs::file_move(
-          original_chapters_list,
-          chapters_list
-        )
-      }
+      )
     }
+  } else {
+    chapters_list <- gsub("\\.Rmd", sprintf(".%s.Rmd", language_code), chapters_list)
+    chapters_list <- gsub("\\.qmd", sprintf(".%s.qmd", language_code), chapters_list)
+    if (!fs::file_exists(file.path(directory, book_name, chapters_list))) {
+      fs::file_move(
+        original_chapters_list,
+        chapters_list
+      )
+    }
+  }
 
-    chapters_list
+  chapters_list
 }
 
-add_link <- function(path, main_language = main_language, language_code, current_code) {
+add_link <- function(path, main_language = main_language, language_code, site_url, type, config) {
   html <- xml2::read_html(path)
 
-  left_sidebar <- xml2::xml_find_first(html, "//div[@class='sidebar-menu-container']")
+  codes <- config[["babelquarto"]][["languagecodes"]]
+  current_lang <- purrr::keep(codes, ~.x[["name"]] == language_code)
 
-  languages_links_div_exists <- (length(xml2::xml_find_first(html, "//div[@id='languages-links']")) > 0)
-
-  if (!languages_links_div_exists) {
-    xml2::xml_add_sibling(
-      left_sidebar,
-      "div",
-      class = "sidebar-menu-container",
-      id = "languages-links",
-      .where = "before"
-    )
-    xml2::xml_add_child(
-      xml2::xml_find_first(html, "//div[@id='languages-links']"),
-      "ul",
-      class = "list-unstyled mt-1",
-      id = "language-links-ul"
-    )
+  version_text <- if (length(current_lang) > 0) {
+    current_lang[[1]][["text"]] %||%
+      sprintf("Version in %s", toupper(language_code))
+  } else {
+    sprintf("Version in %s", toupper(language_code))
   }
 
-  languages_links <- xml2::xml_find_first(html, "//ul[@id='language-links-ul']")
-  base_dir <- dirname(path)
-
-  if (language_code == main_language) { 
-    new_path <- sub("\\..*\\.html", ".html", basename(path))
-    result <- strsplit(base_dir, "/_book/[a-zA-Z]{2}/")[[1]][2]
-    if (is.na(result[[1]])) {
-      href <- sprintf("/%s", new_path)
+  if (language_code == main_language) {
+    new_path <-  if (type == "book") {
+      sub("\\..*\\.html", ".html", basename(path))
     } else {
-      href <- sprintf("/%s/%s", result, new_path)
+      basename(path)
     }
-  } else { # creating a link for alternative
+    href <- sprintf("%s/%s", site_url, new_path)
+  } else {
     base_path <- sub("\\..*\\.html", ".html", basename(path))
-    new_path <- fs::path_ext_set(base_path, sprintf(".%s.html", language_code))
-    result <- strsplit(base_dir, "/_book/")[[1]][2]
-    if (is.na(result[[1]])) {
-      href <- sprintf("/%s/%s", language_code, new_path)
+    new_path <- if (type == "book") {
+      fs::path_ext_set(base_path, sprintf(".%s.html", language_code))
     } else {
-      href <- sprintf("/%s/%s/%s", language_code, result, new_path)
+      base_path
     }
+    href <- sprintf("%s/%s/%s", site_url, language_code, new_path)
   }
 
-  xml2::xml_add_child(
-    languages_links,
-    "a",
-    sprintf("Version in %s", toupper(language_code)),
-    class = "toc-action",
-    href = href,
-    id = sprintf("language-link-%s", language_code)
-  )
+  if (type == "book") {
 
-  # Check previous links and remove if the previous link's language code matches the specified code
-  previous_link_items <- xml2::xml_find_all(html, "//li[starts-with(@id, 'language-link-li-')]")
-  for (prev_link_item in previous_link_items) {
-    prev_lang_code <- substr(xml2::xml_attr(prev_link_item, "id"), 18, nchar(xml2::xml_attr(prev_link_item, "id")))
-    if (prev_lang_code == current_code) {
-      xml2::xml_remove(prev_link_item)
+    logo <- xml2::xml_find_first(html, "//div[contains(@class,'sidebar-header')]")
+
+    languages_links <- xml2::xml_find_first(html, "//ul[@id='languages-links']")
+    languages_links_div_exists <- (length(languages_links) > 0)
+
+    if (!languages_links_div_exists) {
+      xml2::xml_add_sibling(
+        logo,
+        "div",
+        class = "dropdown",
+        id = "languages-links-parent",
+        .where = "after"
+      )
+
+      parent <- xml2::xml_find_first(html, "//div[@id='languages-links-parent']")
+      xml2::xml_add_child(
+        parent,
+        "button",
+        "",
+        class = "btn btn-primary dropdown-toggle",
+        type="button",
+        `data-bs-toggle` = "dropdown",
+        `aria-expanded` = "false",
+        id = "languages-button"
+      )
+
+      xml2::xml_add_child(
+        xml2::xml_find_first(html, "//button[@id='languages-button']"),
+        "i",
+        class = "bi bi-globe2"
+      )
+
+      xml2::xml_add_child(
+        parent,
+        "ul",
+        class = "dropdown-menu",
+        id = "languages-links"
+      )
+
+      languages_links <- xml2::xml_find_first(html, "//ul[@id='languages-links']")
     }
+
+    xml2::xml_add_child(
+      languages_links,
+      "a",
+      version_text,
+      class = "dropdown-item",
+      href = href,
+      id = sprintf("language-link-%s", language_code)
+    )
+    xml2::xml_add_parent(
+      xml2::xml_find_first(html, sprintf("a[id='%s']", sprintf("language-link-%s", language_code))),
+      "li"
+    )
+
+  } else {
+
+    languages_links <- xml2::xml_find_first(html, "//ul[@id='languages-links']")
+    languages_links_div_exists <- (length(languages_links) > 0)
+
+    if (!languages_links_div_exists) {
+      navbar <- xml2::xml_find_first(html, "//div[@id='navbarCollapse']")
+
+      xml2::xml_add_child(
+        navbar,
+        "div",
+        class = "dropdown",
+        id = "languages-links-parent",
+        .where = 0
+      )
+
+      parent <- xml2::xml_find_first(html, "//div[@id='languages-links-parent']")
+      xml2::xml_add_child(
+        parent,
+        "button",
+        "",
+        class = "btn btn-primary dropdown-toggle",
+        type="button",
+        `data-bs-toggle` = "dropdown",
+        `aria-expanded` = "false",
+        id = "languages-button"
+      )
+
+      xml2::xml_add_child(
+        xml2::xml_find_first(html, "//button[@id='languages-button']"),
+        "i",
+        class = "bi bi-globe2"
+      )
+
+      xml2::xml_add_child(
+        parent,
+        "ul",
+        class = "dropdown-menu",
+        id = "languages-links"
+      )
+
+      languages_links <- xml2::xml_find_first(html, "//ul[@id='languages-links']")
+    }
+    xml2::xml_add_child(
+      languages_links,
+      "a",
+      version_text,
+      class = "dropdown-item",
+      href = href,
+      id = sprintf("language-link-%s", language_code),
+      .where = 0
+    )
+    xml2::xml_add_parent(
+      xml2::xml_find_first(html, sprintf("//a[@id='language-link-%s']", language_code)),
+      "li"
+    )
   }
-
-  just_added_link <- xml2::xml_find_first(html, sprintf("//a[@id='language-link-%s']", language_code))
-  xml2::xml_add_parent(just_added_link, "li", id = sprintf("language-link-li-%s", language_code))
-
-  just_added_link_item <- xml2::xml_find_first(html, sprintf("//li[@id='language-link-li-%s']", language_code))
-  xml2::xml_add_child(just_added_link_item, "span", " ", .where = 0)
-  xml2::xml_add_child(just_added_link_item, "i", class = "bi bi-globe2", .where = 0)
 
   xml2::write_html(html, path)
 }
 
-use_lang_navbar <- function(navbar_left, language_code) {
-  navbar_left <- gsub("\\.qmd", sprintf(".%s.qmd", language_code), navbar_left)
-  navbar_left
+# as in testthat
+on_ci <- function() {
+  isTRUE(as.logical(Sys.getenv("CI", "false")))
 }

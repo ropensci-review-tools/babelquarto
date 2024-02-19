@@ -4,8 +4,8 @@
 #' @inheritParams render_book
 #' @return Nothing
 #' @export
-register_main_language <- function(main_language = "en", book_path = ".") {
-  config_path <- file.path(book_path, "_quarto.yml")
+register_main_language <- function(main_language = "en", project_path = ".") {
+  config_path <- file.path(project_path, "_quarto.yml")
 
   config <- yaml::read_yaml(config_path)
   if (!is.null(config[["babelquarto"]][["mainlanguage"]])) {
@@ -27,6 +27,9 @@ register_main_language <- function(main_language = "en", book_path = ".") {
     config_lines,
     "",
     "babelquarto:",
+    "  languagecodes:",
+    sprintf("  - name: %s", main_language),
+    sprintf('    text: "Version in %s"', main_language),
     sprintf("  mainlanguage: '%s'", main_language),
     sprintf("lang: %s", main_language)
   )
@@ -41,9 +44,9 @@ register_main_language <- function(main_language = "en", book_path = ".") {
 #' @return Nothing
 #' @export
 #'
-register_further_languages <- function(further_languages, book_path = ".") {
+register_further_languages <- function(further_languages, project_path = ".") {
 
-  config_path <- file.path(book_path, "_quarto.yml")
+  config_path <- file.path(project_path, "_quarto.yml")
 
   config <- yaml::read_yaml(config_path)
   if (!is.null(config[["babelquarto"]][["languages"]])) {
@@ -64,7 +67,7 @@ register_further_languages <- function(further_languages, book_path = ".") {
 
   config_lines <- brio::read_lines(config_path)
   config_lines <- config_lines[!grepl("languages\\:", config_lines)]
-  which_main <- which(trimws(config_lines) == "babelquarto:") + 1
+  which_main <- which(grepl("mainlanguage\\:", trimws(config_lines)))
   languages <- sprintf("'%s'",union(config[["babelquarto"]][["languages"]], further_languages))
   config_lines <- append(
     config_lines,
@@ -76,5 +79,19 @@ register_further_languages <- function(further_languages, book_path = ".") {
     ),
     after = which_main
   )
+
+  which_codes <- which(trimws(config_lines) == "languagecodes:")
+  config_lines <- append(
+    config_lines,
+    unlist(purrr::map(
+      further_languages,
+      ~list(
+        sprintf("  - name: %s", .x),
+        sprintf('    text: "Version in %s"', .x)
+      )
+    )),
+    after = which_codes
+  )
+
   brio::write_lines(config_lines, path = config_path)
 }

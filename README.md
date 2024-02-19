@@ -8,12 +8,8 @@
 [![R-CMD-check](https://github.com/ropensci-review-tools/quartobabel/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ropensci-review-tools/quartobabel/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
-The goal of babelquarto is to render a Quarto multilingual book
-structured like the [rOpenSci dev
-guide](https://devdevguide.netlify.app/):
-
-- each qmd is present once for the main language,
-- and once more for each other language with an extension à la `.es.qmd`
+The goal of babelquarto is to render a Quarto multilingual project, book
+or website.
 
 ## Installation
 
@@ -31,31 +27,37 @@ Or from [GitHub](https://github.com/) with:
 pak::pak("ropensci-review-tools/babelquarto")
 ```
 
-## Example
+## Example book
 
 Create a starter/example book.
 
 ``` r
 parent_dir <- withr::local_tempdir()
-babelquarto::quarto_multilingual_book(parent_dir = parent_dir, book_dir = "blop")
-readLines(file.path(parent_dir, "blop", "_quarto.yml"))
+project_dir <- "blop"
+babelquarto::quarto_multilingual_book(parent_dir = parent_dir, project_dir = project_dir)
+#> [1] "/tmp/Rtmp7EEwEI/file13dc91fbfb26a/blop"
+readLines(file.path(parent_dir, project_dir, "_quarto.yml"))
 #>  [1] "project:"                          "  type: book"                     
 #>  [3] ""                                  "book:"                            
-#>  [5] "  title: \"blop\""                 "  author: \"Maëlle Salmon\""      
-#>  [7] "  date: \"6/2/2023\""              "  chapters:"                      
-#>  [9] "    - index.qmd"                   "    - intro.qmd"                  
-#> [11] "    - summary.qmd"                 "    - references.qmd"             
-#> [13] ""                                  "bibliography: references.bib"     
-#> [15] ""                                  "format:"                          
-#> [17] "  html:"                           "    theme: cosmo"                 
-#> [19] ""                                  "babelquarto:"                     
-#> [21] "  mainlanguage: 'en'"              "  languages: ['es', 'fr']"        
-#> [23] "title-es: title in es"             "title-fr: title in fr"            
-#> [25] "description-es: description in es" "description-fr: description in fr"
-#> [27] "author-es: author in es"           "author-fr: author in fr"          
-#> [29] "lang: en"
-fs::dir_tree(file.path(parent_dir, "blop"))
-#> /tmp/Rtmp2xyc3G/file9ed48117a92/blop
+#>  [5] "  site-url: https://example.com"   "  title: \"blop\""                
+#>  [7] "  author: \"Maëlle Salmon\""       "  date: \"1/25/2024\""            
+#>  [9] "  chapters:"                       "    - index.qmd"                  
+#> [11] "    - intro.qmd"                   "    - summary.qmd"                
+#> [13] "    - references.qmd"              ""                                 
+#> [15] "bibliography: references.bib"      ""                                 
+#> [17] "format:"                           "  html:"                          
+#> [19] "    theme: cosmo"                  ""                                 
+#> [21] "babelquarto:"                      "  languagecodes:"                 
+#> [23] "  - name: es"                      "    text: \"Version in es\""      
+#> [25] "  - name: fr"                      "    text: \"Version in fr\""      
+#> [27] "  - name: en"                      "    text: \"Version in en\""      
+#> [29] "  mainlanguage: 'en'"              "  languages: ['es', 'fr']"        
+#> [31] "title-es: title in es"             "title-fr: title in fr"            
+#> [33] "description-es: description in es" "description-fr: description in fr"
+#> [35] "author-es: author in es"           "author-fr: author in fr"          
+#> [37] "lang: en"
+fs::dir_tree(file.path(parent_dir, project_dir))
+#> /tmp/Rtmp7EEwEI/file13dc91fbfb26a/blop
 #> ├── _quarto.yml
 #> ├── cover.png
 #> ├── index.es.qmd
@@ -73,24 +75,101 @@ fs::dir_tree(file.path(parent_dir, "blop"))
 #> └── summary.qmd
 ```
 
-Render it. We end up with three books, that cross-link to each other
-from the left sidebar. [Example](https://devdevguide.netlify.app).
+``` r
+babelquarto::render_book(file.path(parent_dir, project_dir))
+```
 
-Note that this does not *translate* the content! Translation tooling
-will live in [babeldown](https://docs.ropensci.org/babeldown).
+We end up with three books, that cross-link to each other from the left
+sidebar. [Example](https://devdevguide.netlify.app).
 
-### Content translation
+## Example website
+
+Create a starter/example website.
+
+``` r
+parent_dir <- withr::local_tempdir()
+project_dir <- "blop"
+babelquarto::quarto_multilingual_website(parent_dir = parent_dir, project_dir = project_dir)
+#> [1] "/tmp/Rtmp7EEwEI/file13dc9152603cc/blop"
+readLines(file.path(parent_dir, project_dir, "_quarto.yml"))
+#>  [1] "project:"                          "  type: website"                  
+#>  [3] ""                                  "website:"                         
+#>  [5] "  site-url: https://example.com"   "  title: \"blop\""                
+#>  [7] "  navbar:"                         "    left:"                        
+#>  [9] "      - href: index.qmd"           "        text: Home"               
+#> [11] "      - about.qmd"                 ""                                 
+#> [13] "format:"                           "  html:"                          
+#> [15] "    theme: cosmo"                  "    css: styles.css"              
+#> [17] "    toc: true"                     ""                                 
+#> [19] ""                                  ""                                 
+#> [21] ""                                  "babelquarto:"                     
+#> [23] "  languagecodes:"                  "  - name: es"                     
+#> [25] "    text: \"Version in es\""       "  - name: fr"                     
+#> [27] "    text: \"Version in fr\""       "  - name: en"                     
+#> [29] "    text: \"Version in en\""       "  mainlanguage: 'en'"             
+#> [31] "  languages: ['es', 'fr']"         "title-es: title in es"            
+#> [33] "title-fr: title in fr"             "description-es: description in es"
+#> [35] "description-fr: description in fr" "author-es: author in es"          
+#> [37] "author-fr: author in fr"           "lang: en"
+fs::dir_tree(file.path(parent_dir, project_dir))
+#> /tmp/Rtmp7EEwEI/file13dc9152603cc/blop
+#> ├── _quarto.yml
+#> ├── about.es.qmd
+#> ├── about.fr.qmd
+#> ├── about.qmd
+#> ├── index.es.qmd
+#> ├── index.fr.qmd
+#> ├── index.qmd
+#> └── styles.css
+```
+
+``` r
+babelquarto::render_website(file.path(parent_dir, project_dir))
+```
+
+[Example](https://maelle.github.io/babelsite),
+[source](https://github.com/maelle/babelsite)
+
+## Configure the base URL
+
+Use the [usual Quarto
+field](https://quarto.org/docs/websites/website-tools.html), or use the
+`site_url` argument of `babelquarto::render_book()`.
+
+    book:
+      site-url: https://example.com
+
+## Configure the version text
+
+If you want the choice to be between, say “English” and “Español” rather
+than “Version in EN” and “Version in ES”, add these fields under the
+babelquarto YAML key, in `_quarto.yml`:
+
+``` yaml
+babelquarto:
+  languagecodes:
+  - name: es
+    text: "Español"
+  - name: en
+    text: "English"
+```
+
+Using `babelquarto::register_main_language()` and
+`babelquarto::register_further_languages()` will create the
+boilertemplate for these fields.
+
+## Content translation
 
 From a book whose main language is English…
 
 ``` r
 parent_dir <- withr::local_tempdir()
-book_dir <- "babelbook"
+project_dir <- "babelbook"
 quarto_bin <- quarto::quarto_path()
 withr::with_dir(parent_dir, {
   sys::exec_wait(
     quarto_bin,
-    args = c("create-project", book_dir, "--type", "book")
+    args = c("create-project", project_dir, "--type", "book")
   )
 })
 #> [1] 0
@@ -99,9 +178,9 @@ withr::with_dir(parent_dir, {
 - Register languages in the Quarto configuration, for instance
 
 ``` r
-book_path <- file.path(parent_dir, book_dir)
-babelquarto::register_main_language(main_language = "en", book_path = book_path)
-babelquarto::register_further_languages(further_languages = "es", book_path = book_path)
+project_path <- file.path(parent_dir, project_dir)
+babelquarto::register_main_language(main_language = "en", project_path = project_path)
+babelquarto::register_further_languages(further_languages = "es", project_path = project_path)
 ```
 
 This is how the config file now looks like:
@@ -112,8 +191,8 @@ project:
 
 book:
   title: "babelbook"
-  author: "Jane Doe"
-  date: "6/2/2023"
+  author: "Norah Jones"
+  date: "1/25/2024"
   chapters:
     - index.qmd
     - intro.qmd
@@ -132,6 +211,11 @@ format:
 
 
 babelquarto:
+  languagecodes:
+  - name: es
+    text: "Version in es"
+  - name: en
+    text: "Version in en"
   mainlanguage: 'en'
   languages: ['es']
 title-es: title in es
@@ -172,3 +256,6 @@ author-es: Yo misma
 
 If these fields do not exist, babelquarto falls back to their text in
 the main language.
+
+Note that babelquarto does not *translate* the content! Translation
+tooling lives in [babeldown](https://docs.ropensci.org/babeldown).
