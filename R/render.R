@@ -162,6 +162,18 @@ render_quarto_lang <- function(language_code, path, output_dir, type) {
 
   if (type == "website") {
 
+    # Update sidebar section titles for the current language
+    if (!is.null(config$website$sidebar$contents)) {
+      for (i in seq_along(config$website$sidebar$contents)) {
+        if (is.list(config$website$sidebar$contents[[i]])) {
+          section_key <- paste0("section-", language_code)
+          if (!is.null(config$website$sidebar$contents[[i]][[section_key]])) {
+            config$website$sidebar$contents[[i]]$section <- config$website$sidebar$contents[[i]][[section_key]]
+          }
+        }
+      }
+    }
+
     # only keep what's needed
     qmds <- fs::dir_ls(
       file.path(temporary_directory, fs::path_file(path)),
