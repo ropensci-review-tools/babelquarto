@@ -276,7 +276,9 @@ add_link <- function(path, main_language = main_language, language_code, site_ur
     } else {
       base_path
     }
+    print(site_url)
     href <- sprintf("%s/%s/%s", site_url, language_code, new_path)
+    print(href)
   }
 
   if (type == "book") {
