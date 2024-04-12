@@ -224,6 +224,10 @@ use_lang_chapter <- function(chapters_list, language_code, book_name, directory)
         )
       )
     }
+
+    if (length(chapters_list$chapters) == 1) {
+      chapters_list$chapters <- as.list(chapters_list$chapters) # https://github.com/ropensci-review-tools/babelquarto/issues/32
+    }
   } else {
     chapters_list <- gsub("\\.Rmd", sprintf(".%s.Rmd", language_code), chapters_list)
     chapters_list <- gsub("\\.qmd", sprintf(".%s.qmd", language_code), chapters_list)
