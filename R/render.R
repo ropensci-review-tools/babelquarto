@@ -106,13 +106,14 @@ render <- function(path = ".", site_url = NULL, type = c("book", "website")) {
   purrr::walk(
     language_codes,
     ~ purrr::walk(
-      fs::dir_ls(output_folder, glob = "*.html", recursive = TRUE),
+      fs::dir_ls(output_folder, glob = "*.html", recurse = TRUE),
       add_link,
       main_language = main_language,
       language_code = .x,
       site_url = site_url,
       type = type,
-      config = config_contents
+      config = config_contents,
+      output_folder = output_folder
     )
   )
 
@@ -123,14 +124,15 @@ render <- function(path = ".", site_url = NULL, type = c("book", "website")) {
       languages_to_add,
       ~ purrr::walk(
         fs::dir_ls(file.path(output_folder, other_lang),
-          glob = "*.html", recursive = TRUE
+          glob = "*.html", recurse = TRUE
         ),
         add_link,
         main_language = main_language,
         language_code = .x,
         site_url = site_url,
         type = type,
-        config = config_contents
+        config = config_contents,
+        output_folder = output_folder
       )
     )
   }
@@ -244,7 +246,8 @@ use_lang_chapter <- function(chapters_list, language_code, book_name, directory)
   chapters_list
 }
 
-add_link <- function(path, main_language = main_language, language_code, site_url, type, config) {
+add_link <- function(path, main_language = main_language,
+                     language_code, site_url, type, config, output_folder) {
   html <- xml2::read_html(path)
 
   codes <- config[["babelquarto"]][["languagecodes"]]
@@ -257,15 +260,28 @@ add_link <- function(path, main_language = main_language, language_code, site_ur
     sprintf("Version in %s", toupper(language_code))
   }
 
+  code_in_filename <- unlist(regmatches(path, gregexpr("\\...\\.html", path)))
+  file_lang <- if (length(code_in_filename) > 0) {
+    sub("\\.", "", sub("\\.html", "", code_in_filename))
+  } else {
+    main_language
+  }
+
   if (language_code == main_language) {
     new_path <-  if (type == "book") {
-      sub("\\..*\\.html", ".html", basename(path))
+      sub(
+        "\\...\\.html", ".html",
+        path_rel(path, output_folder, file_lang, main_language)
+      )
     } else {
-      basename(path)
+      path_rel(path, output_folder, file_lang, main_language)
     }
     href <- sprintf("%s/%s", site_url, new_path)
   } else {
-    base_path <- sub("\\..*\\.html", ".html", basename(path))
+    base_path <- sub(
+      "\\..\\.html", ".html",
+      path_rel(path, output_folder, file_lang, main_language)
+    )
     new_path <- if (type == "book") {
       fs::path_ext_set(base_path, sprintf(".%s.html", language_code))
     } else {
@@ -395,4 +411,12 @@ add_link <- function(path, main_language = main_language, language_code, site_ur
 # as in testthat
 on_ci <- function() {
   isTRUE(as.logical(Sys.getenv("CI", "false")))
+}
+
+path_rel <- function(path, output_folder, lang, main_language) {
+  if (lang == main_language) {
+    fs::path_rel(path, start = output_folder)
+  } else {
+    fs::path_rel(path, start = file.path(output_folder, lang))
+  }
 }
