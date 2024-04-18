@@ -35,12 +35,12 @@ Create a starter/example book.
 parent_dir <- withr::local_tempdir()
 project_dir <- "blop"
 babelquarto::quarto_multilingual_book(parent_dir = parent_dir, project_dir = project_dir)
-#> [1] "/tmp/Rtmp7EEwEI/file13dc91fbfb26a/blop"
+#> [1] "/tmp/RtmpsqBHYK/file16b17680628bb/blop"
 readLines(file.path(parent_dir, project_dir, "_quarto.yml"))
 #>  [1] "project:"                          "  type: book"                     
 #>  [3] ""                                  "book:"                            
 #>  [5] "  site-url: https://example.com"   "  title: \"blop\""                
-#>  [7] "  author: \"Maëlle Salmon\""       "  date: \"1/25/2024\""            
+#>  [7] "  author: \"Maëlle Salmon\""       "  date: \"4/18/2024\""            
 #>  [9] "  chapters:"                       "    - index.qmd"                  
 #> [11] "    - intro.qmd"                   "    - summary.qmd"                
 #> [13] "    - references.qmd"              ""                                 
@@ -57,7 +57,7 @@ readLines(file.path(parent_dir, project_dir, "_quarto.yml"))
 #> [35] "author-es: author in es"           "author-fr: author in fr"          
 #> [37] "lang: en"
 fs::dir_tree(file.path(parent_dir, project_dir))
-#> /tmp/Rtmp7EEwEI/file13dc91fbfb26a/blop
+#> /tmp/RtmpsqBHYK/file16b17680628bb/blop
 #> ├── _quarto.yml
 #> ├── cover.png
 #> ├── index.es.qmd
@@ -90,7 +90,7 @@ Create a starter/example website.
 parent_dir <- withr::local_tempdir()
 project_dir <- "blop"
 babelquarto::quarto_multilingual_website(parent_dir = parent_dir, project_dir = project_dir)
-#> [1] "/tmp/Rtmp7EEwEI/file13dc9152603cc/blop"
+#> [1] "/tmp/RtmpsqBHYK/file16b1734c5f5c6/blop"
 readLines(file.path(parent_dir, project_dir, "_quarto.yml"))
 #>  [1] "project:"                          "  type: website"                  
 #>  [3] ""                                  "website:"                         
@@ -112,7 +112,7 @@ readLines(file.path(parent_dir, project_dir, "_quarto.yml"))
 #> [35] "description-fr: description in fr" "author-es: author in es"          
 #> [37] "author-fr: author in fr"           "lang: en"
 fs::dir_tree(file.path(parent_dir, project_dir))
-#> /tmp/Rtmp7EEwEI/file13dc9152603cc/blop
+#> /tmp/RtmpsqBHYK/file16b1734c5f5c6/blop
 #> ├── _quarto.yml
 #> ├── about.es.qmd
 #> ├── about.fr.qmd
@@ -158,6 +158,34 @@ Using `babelquarto::register_main_language()` and
 `babelquarto::register_further_languages()` will create the
 boilertemplate for these fields.
 
+## Configure templates
+
+If you want, say, a banner with different content in the different
+languages, you can create a [partial
+template](https://quarto.org/docs/journals/templates.html#html-partials)
+and in it use the variables `lang-fr` and `lang-en` for instance for
+content in French and English.
+
+The Quarto configuration file `_quarto.yml` would include:
+
+``` yaml
+format:
+  html:
+    template-partials:
+      - metadata.html
+```
+
+The end of the `metadata.html` template would be:
+
+``` html
+<!-- copy content from https://github.com/quarto-dev/quarto-cli/blob/main/src/resources/formats/html/pandoc/metadata.html -->
+<div class="alert alert-info alert-dismissible">
+$if(lang-en)$Hello$endif$
+$if(lang-fr)$Salut$endif$
+$if(lang-es)$Hola$endif$
+</div>
+```
+
 ## Content translation
 
 From a book whose main language is English…
@@ -192,7 +220,7 @@ project:
 book:
   title: "babelbook"
   author: "Norah Jones"
-  date: "1/25/2024"
+  date: "4/18/2024"
   chapters:
     - index.qmd
     - intro.qmd
