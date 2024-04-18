@@ -71,7 +71,6 @@ test_that("render_book() works -- chapters in folders", {
   expect_equal(xml2::xml_attr(spanish_link, "href"), "https://example.com/es/chapters/references.es.html")
 })
 
-
 test_that("render_website() works", {
   withr::local_envvar("BABELQUARTO_TESTS_URL" = "true")
 
@@ -96,5 +95,48 @@ test_that("render_website() works", {
   spanish_link <- xml2::xml_find_first(index, '//a[@id="language-link-es"]')
   expect_equal(xml2::xml_attr(spanish_link, "href"), "https://example.com/es/index.html")
   expect_equal(xml2::xml_text(spanish_link), "Version en Español")
+
+})
+test_that("render_book() works -- partial template", {
+  withr::local_envvar("BABELQUARTO_TESTS_URL" = "true")
+
+  parent_dir <- withr::local_tempdir()
+  project_dir <- "blop"
+  quarto_multilingual_website(
+    parent_dir = parent_dir,
+    project_dir = project_dir,
+    further_languages = c("es", "fr"),
+    main_language = "en"
+  )
+
+  fs::file_copy(
+    test_path("metadata.html"),
+    file.path(parent_dir, project_dir, "metadata.html")
+  )
+
+  config_path <- file.path(parent_dir, project_dir, "_quarto.yml")
+  config <- brio::read_lines(config_path)
+  config[config == '    text: "Version in es"'] <- '    text: "Version en Español"'
+  config <- append(
+    config,
+    c("    template-partials:", "      - metadata.html"),
+    after = grep("theme: cosmo", config)
+  )
+  brio::write_lines(config, config_path)
+
+  withr::with_dir(parent_dir, render_website(project_dir))
+  expect_true(fs::dir_exists(file.path(parent_dir, project_dir, "_site")))
+
+  index <- xml2::read_html(file.path(parent_dir, project_dir, "_site", "index.html"))
+  div <- xml2::xml_find_first(index, '//div[@class="alert alert-info alert-dismissible"]')
+  expect_equal(xml2::xml_text(div), "Hello")
+
+  index <- xml2::read_html(file.path(parent_dir, project_dir, "_site", "es", "index.html"))
+  div <- xml2::xml_find_first(index, '//div[@class="alert alert-info alert-dismissible"]')
+  expect_equal(xml2::xml_text(div), "Hola")
+
+  index <- xml2::read_html(file.path(parent_dir, project_dir, "_site", "fr", "index.html"))
+  div <- xml2::xml_find_first(index, '//div[@class="alert alert-info alert-dismissible"]')
+  expect_equal(xml2::xml_text(div), "Salut")
 
 })
