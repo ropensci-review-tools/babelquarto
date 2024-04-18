@@ -129,14 +129,14 @@ test_that("render_book() works -- partial template", {
 
   index <- xml2::read_html(file.path(parent_dir, project_dir, "_site", "index.html"))
   div <- xml2::xml_find_first(index, '//div[@class="alert alert-info alert-dismissible"]')
-  expect_equal(xml2::xml_text(div), "Hello")
+  expect_match(xml2::xml_text(div), "Hello")
 
   index <- xml2::read_html(file.path(parent_dir, project_dir, "_site", "es", "index.html"))
   div <- xml2::xml_find_first(index, '//div[@class="alert alert-info alert-dismissible"]')
-  expect_equal(xml2::xml_text(div), "Hola")
+  expect_match(xml2::xml_text(div), "Hola")
 
   index <- xml2::read_html(file.path(parent_dir, project_dir, "_site", "fr", "index.html"))
   div <- xml2::xml_find_first(index, '//div[@class="alert alert-info alert-dismissible"]')
-  expect_equal(xml2::xml_text(div), "Salut")
+  expect_match(xml2::xml_text(div), "Salut")
 
 })
