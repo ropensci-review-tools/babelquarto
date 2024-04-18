@@ -86,7 +86,9 @@ render <- function(path = ".", site_url = NULL, type = c("book", "website")) {
   fs::dir_copy(path, temporary_directory)
   withr::with_dir(file.path(temporary_directory, fs::path_file(path)), {
     fs::file_delete(fs::dir_ls(regexp = "\\...\\.qmd"))
-    quarto::quarto_render(as_job = FALSE)
+    metadata <- list("true")
+    names(metadata) <- sprintf("lang-%s", main_language)
+    quarto::quarto_render(as_job = FALSE, metadata = metadata)
   })
   fs::dir_copy(
     file.path(temporary_directory, fs::path_file(path), output_dir),
@@ -191,8 +193,13 @@ render_quarto_lang <- function(language_code, path, output_dir, type) {
   brio::write_lines(config_lines, file.path(temporary_directory, project_name, "_quarto.yml"))
 
   # Render language book
+  metadata <- list("yes")
+  names(metadata) <- sprintf("lang-%s", language_code)
   withr::with_dir(file.path(temporary_directory, project_name), {
-    quarto::quarto_render(as_job = FALSE)
+    quarto::quarto_render(
+      as_job = FALSE,
+      metadata = metadata
+    )
   })
 
   # Copy it to local not temporary _book/<language-code>
