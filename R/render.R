@@ -121,7 +121,7 @@ render <- function(path = ".", site_url = NULL, type = c("book", "website")) {
 
   ## For other languages ----
   for (other_lang in language_codes) {
-    languages_to_add <- c(main_language, language_codes[language_codes != other_lang])
+    languages_to_add <- c(main_language, setdiff(language_codes, other_lang))
     purrr::walk(
       languages_to_add,
       ~ purrr::walk(
