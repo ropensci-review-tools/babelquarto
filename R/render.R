@@ -52,7 +52,6 @@ render <- function(path = ".", site_url = NULL, type = c("book", "website")) {
   if (is.null(site_url)) {
     if (nzchar(Sys.getenv("BABELQUARTO_TESTS_URL")) || !on_ci()) {
       site_url <- site_url %||% config_contents[[type]][["site-url"]] %||% ""
-      site_url <- sub("/$", "", site_url)
     } else {
       # no end slash
       # for deploy previews
@@ -61,6 +60,7 @@ render <- function(path = ".", site_url = NULL, type = c("book", "website")) {
       site_url <- Sys.getenv("BABELQUARTO_CI_URL", "")
     }
   }
+  site_url <- sub("/$", "", site_url)
 
   output_dir <- config_contents[["project"]][["output-dir"]] %||%
     switch(
