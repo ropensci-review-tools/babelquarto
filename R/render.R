@@ -105,10 +105,21 @@ render <- function(path = ".", site_url = NULL, type = c("book", "website")) {
 
   # Add the language switching link to the sidebar ----
   ## For the main language ----
+
+  # we need to recurse but not inside the language folders!
+  all_docs <- fs::dir_ls(output_folder, glob = "*.html", recurse = TRUE)
+  other_language_docs <- unlist(
+    purrr::map(
+      language_codes,
+      ~fs::dir_ls(file.path(output_folder, .x), glob = "*.html", recurse = TRUE)
+    )
+  )
+  main_language_docs <- setdiff(all_docs, other_language_docs)
+
   purrr::walk(
     language_codes,
     ~ purrr::walk(
-      fs::dir_ls(output_folder, glob = "*.html", recurse = TRUE),
+      main_language_docs,
       add_link,
       main_language = main_language,
       language_code = .x,
