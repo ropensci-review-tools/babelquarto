@@ -268,10 +268,12 @@ add_link <- function(path, main_language = main_language,
   }
 
   code_in_filename <- unlist(regmatches(path, gregexpr("\\...\\.html", path)))
-  file_lang <- if (length(code_in_filename) > 0) {
-    sub("\\.", "", sub("\\.html", "", code_in_filename))
+
+  if (length(code_in_filename) > 0) {
+    file_lang <- sub("\\.", "", sub("\\.html", "", code_in_filename))
+    path <- sub(sprintf("\\.%s\\.html$", file_lang), ".html", path)
   } else {
-    main_language
+    file_lang <- main_language
   }
 
   if (language_code == main_language) {
