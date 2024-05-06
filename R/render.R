@@ -121,6 +121,7 @@ render <- function(path = ".", site_url = NULL, type = c("book", "website")) {
 
   ## For other languages ----
   for (other_lang in language_codes) {
+
     languages_to_add <- c(main_language, setdiff(language_codes, other_lang))
     purrr::walk(
       languages_to_add,
@@ -256,6 +257,8 @@ use_lang_chapter <- function(chapters_list, language_code, book_name, directory)
 add_link <- function(path, main_language = main_language,
                      language_code, site_url, type, config, output_folder) {
   html <- xml2::read_html(path)
+
+  document_path <- path
 
   codes <- config[["babelquarto"]][["languagecodes"]]
   current_lang <- purrr::keep(codes, ~.x[["name"]] == language_code)
@@ -414,7 +417,7 @@ add_link <- function(path, main_language = main_language,
     )
   }
 
-  xml2::write_html(html, path)
+  xml2::write_html(html, document_path)
 }
 
 # as in testthat
