@@ -52,7 +52,6 @@ render <- function(path = ".", site_url = NULL, type = c("book", "website")) {
   if (is.null(site_url)) {
     if (nzchar(Sys.getenv("BABELQUARTO_TESTS_URL")) || !on_ci()) {
       site_url <- site_url %||% config_contents[[type]][["site-url"]] %||% ""
-      site_url <- sub("/$", "", site_url)
     } else {
       # no end slash
       # for deploy previews
@@ -61,6 +60,7 @@ render <- function(path = ".", site_url = NULL, type = c("book", "website")) {
       site_url <- Sys.getenv("BABELQUARTO_CI_URL", "")
     }
   }
+  site_url <- sub("/$", "", site_url)
 
   output_dir <- config_contents[["project"]][["output-dir"]] %||%
     switch(
@@ -105,10 +105,21 @@ render <- function(path = ".", site_url = NULL, type = c("book", "website")) {
 
   # Add the language switching link to the sidebar ----
   ## For the main language ----
+
+  # we need to recurse but not inside the language folders!
+  all_docs <- fs::dir_ls(output_folder, glob = "*.html", recurse = TRUE)
+  other_language_docs <- unlist(
+    purrr::map(
+      language_codes,
+      ~fs::dir_ls(file.path(output_folder, .x), glob = "*.html", recurse = TRUE)
+    )
+  )
+  main_language_docs <- setdiff(all_docs, other_language_docs)
+
   purrr::walk(
     language_codes,
     ~ purrr::walk(
-      fs::dir_ls(output_folder, glob = "*.html", recurse = TRUE),
+      main_language_docs,
       add_link,
       main_language = main_language,
       language_code = .x,
@@ -121,7 +132,8 @@ render <- function(path = ".", site_url = NULL, type = c("book", "website")) {
 
   ## For other languages ----
   for (other_lang in language_codes) {
-    languages_to_add <- c(main_language, language_codes[language_codes != other_lang])
+
+    languages_to_add <- c(main_language, setdiff(language_codes, other_lang))
     purrr::walk(
       languages_to_add,
       ~ purrr::walk(
@@ -257,6 +269,8 @@ add_link <- function(path, main_language = main_language,
                      language_code, site_url, type, config, output_folder) {
   html <- xml2::read_html(path)
 
+  document_path <- path
+
   codes <- config[["babelquarto"]][["languagecodes"]]
   current_lang <- purrr::keep(codes, ~.x[["name"]] == language_code)
 
@@ -268,10 +282,12 @@ add_link <- function(path, main_language = main_language,
   }
 
   code_in_filename <- unlist(regmatches(path, gregexpr("\\...\\.html", path)))
-  file_lang <- if (length(code_in_filename) > 0) {
-    sub("\\.", "", sub("\\.html", "", code_in_filename))
+
+  if (length(code_in_filename) > 0) {
+    file_lang <- sub("\\.", "", sub("\\.html", "", code_in_filename))
+    path <- sub(sprintf("\\.%s\\.html$", file_lang), ".html", path)
   } else {
-    main_language
+    file_lang <- main_language
   }
 
   if (language_code == main_language) {
@@ -412,7 +428,7 @@ add_link <- function(path, main_language = main_language,
     )
   }
 
-  xml2::write_html(html, path)
+  xml2::write_html(html, document_path)
 }
 
 # as in testthat
