@@ -96,6 +96,11 @@ test_that("render_website() works", {
   expect_equal(xml2::xml_attr(spanish_link, "href"), "https://example.com/es/index.html")
   expect_equal(xml2::xml_text(spanish_link), "Version en Español")
 
+  spanish_index <- xml2::read_html(file.path(parent_dir, project_dir, "_site", "es", "index.html"))
+  english_link <- xml2::xml_find_first(spanish_index, '//a[@id="language-link-en"]')
+  expect_equal(xml2::xml_attr(english_link, "href"), "https://example.com/index.html")
+  expect_equal(xml2::xml_text(english_link), "Version in en")
+
 })
 test_that("render_book() works -- partial template", {
   withr::local_envvar("BABELQUARTO_TESTS_URL" = "true")
