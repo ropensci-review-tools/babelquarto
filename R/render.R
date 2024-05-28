@@ -282,12 +282,27 @@ add_link <- function(path, main_language = main_language,
   }
 
   code_in_filename <- unlist(regmatches(path, gregexpr("\\...\\.html", path)))
+  code_in_path <- unlist(regmatches(path, gregexpr(
+    file.path(output_folder, "..", basename(path)),
+    path
+  )))
 
   if (length(code_in_filename) > 0) {
     file_lang <- sub("\\.", "", sub("\\.html", "", code_in_filename))
     path <- sub(sprintf("\\.%s\\.html$", file_lang), ".html", path)
   } else {
-    file_lang <- main_language
+    if (length(code_in_path) > 0) {
+      messy_code <- sub(
+          output_folder,
+          "",
+          sub(basename(path), "", path)
+        )
+      file_lang <- unlist(
+        regmatches(messy_code, gregexpr("[a-zA-Z]+", messy_code))
+     )
+    } else {
+      file_lang <- main_language
+    }
   }
 
   if (language_code == main_language) {
