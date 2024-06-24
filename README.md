@@ -27,6 +27,11 @@ Or from [GitHub](https://github.com/) with:
 pak::pak("ropensci-review-tools/babelquarto")
 ```
 
+Once using babelquarto, you cannot render your book or website using
+Quarto CLI (or the RStudio IDE render button) directly. You need to use
+`babelquarto::render_book()` or `babelquarto::render_website()`,
+respectively.
+
 ## Example book
 
 Create a starter/example book.
@@ -35,12 +40,15 @@ Create a starter/example book.
 parent_dir <- withr::local_tempdir()
 project_dir <- "blop"
 babelquarto::quarto_multilingual_book(parent_dir = parent_dir, project_dir = project_dir)
-#> [1] "/tmp/RtmpsqBHYK/file16b17680628bb/blop"
+#> [1] "/tmp/RtmpBoDnhG/filedc9c5c49d508/blop"
+```
+
+``` r
 readLines(file.path(parent_dir, project_dir, "_quarto.yml"))
 #>  [1] "project:"                          "  type: book"                     
 #>  [3] ""                                  "book:"                            
 #>  [5] "  site-url: https://example.com"   "  title: \"blop\""                
-#>  [7] "  author: \"Maëlle Salmon\""       "  date: \"4/18/2024\""            
+#>  [7] "  author: \"Maëlle Salmon\""       "  date: \"6/24/2024\""            
 #>  [9] "  chapters:"                       "    - index.qmd"                  
 #> [11] "    - intro.qmd"                   "    - summary.qmd"                
 #> [13] "    - references.qmd"              ""                                 
@@ -56,8 +64,11 @@ readLines(file.path(parent_dir, project_dir, "_quarto.yml"))
 #> [33] "description-es: description in es" "description-fr: description in fr"
 #> [35] "author-es: author in es"           "author-fr: author in fr"          
 #> [37] "lang: en"
+```
+
+``` r
 fs::dir_tree(file.path(parent_dir, project_dir))
-#> /tmp/RtmpsqBHYK/file16b17680628bb/blop
+#> /tmp/RtmpBoDnhG/filedc9c5c49d508/blop
 #> ├── _quarto.yml
 #> ├── cover.png
 #> ├── index.es.qmd
@@ -90,7 +101,10 @@ Create a starter/example website.
 parent_dir <- withr::local_tempdir()
 project_dir <- "blop"
 babelquarto::quarto_multilingual_website(parent_dir = parent_dir, project_dir = project_dir)
-#> [1] "/tmp/RtmpsqBHYK/file16b1734c5f5c6/blop"
+#> [1] "/tmp/RtmpBoDnhG/filedc9c76c8fd6a/blop"
+```
+
+``` r
 readLines(file.path(parent_dir, project_dir, "_quarto.yml"))
 #>  [1] "project:"                          "  type: website"                  
 #>  [3] ""                                  "website:"                         
@@ -111,8 +125,11 @@ readLines(file.path(parent_dir, project_dir, "_quarto.yml"))
 #> [33] "title-fr: title in fr"             "description-es: description in es"
 #> [35] "description-fr: description in fr" "author-es: author in es"          
 #> [37] "author-fr: author in fr"           "lang: en"
+```
+
+``` r
 fs::dir_tree(file.path(parent_dir, project_dir))
-#> /tmp/RtmpsqBHYK/file16b1734c5f5c6/blop
+#> /tmp/RtmpBoDnhG/filedc9c76c8fd6a/blop
 #> ├── _quarto.yml
 #> ├── about.es.qmd
 #> ├── about.fr.qmd
@@ -220,7 +237,7 @@ project:
 book:
   title: "babelbook"
   author: "Norah Jones"
-  date: "4/18/2024"
+  date: "6/24/2024"
   chapters:
     - index.qmd
     - intro.qmd

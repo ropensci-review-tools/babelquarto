@@ -36,6 +36,9 @@ Or from [GitHub](https://github.com/) with:
 pak::pak("ropensci-review-tools/babelquarto")
 ```
 
+Once using babelquarto, you cannot render your book or website using Quarto CLI (or the RStudio IDE render button) directly.
+You need to use `babelquarto::render_book()` or `babelquarto::render_website()`, respectively.
+
 ## Example book
 
 Create a starter/example book.
