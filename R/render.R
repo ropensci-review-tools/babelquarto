@@ -128,7 +128,8 @@ render <- function(path = ".", site_url = NULL, type = c("book", "website")) {
       site_url = site_url,
       type = type,
       config = config_contents,
-      output_folder = output_folder
+      output_folder = output_folder,
+      path_language = main_language
     )
   )
 
@@ -148,7 +149,8 @@ render <- function(path = ".", site_url = NULL, type = c("book", "website")) {
         site_url = site_url,
         type = type,
         config = config_contents,
-        output_folder = output_folder
+        output_folder = output_folder,
+        path_language = other_lang
       )
     )
   }
@@ -279,7 +281,8 @@ use_lang_chapter <- function(chapters_list, language_code, book_name, directory)
 }
 
 add_links <- function(path, main_language = main_language,
-                     language_code, site_url, type, config, output_folder) {
+                     language_code, site_url, type, config, output_folder,
+                     path_language) {
   html <- xml2::read_html(path)
 
   document_path <- path
@@ -294,44 +297,20 @@ add_links <- function(path, main_language = main_language,
     sprintf("Version in %s", toupper(language_code))
   }
 
-  code_in_filename <- unlist(regmatches(path, gregexpr("\\...\\.html", path)))
-  code_in_path <- unlist(regmatches(path, gregexpr(
-    file.path(output_folder, "..", basename(path)),
-    path
-  )))
-
-  if (length(code_in_filename) > 0) {
-    file_lang <- sub("\\.", "", sub("\\.html", "", code_in_filename))
-    path <- sub(sprintf("\\.%s\\.html$", file_lang), ".html", path)
-  } else {
-    if (length(code_in_path) > 0) {
-      messy_code <- sub(
-          output_folder,
-          "",
-          sub(basename(path), "", path)
-        )
-      file_lang <- unlist(
-        regmatches(messy_code, gregexpr("[a-zA-Z]+", messy_code))
-     )
-    } else {
-      file_lang <- main_language
-    }
-  }
-
   if (language_code == main_language) {
     new_path <-  if (type == "book") {
       sub(
         "\\...\\.html", ".html",
-        path_rel(path, output_folder, file_lang, main_language)
+        path_rel(path, output_folder, path_language, main_language)
       )
     } else {
-      path_rel(path, output_folder, file_lang, main_language)
+      path_rel(path, output_folder, path_language, main_language)
     }
     href <- sprintf("%s/%s", site_url, new_path)
   } else {
     base_path <- sub(
       "\\..\\.html", ".html",
-      path_rel(path, output_folder, file_lang, main_language)
+      path_rel(path, output_folder, path_language, main_language)
     )
     new_path <- if (type == "book") {
       fs::path_ext_set(base_path, sprintf(".%s.html", language_code))
