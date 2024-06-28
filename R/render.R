@@ -39,11 +39,13 @@
 render_book <- function(project_path = ".", site_url = NULL) {
   render(path = project_path, site_url = site_url, type = "book")
 }
+
 #' @export
 #' @rdname render
 render_website <- function(project_path = ".", site_url = NULL) {
   render(path = project_path, site_url = site_url, type = "website")
 }
+
 render <- function(path = ".", site_url = NULL, type = c("book", "website")) {
   # configuration ----
   config <- file.path(path, "_quarto.yml")
