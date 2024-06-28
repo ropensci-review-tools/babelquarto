@@ -7,7 +7,7 @@
 register_main_language <- function(main_language = "en", project_path = ".") {
   config_path <- file.path(project_path, "_quarto.yml")
 
-  config <- yaml::read_yaml(config_path)
+  config <- yaml::read_yaml(config_path, handlers = list(seq = function(x) x))
   if (!is.null(config[["babelquarto"]][["mainlanguage"]])) {
     if (config[["babelquarto"]][["mainlanguage"]] != main_language) {
       cli::cli_abort(
@@ -48,7 +48,7 @@ register_further_languages <- function(further_languages, project_path = ".") {
 
   config_path <- file.path(project_path, "_quarto.yml")
 
-  config <- yaml::read_yaml(config_path)
+  config <- yaml::read_yaml(config_path, handlers = list(seq = function(x) x))
   if (!is.null(config[["babelquarto"]][["languages"]])) {
     if (all(further_languages %in% config[["babelquarto"]][["languages"]])) {
       cli::cli_alert_info("All languages already registered.")
