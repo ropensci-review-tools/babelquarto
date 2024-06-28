@@ -173,6 +173,13 @@ render_quarto_lang <- function(language_code, path, output_dir, type) {
       book_name = project_name,
       directory = temporary_directory
     )
+    config[["book"]][["appendices"]] <- purrr::map(
+      config[["book"]][["appendices"]],
+      use_lang_chapter,
+      language_code = language_code,
+      book_name = project_name,
+      directory = temporary_directory
+    )
     # Replace TRUE and FALSE with 'true' and 'false'
     # to avoid converting to "yes" and "no"
     config <- replace_true_false(config)
