@@ -122,7 +122,7 @@ render <- function(path = ".", site_url = NULL, type = c("book", "website")) {
     language_codes,
     ~ purrr::walk(
       main_language_docs,
-      add_link,
+      add_links,
       main_language = main_language,
       language_code = .x,
       site_url = site_url,
@@ -142,7 +142,7 @@ render <- function(path = ".", site_url = NULL, type = c("book", "website")) {
         fs::dir_ls(file.path(output_folder, other_lang),
           glob = "*.html", recurse = TRUE
         ),
-        add_link,
+        add_links,
         main_language = main_language,
         language_code = .x,
         site_url = site_url,
@@ -278,7 +278,7 @@ use_lang_chapter <- function(chapters_list, language_code, book_name, directory)
   chapters_list
 }
 
-add_link <- function(path, main_language = main_language,
+add_links <- function(path, main_language = main_language,
                      language_code, site_url, type, config, output_folder) {
   html <- xml2::read_html(path)
 
