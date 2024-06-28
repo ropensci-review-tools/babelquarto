@@ -47,7 +47,7 @@ render_website <- function(project_path = ".", site_url = NULL) {
 render <- function(path = ".", site_url = NULL, type = c("book", "website")) {
   # configuration ----
   config <- file.path(path, "_quarto.yml")
-  config_contents <- yaml::read_yaml(config)
+  config_contents <- yaml::read_yaml(config, handlers = list(seq = function(x) x))
 
   if (is.null(site_url)) {
     if (nzchar(Sys.getenv("BABELQUARTO_TESTS_URL")) || !on_ci()) {
@@ -159,7 +159,10 @@ render_quarto_lang <- function(language_code, path, output_dir, type) {
   fs::dir_copy(path, temporary_directory)
   project_name <- fs::path_file(path)
 
-  config <- yaml::read_yaml(file.path(temporary_directory, project_name, "_quarto.yml"))
+  config <- yaml::read_yaml(
+    file.path(temporary_directory, project_name, "_quarto.yml"),
+    handlers = list(seq = function(x) x)
+  )
   config$lang <- language_code
   config[[type]][["title"]] <- config[[sprintf("title-%s", language_code)]] %||% config[[type]][["title"]]
   config[[type]][["description"]] <- config[[sprintf("description-%s", language_code)]] %||% config[[type]][["description"]]
