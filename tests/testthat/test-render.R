@@ -173,3 +173,33 @@ test_that("render_book() works - appendices", {
 
 
 })
+
+test_that("render_book() works - chapters", {
+  withr::local_envvar("BABELQUARTO_TESTS_URL" = "true")
+
+  parent_dir <- withr::local_tempdir()
+  project_dir <- "blop"
+  quarto_multilingual_book(
+    parent_dir = parent_dir,
+    project_dir = project_dir,
+    further_languages = c("es", "fr"),
+    main_language = "en",
+    site_url = "https://ropensci.org"
+  )
+
+  config_path <- file.path(parent_dir, project_dir, "_quarto.yml")
+  config_lines <- brio::read_lines(config_path)
+  config_lines <- setdiff(
+    config_lines,
+    c("    - intro.qmd", "    - references.qmd")
+  )
+  brio::write_lines(config_lines, config_path)
+
+  fs::file_delete(file.path(parent_dir, project_dir, "summary.es.qmd"))
+
+  withr::with_dir(parent_dir, render_book(project_dir))
+  expect_true(fs::dir_exists(file.path(parent_dir, project_dir, "_book")))
+
+
+})
+
