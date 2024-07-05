@@ -169,6 +169,7 @@ render_quarto_lang <- function(language_code, path, output_dir, type) {
 
   if (type == "book") {
     config[[type]][["author"]] <- config[[sprintf("author-%s", language_code)]] %||% config[[type]][["author"]]
+
     config[["book"]][["chapters"]] <- purrr::map(
       config[["book"]][["chapters"]],
       use_lang_chapter,
@@ -249,7 +250,7 @@ use_lang_chapter <- function(chapters_list, language_code, book_name, directory)
     if (any(!fs::file_exists(chapters_list$chapters))) {
       chapters_not_translated <- !fs::file_exists(chapters_list$chapters)
       fs::file_move(
-        original_chapters_list$chapters[chapters_not_translated],
+        unlist(original_chapters_list$chapters[chapters_not_translated]),
         gsub("\\.Rmd", sprintf(".%s.Rmd", language_code) ,
           gsub(
             "\\.qmd", sprintf(".%s.qmd", language_code),
