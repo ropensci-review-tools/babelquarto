@@ -341,18 +341,18 @@ add_link <- function(path, main_language = main_language,
 
   if (type == "book") {
 
-    logo <- xml2::xml_find_first(html, "//div[contains(@class,'sidebar-header')]")
+    sidebar_menu <- xml2::xml_find_first(html, "//div[contains(@class,'sidebar-menu-container')]")
 
     languages_links <- xml2::xml_find_first(html, "//ul[@id='languages-links']")
     languages_links_div_exists <- (length(languages_links) > 0)
 
     if (!languages_links_div_exists) {
       xml2::xml_add_sibling(
-        logo,
+        sidebar_menu,
         "div",
         class = "dropdown",
         id = "languages-links-parent",
-        .where = "after"
+        .where = "before"
       )
 
       parent <- xml2::xml_find_first(html, "//div[@id='languages-links-parent']")
