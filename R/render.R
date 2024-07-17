@@ -88,7 +88,11 @@ render <- function(path = ".", site_url = NULL, type = c("book", "website")) {
     fs::file_delete(fs::dir_ls(regexp = "\\...\\.qmd"))
     metadata <- list("true")
     names(metadata) <- sprintf("lang-%s", main_language)
-    quarto::quarto_render(as_job = FALSE, metadata = metadata)
+    quarto::quarto_render(
+      as_job = FALSE,
+      metadata = metadata,
+      profile = main_language
+    )
   })
   fs::dir_copy(
     file.path(temporary_directory, fs::path_file(path), output_dir),
@@ -221,7 +225,8 @@ render_quarto_lang <- function(language_code, path, output_dir, type) {
   withr::with_dir(file.path(temporary_directory, project_name), {
     quarto::quarto_render(
       as_job = FALSE,
-      metadata = metadata
+      metadata = metadata,
+      profile = language_code
     )
   })
 
