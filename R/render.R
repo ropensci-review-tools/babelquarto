@@ -39,11 +39,13 @@
 render_book <- function(project_path = ".", site_url = NULL) {
   render(path = project_path, site_url = site_url, type = "book")
 }
+
 #' @export
 #' @rdname render
 render_website <- function(project_path = ".", site_url = NULL) {
   render(path = project_path, site_url = site_url, type = "website")
 }
+
 render <- function(path = ".", site_url = NULL, type = c("book", "website")) {
   # configuration ----
   config <- file.path(path, "_quarto.yml")
@@ -124,34 +126,53 @@ render <- function(path = ".", site_url = NULL, type = c("book", "website")) {
     language_codes,
     ~ purrr::walk(
       main_language_docs,
-      add_link,
+      add_links,
       main_language = main_language,
       language_code = .x,
       site_url = site_url,
       type = type,
       config = config_contents,
-      output_folder = output_folder
+      output_folder = output_folder,
+      path_language = main_language
     )
   )
-
+  purrr::walk(
+      main_language_docs,
+      add_cross_links,
+      main_language = main_language,
+      site_url = site_url,
+      config = config_contents,
+      output_folder = output_folder,
+      path_language = main_language)
   ## For other languages ----
   for (other_lang in language_codes) {
-
+    other_lang_docs <- fs::dir_ls(
+      file.path(output_folder, other_lang),
+      glob = "*.html", recurse = TRUE
+    )
     languages_to_add <- c(main_language, setdiff(language_codes, other_lang))
     purrr::walk(
       languages_to_add,
       ~ purrr::walk(
-        fs::dir_ls(file.path(output_folder, other_lang),
-          glob = "*.html", recurse = TRUE
-        ),
-        add_link,
+        other_lang_docs,
+        add_links,
         main_language = main_language,
         language_code = .x,
         site_url = site_url,
         type = type,
         config = config_contents,
-        output_folder = output_folder
+        output_folder = output_folder,
+        path_language = other_lang
       )
+    )
+    purrr::walk(
+      other_lang_docs,
+      add_cross_links,
+      main_language = main_language,
+      site_url = site_url,
+      config = config_contents,
+      output_folder = output_folder,
+      path_language = other_lang
     )
   }
 
@@ -281,8 +302,9 @@ use_lang_chapter <- function(chapters_list, language_code, book_name, directory)
   chapters_list
 }
 
-add_link <- function(path, main_language = main_language,
-                     language_code, site_url, type, config, output_folder) {
+add_links <- function(path, main_language = main_language,
+                     language_code, site_url, type, config, output_folder,
+                     path_language) {
   html <- xml2::read_html(path)
 
   document_path <- path
@@ -297,44 +319,20 @@ add_link <- function(path, main_language = main_language,
     sprintf("Version in %s", toupper(language_code))
   }
 
-  code_in_filename <- unlist(regmatches(path, gregexpr("\\...\\.html", path)))
-  code_in_path <- unlist(regmatches(path, gregexpr(
-    file.path(output_folder, "..", basename(path)),
-    path
-  )))
-
-  if (length(code_in_filename) > 0) {
-    file_lang <- sub("\\.", "", sub("\\.html", "", code_in_filename))
-    path <- sub(sprintf("\\.%s\\.html$", file_lang), ".html", path)
-  } else {
-    if (length(code_in_path) > 0) {
-      messy_code <- sub(
-          output_folder,
-          "",
-          sub(basename(path), "", path)
-        )
-      file_lang <- unlist(
-        regmatches(messy_code, gregexpr("[a-zA-Z]+", messy_code))
-     )
-    } else {
-      file_lang <- main_language
-    }
-  }
-
   if (language_code == main_language) {
     new_path <-  if (type == "book") {
       sub(
         "\\...\\.html", ".html",
-        path_rel(path, output_folder, file_lang, main_language)
+        path_rel(path, output_folder, path_language, main_language)
       )
     } else {
-      path_rel(path, output_folder, file_lang, main_language)
+      path_rel(path, output_folder, path_language, main_language)
     }
     href <- sprintf("%s/%s", site_url, new_path)
   } else {
     base_path <- sub(
       "\\..\\.html", ".html",
-      path_rel(path, output_folder, file_lang, main_language)
+      path_rel(path, output_folder, path_language, main_language)
     )
     new_path <- if (type == "book") {
       fs::path_ext_set(base_path, sprintf(".%s.html", language_code))
@@ -346,18 +344,18 @@ add_link <- function(path, main_language = main_language,
 
   if (type == "book") {
 
-    logo <- xml2::xml_find_first(html, "//div[contains(@class,'sidebar-header')]")
+    sidebar_menu <- xml2::xml_find_first(html, "//div[contains(@class,'sidebar-menu-container')]")
 
     languages_links <- xml2::xml_find_first(html, "//ul[@id='languages-links']")
     languages_links_div_exists <- (length(languages_links) > 0)
 
     if (!languages_links_div_exists) {
       xml2::xml_add_sibling(
-        logo,
+        sidebar_menu,
         "div",
         class = "dropdown",
         id = "languages-links-parent",
-        .where = "after"
+        .where = "before"
       )
 
       parent <- xml2::xml_find_first(html, "//div[@id='languages-links-parent']")
@@ -460,6 +458,49 @@ add_link <- function(path, main_language = main_language,
   }
 
   xml2::write_html(html, document_path)
+
+
+}
+
+add_cross_links <- function(path,
+                            path_language, main_language,
+                            config, site_url, output_folder) {
+  main_language_href <- if (path_language == main_language) {
+    sprintf("%s/%s", site_url, fs::path_rel(path, start = output_folder))
+  } else {
+    sub(
+      sprintf("%s\\.html", path_language), "html",
+      sprintf("%s/%s", site_url, fs::path_rel(path, start = file.path(output_folder, path_language)))
+    )
+  }
+  main_language_link <- sprintf(
+    '<link rel="alternate" hreflang="%s" href="%s" />',
+    main_language,
+    main_language_href
+  )
+
+  create_other_language_link <- function(lang, main_language_href, site_url) {
+    other_language_href <- sub(site_url, paste0(site_url, "/", lang), main_language_href)
+    other_language_href <- sub(".html", paste0(".", lang, ".html"), other_language_href)
+    sprintf(
+      '<link rel="alternate" hreflang="%s" href="%s" />',
+      lang,
+      other_language_href
+    )
+  }
+  other_language_links <- purrr::map_chr(
+    config[["babelquarto"]][["languages"]],
+    create_other_language_link,
+    main_language_href = main_language_href,
+    site_url = site_url
+  )
+  html_lines <- brio::read_lines(path)
+  html_lines <- append(
+    html_lines,
+    c(main_language_link, other_language_links),
+    after = 3
+  )
+  brio::write_lines(html_lines, path)
 }
 
 # as in testthat
