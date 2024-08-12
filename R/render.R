@@ -325,6 +325,8 @@ add_links <- function(path, main_language = main_language,
       path_rel(path, output_folder, path_language, main_language)
     }
     href <- sprintf("%s/%s", site_url, new_path)
+    # If no translated version exists, don't add the link
+    if (!fs::file_exists(file.path(output_folder, new_path))) return()
   } else {
     base_path <- sub(
       "\\..\\.html", ".html",
@@ -336,6 +338,8 @@ add_links <- function(path, main_language = main_language,
       base_path
     }
     href <- sprintf("%s/%s/%s", site_url, language_code, new_path)
+    # If no translated version exists, don't add the link
+    if (!fs::file_exists(file.path(output_folder, language_code, new_path))) return()
   }
 
   if (type == "book") {
