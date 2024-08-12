@@ -85,7 +85,7 @@ render <- function(path = ".", site_url = NULL, type = c("book", "website")) {
   temporary_directory <- withr::local_tempdir()
   fs::dir_copy(path, temporary_directory)
   withr::with_dir(file.path(temporary_directory, fs::path_file(path)), {
-    fs::file_delete(fs::dir_ls(regexp = "\\...\\.qmd"))
+    fs::file_delete(fs::dir_ls(regexp = "\\...\\.qmd", recurse = TRUE))
     metadata <- list("true")
     names(metadata) <- sprintf("lang-%s", main_language)
     quarto::quarto_render(as_job = FALSE, metadata = metadata)
@@ -146,7 +146,8 @@ render <- function(path = ".", site_url = NULL, type = c("book", "website")) {
         site_url = site_url,
         type = type,
         config = config_contents,
-        output_folder = output_folder
+        output_folder = output_folder,
+        file_lang = other_lang
       )
     )
   }
@@ -195,10 +196,13 @@ render_quarto_lang <- function(language_code, path, output_dir, type) {
     # only keep what's needed
     qmds <- fs::dir_ls(
       file.path(temporary_directory, fs::path_file(path)),
-      glob = "*.qmd"
+      glob = "*.qmd",
+      recurse = TRUE
     )
     language_qmds <- qmds[grepl(sprintf("%s.qmd", language_code), qmds)]
-    fs::file_delete(qmds[!(qmds %in% language_qmds)])
+    missing_qmds <- setdiff(qmds, c(language_qmds, sub(sprintf("\\.%s\\.qmd$", language_code), ".qmd", language_qmds)))
+    necessary_qmds <- c(language_qmds, missing_qmds)
+    fs::file_delete(qmds[!(qmds %in% necessary_qmds)])
     for (qmd_path in language_qmds) {
       fs::file_move(
         qmd_path,
@@ -277,7 +281,8 @@ use_lang_chapter <- function(chapters_list, language_code, book_name, directory)
 }
 
 add_link <- function(path, main_language = main_language,
-                     language_code, site_url, type, config, output_folder) {
+                     language_code, site_url, type, config, output_folder,
+                     file_lang = main_language) {
   html <- xml2::read_html(path)
 
   document_path <- path
@@ -290,30 +295,6 @@ add_link <- function(path, main_language = main_language,
       sprintf("Version in %s", toupper(language_code))
   } else {
     sprintf("Version in %s", toupper(language_code))
-  }
-
-  code_in_filename <- unlist(regmatches(path, gregexpr("\\...\\.html", path)))
-  code_in_path <- unlist(regmatches(path, gregexpr(
-    file.path(output_folder, "..", basename(path)),
-    path
-  )))
-
-  if (length(code_in_filename) > 0) {
-    file_lang <- sub("\\.", "", sub("\\.html", "", code_in_filename))
-    path <- sub(sprintf("\\.%s\\.html$", file_lang), ".html", path)
-  } else {
-    if (length(code_in_path) > 0) {
-      messy_code <- sub(
-          output_folder,
-          "",
-          sub(basename(path), "", path)
-        )
-      file_lang <- unlist(
-        regmatches(messy_code, gregexpr("[a-zA-Z]+", messy_code))
-     )
-    } else {
-      file_lang <- main_language
-    }
   }
 
   if (language_code == main_language) {
