@@ -203,3 +203,63 @@ test_that("render_book() works - chapters", {
 
 })
 
+test_that("render_website() works - listing", {
+  withr::local_envvar("BABELQUARTO_TESTS_URL" = "true")
+
+  parent_dir <- withr::local_tempdir()
+  project_dir <- "blop"
+  quarto_multilingual_website(
+    parent_dir = parent_dir,
+    project_dir = project_dir,
+    further_languages = c("es", "fr"),
+    main_language = "en"
+  )
+
+  fs::dir_create(file.path(parent_dir, project_dir, "subdir"))
+  fs::file_copy(
+    test_path("listing.qmd"),
+    file.path(parent_dir, project_dir, "listing.qmd")
+  )
+  fs::file_copy(
+    file.path(parent_dir, project_dir, "about.qmd"),
+    file.path(parent_dir, project_dir, "subdir", "about.qmd")
+  )
+
+
+  withr::with_dir(parent_dir, render_website(project_dir))
+  
+  index <- xml2::read_html(file.path(parent_dir, project_dir, "_site", "listing.html"))
+  listing_grid <- xml2::xml_find_first(index, "//div[contains(@class, 'quarto-listing-cols-3')]")
+  grid_items <- length(xml2::xml_find_all(listing_grid, ".//div[contains(@class, 'quarto-grid-item')]"))
+
+  expect_length(grid_items, 1)
+})
+
+test_that("render_website() works - missing translations", {
+  withr::local_envvar("BABELQUARTO_TESTS_URL" = "true")
+
+  parent_dir <- withr::local_tempdir()
+  project_dir <- "blop"
+  quarto_multilingual_website(
+    parent_dir = parent_dir,
+    project_dir = project_dir,
+    further_languages = c("es", "fr"),
+    main_language = "en"
+  )
+
+  fs::dir_create(file.path(parent_dir, project_dir, "subdir"))
+  fs::file_copy(
+    file.path(parent_dir, project_dir, "about.qmd"),
+    file.path(parent_dir, project_dir, "subdir", "about.qmd")
+  )
+  fs::file_copy(
+    file.path(parent_dir, project_dir, "about.fr.qmd"),
+    file.path(parent_dir, project_dir, "subdir", "about.fr.qmd")
+  )
+
+  withr::with_dir(parent_dir, render_website(project_dir))
+  expect_true(fs::dir_exists(file.path(parent_dir, project_dir, "_site", "subdir")))
+  expect_true(fs::dir_exists(file.path(parent_dir, project_dir, "_site", "fr", "subdir")))
+  expect_true(fs::file_exists(file.path(parent_dir, project_dir, "_site", "fr", "subdir", "about.html")))
+  expect_false(fs::dir_exists(file.path(parent_dir, project_dir, "_site", "es", "subdir")))
+})
