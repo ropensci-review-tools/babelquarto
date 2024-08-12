@@ -87,7 +87,7 @@ render <- function(path = ".", site_url = NULL, type = c("book", "website")) {
   temporary_directory <- withr::local_tempdir()
   fs::dir_copy(path, temporary_directory)
   withr::with_dir(file.path(temporary_directory, fs::path_file(path)), {
-    fs::file_delete(fs::dir_ls(regexp = "\\...\\.qmd"))
+    fs::file_delete(fs::dir_ls(regexp = "\\...\\.qmd", recurse = TRUE))
     metadata <- list("true")
     names(metadata) <- sprintf("lang-%s", main_language)
     quarto::quarto_render(as_job = FALSE, metadata = metadata)
@@ -216,7 +216,8 @@ render_quarto_lang <- function(language_code, path, output_dir, type) {
     # only keep what's needed
     qmds <- fs::dir_ls(
       file.path(temporary_directory, fs::path_file(path)),
-      glob = "*.qmd"
+      glob = "*.qmd",
+      recurse = TRUE
     )
     language_qmds <- qmds[grepl(sprintf("%s.qmd", language_code), qmds)]
     fs::file_delete(qmds[!(qmds %in% language_qmds)])
