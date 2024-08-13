@@ -246,7 +246,7 @@ test_that("render_website() works - listing", {
   expect_length(grid_items, 1)
 })
 
-test_that("render_website() works - missing translations", {
+test_that("render_website() works - clean render for each language", {
   withr::local_envvar("BABELQUARTO_TESTS_URL" = "true")
 
   parent_dir <- withr::local_tempdir()
@@ -270,7 +270,9 @@ test_that("render_website() works - missing translations", {
 
   withr::with_dir(parent_dir, render_website(project_dir))
   expect_true(fs::dir_exists(file.path(parent_dir, project_dir, "_site", "subdir")))
+  expect_length(fs::dir_ls(file.path(parent_dir, project_dir, "_site", "subdir")), 1)
   expect_true(fs::dir_exists(file.path(parent_dir, project_dir, "_site", "fr", "subdir")))
+  expect_length(fs::dir_ls(file.path(parent_dir, project_dir, "_site", "fr", "subdir")), 1)
   expect_true(fs::file_exists(file.path(parent_dir, project_dir, "_site", "fr", "subdir", "about.html")))
   expect_false(fs::dir_exists(file.path(parent_dir, project_dir, "_site", "es", "subdir")))
 })
