@@ -9,7 +9,7 @@ test_that("register_main_language() works", {
     project_dir = "blop",
     further_languages = c("es", "fr"),
     main_language = "en",
-    register = FALSE
+    register_languages = FALSE
   )
   book_path <- file.path(parent_dir, "blop")
   register_main_language("en", book_path)
@@ -29,7 +29,7 @@ test_that("register_further_languages() works", {
     project_dir = "blop",
     further_languages = c("es", "fr"),
     main_language = "en",
-    register = FALSE
+    register_languages = FALSE
   )
   book_path <- file.path(parent_dir, "blop")
   expect_snapshot(
