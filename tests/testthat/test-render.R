@@ -216,8 +216,16 @@ test_that("render_website() works - listing", {
   )
 
   fs::dir_create(file.path(parent_dir, project_dir, "subdir"))
-  fs::file_copy(
-    test_path("listing.qmd"),
+  listing_lines <- c(
+    "---",
+    'title: "Listing"',
+    "listing:",
+    '  - contents: ["subdir/*.qmd"]',
+    "    type: grid",
+    "---"
+  )
+  brio::write_lines(
+    listing_lines,
     file.path(parent_dir, project_dir, "listing.qmd")
   )
   fs::file_copy(

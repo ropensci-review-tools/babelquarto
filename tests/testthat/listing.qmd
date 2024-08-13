@@ -1,6 +1,0 @@
----
-title: "Listing"
-listing:
-  - contents: ["subdir/*.qmd"]
-    type: grid
----
