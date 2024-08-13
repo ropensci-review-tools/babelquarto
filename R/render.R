@@ -325,7 +325,6 @@ add_links <- function(path, main_language = main_language,
       path_rel(path, output_folder, path_language, main_language)
     }
     href <- sprintf("%s/%s", site_url, new_path)
-    # If no translated version exists, don't add the link
     no_translated_version <- !fs::file_exists(file.path(output_folder, new_path))
     if (no_translated_version) return()
   } else {
