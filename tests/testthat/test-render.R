@@ -232,13 +232,16 @@ test_that("render_website() works - listing", {
     file.path(parent_dir, project_dir, "about.qmd"),
     file.path(parent_dir, project_dir, "subdir", "about.qmd")
   )
-
+  fs::file_copy(
+    file.path(parent_dir, project_dir, "about.fr.qmd"),
+    file.path(parent_dir, project_dir, "subdir", "about.fr.qmd")
+  )
 
   withr::with_dir(parent_dir, render_website(project_dir))
   
   index <- xml2::read_html(file.path(parent_dir, project_dir, "_site", "listing.html"))
   listing_grid <- xml2::xml_find_first(index, "//div[contains(@class, 'quarto-listing-cols-3')]")
-  grid_items <- length(xml2::xml_find_all(listing_grid, ".//div[contains(@class, 'quarto-grid-item')]"))
+  grid_items <- xml2::xml_find_all(listing_grid, ".//div[contains(@class, 'quarto-grid-item')]")
 
   expect_length(grid_items, 1)
 })
