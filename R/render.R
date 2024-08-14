@@ -186,6 +186,7 @@ render_quarto_lang <- function(language_code, path, output_dir, type) {
   )
   config$lang <- language_code
   config[[type]][["title"]] <- config[[sprintf("title-%s", language_code)]] %||% config[[type]][["title"]]
+  config[[type]][["subtitle"]] <- config[[sprintf("subtitle-%s", language_code)]] %||% config[[type]][["subtitle"]]
   config[[type]][["description"]] <- config[[sprintf("description-%s", language_code)]] %||% config[[type]][["description"]]
 
   if (type == "book") {
