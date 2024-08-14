@@ -276,3 +276,47 @@ test_that("render_website() works - clean render for each language", {
   expect_true(fs::file_exists(file.path(parent_dir, project_dir, "_site", "fr", "subdir", "about.html")))
   expect_false(fs::dir_exists(file.path(parent_dir, project_dir, "_site", "es", "subdir")))
 })
+
+test_that("render_website() fails when missing sidebar and languagelinks is set to sidebar", {
+  withr::local_envvar("BABELQUARTO_TESTS_URL" = "true")
+
+  parent_dir <- withr::local_tempdir()
+  project_dir <- "blop"
+  quarto_multilingual_website(
+    parent_dir = parent_dir,
+    project_dir = project_dir,
+    further_languages = c("es", "fr"),
+    main_language = "en"
+  )
+
+  config_path <- file.path(parent_dir, project_dir, "_quarto.yml")
+  config_lines <- brio::read_lines(config_path)
+  where_languagelinks <- which(grepl("  languagelinks:", config_lines))
+  config_lines[where_languagelinks] <- "  languagelinks: sidebar"
+  brio::write_lines(config_lines, config_path)
+
+  expect_error(withr::with_dir(parent_dir, render_website(project_dir)))
+})
+
+test_that("render_book() fails when missing navbar and languagelinks is set to navbar", {
+  withr::local_envvar("BABELQUARTO_TESTS_URL" = "true")
+
+  parent_dir <- withr::local_tempdir()
+  project_dir <- "blop"
+
+  quarto_multilingual_book(
+    parent_dir = parent_dir,
+    project_dir = project_dir,
+    further_languages = c("es", "fr"),
+    main_language = "en",
+    site_url = "https://ropensci.org"
+  )
+
+  config_path <- file.path(parent_dir, project_dir, "_quarto.yml")
+  config_lines <- brio::read_lines(config_path)
+  where_languagelinks <- which(grepl("  languagelinks:", config_lines))
+  config_lines[where_languagelinks] <- "  languagelinks: navbar"
+  brio::write_lines(config_lines, config_path)
+
+  expect_error(withr::with_dir(parent_dir, render_website(project_dir)))
+})
