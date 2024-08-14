@@ -23,16 +23,15 @@ register_main_language <- function(main_language = "en", project_path = ".") {
   }
 
   config_lines <- brio::read_lines(config_path)
-  config_lines <- c(
-    config_lines,
-    "",
-    "babelquarto:",
+  mainlanguage_config <- c(
     "  languagecodes:",
     sprintf("  - name: %s", main_language),
     sprintf('    text: "Version in %s"', main_language),
     sprintf("  mainlanguage: '%s'", main_language),
     sprintf("lang: %s", main_language)
   )
+  where_mainlanguage <- which(grepl("  languagelinks:", config_lines))
+  config_lines <- append(config_lines, mainlanguage_config, after = where_mainlanguage)
   brio::write_lines(config_lines, path = config_path)
 }
 

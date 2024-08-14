@@ -101,6 +101,19 @@ quarto_multilingual_project <- function(parent_dir,
     config_lines[grepl("date:", config_lines)] <- sprintf('  date: "%s"', Sys.getenv("QUARTOBABELDATE"))
   }
 
+  ## Add language link placement ----
+  if (type == "book") {
+    placement <- "sidebar"
+  } else {
+    placement <- "navbar"
+  }
+  config_lines <- c(
+    config_lines,
+    "",
+    "babelquarto:",
+    sprintf("  languagelinks: %s", placement)
+  )
+
   brio::write_lines(config_lines, path = config_path)
 
   ## "Register" languages ----
