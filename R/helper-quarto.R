@@ -7,6 +7,7 @@
 #' @param register_languages Whether to register languages (logical).
 #' @param site_url Site URL for the book/site-url
 #' or website/site-url part of the Quarto configuration.
+#' @param placement Where to place the language links (sidebar, navbar).
 #'
 #' @return The path to the created project.
 #' @export
@@ -16,7 +17,8 @@ quarto_multilingual_book <- function(parent_dir,
                                      main_language = "en",
                                      further_languages = c("es", "fr"),
                                      register_languages = TRUE,
-                                     site_url = "https://example.com") {
+                                     site_url = "https://example.com",
+                                     placement = "sidebar") {
   quarto_multilingual_project(
     parent_dir = parent_dir,
     project_dir = project_dir,
@@ -24,18 +26,20 @@ quarto_multilingual_book <- function(parent_dir,
     main_language = main_language,
     further_languages = further_languages,
     register_languages = register_languages,
-    site_url = site_url
+    site_url = site_url,
+    placement = placement
   )
 }
 
 #' @rdname quarto_multilingual_book
 #' @export
 quarto_multilingual_website <- function(parent_dir,
-                                       project_dir,
-                                       main_language = "en",
-                                       further_languages = c("es", "fr"),
-                                       register_languages = TRUE,
-                                       site_url = "https://example.com") {
+                                        project_dir,
+                                        main_language = "en",
+                                        further_languages = c("es", "fr"),
+                                        register_languages = TRUE,
+                                        site_url = "https://example.com",
+                                        placement = "navbar") {
   quarto_multilingual_project(
     parent_dir = parent_dir,
     project_dir = project_dir,
@@ -43,17 +47,19 @@ quarto_multilingual_website <- function(parent_dir,
     main_language = main_language,
     further_languages = further_languages,
     register_languages = register_languages,
-    site_url = site_url
+    site_url = site_url,
+    placement = placement
   )
 }
 
 quarto_multilingual_project <- function(parent_dir,
-                                       project_dir,
-                                       type = c("book", "website"),
-                                       main_language = "en",
-                                       further_languages = c("es", "fr"),
-                                       register_languages = TRUE,
-                                       site_url = "https://example.com") {
+                                        project_dir,
+                                        type = c("book", "website"),
+                                        main_language = "en",
+                                        further_languages = c("es", "fr"),
+                                        register_languages = TRUE,
+                                        site_url = "https://example.com",
+                                        placement = c("navbar", "sidebar")) {
 
   # Vanilla project from Quarto CLI ----
   if (parent_dir != getwd()) withr::local_dir(parent_dir)
@@ -102,7 +108,7 @@ quarto_multilingual_project <- function(parent_dir,
   }
 
   ## Add language link placement ----
-  placement <- switch(type,
+  placement <- placement %||% switch(type,
     book = "sidebar",
     website = "navbar"
   )
@@ -113,6 +119,26 @@ quarto_multilingual_project <- function(parent_dir,
     "babelquarto:",
     sprintf("  languagelinks: %s", placement)
   )
+
+  if (type == "website" && placement == "sidebar") {
+    where_website <- which(grepl("website:", config_lines))
+    website_sidebar <- c(
+      "  sidebar:",
+      "    contents:",
+      "      - index.qmd"
+    )
+    config_lines <- append(config_lines, website_sidebar, after = where_website)
+  }
+
+  if (type == "book" && placement == "navbar") {
+    where_book <- which(grepl("book:", config_lines))
+    book_navbar <- c(
+      "  navbar:",
+      "    left:",
+      "      - index.qmd"
+    )
+    config_lines <- append(config_lines, book_navbar, after = where_book)
+  }
 
   brio::write_lines(config_lines, path = config_path)
 
