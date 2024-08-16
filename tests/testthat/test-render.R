@@ -326,3 +326,53 @@ test_that("render_book() fails when missing navbar and languagelinks is set to n
     regexp = "Can't find book/navbar in _quarto.yml."
   )
 })
+
+test_that("book with navbar placement has languagelinks in the navbar", {
+  withr::local_envvar("BABELQUARTO_TESTS_URL" = "true")
+
+  parent_dir <- withr::local_tempdir()
+  project_dir <- "blop"
+
+  quarto_multilingual_book(
+    parent_dir = parent_dir,
+    project_dir = project_dir,
+    further_languages = c("es", "fr"),
+    main_language = "en",
+    site_url = "https://ropensci.org",
+    placement = "navbar"
+  )
+
+  withr::with_dir(parent_dir, render_book(project_dir))
+
+  index <- xml2::read_html(file.path(parent_dir, project_dir, "_book", "index.html"))
+  language_links <- xml2::xml_find_first(index, '//div[@id="languages-links-parent"]')
+  navbar_li <- xml2::xml_parent(language_links)
+  navbar_li_class <- xml2::xml_attr(navbar_li, "class")
+
+  expect_equal(navbar_li_class, "nav-item")
+})
+
+test_that("website with sidebar placement has languagelinks in the sidebar", {
+  withr::local_envvar("BABELQUARTO_TESTS_URL" = "true")
+
+  parent_dir <- withr::local_tempdir()
+  project_dir <- "blop"
+
+  quarto_multilingual_website(
+    parent_dir = parent_dir,
+    project_dir = project_dir,
+    further_languages = c("es", "fr"),
+    main_language = "en",
+    site_url = "https://ropensci.org",
+    placement = "sidebar"
+  )
+
+  withr::with_dir(parent_dir, render_website(project_dir))
+
+  index <- xml2::read_html(file.path(parent_dir, project_dir, "_site", "index.html"))
+  language_links <- xml2::xml_find_first(index, '//div[@id="languages-links-parent"]')
+  sidebar <- xml2::xml_parent(language_links)
+  sidebar_id <- xml2::xml_attr(sidebar, "id")
+
+  expect_equal(sidebar_id, "quarto-sidebar")
+})
