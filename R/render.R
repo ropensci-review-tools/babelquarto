@@ -361,14 +361,21 @@ add_links <- function(path, main_language = main_language,
 
   if (!languages_links_div_exists) {
     if (placement == "navbar") {
-      navbar <- xml2::xml_find_first(html, "//div[@id='navbarCollapse']")
+      navbar <- xml2::xml_find_first(html, "//ul[contains(@class, 'navbar-nav')]")
 
-      xml2::xml_add_child(
+      navbar_li <- xml2::xml_add_child(
         navbar,
+        "li",
+        class = "nav-item",
+        .where = 0
+      )
+
+      xml2::xml_add_sibling(
+        navbar_li,
         "div",
         class = "dropdown",
         id = "languages-links-parent",
-        .where = 0
+        .where = "before"
       )
     } else {
       sidebar_menu <- xml2::xml_find_first(html, "//div[contains(@class,'sidebar-menu-container')]")
