@@ -1,7 +1,7 @@
 #' Create a starter/example quarto multilingual book or website
 #'
 #' @param parent_dir Folder where to create the project folder.
-#' @param project_dir Project (book, webiste) folder name.
+#' @param project_dir Project (book, website) folder name.
 #' @param further_languages Codes for not main languages.
 #' @param main_language Code for main languages.
 #' @param register_languages Whether to register languages (logical).
