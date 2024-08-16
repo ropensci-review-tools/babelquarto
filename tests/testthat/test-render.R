@@ -295,7 +295,10 @@ test_that("render_website() fails when missing sidebar and languagelinks is set 
   config_lines[where_languagelinks] <- "  languagelinks: sidebar"
   brio::write_lines(config_lines, config_path)
 
-  expect_error(withr::with_dir(parent_dir, render_website(project_dir)))
+  expect_error(
+    withr::with_dir(parent_dir, render_website(project_dir)),
+    regexp = "Can't find website/sidebar in _quarto.yml."
+  )
 })
 
 test_that("render_book() fails when missing navbar and languagelinks is set to navbar", {
@@ -318,5 +321,8 @@ test_that("render_book() fails when missing navbar and languagelinks is set to n
   config_lines[where_languagelinks] <- "  languagelinks: navbar"
   brio::write_lines(config_lines, config_path)
 
-  expect_error(withr::with_dir(parent_dir, render_website(project_dir)))
+  expect_error(
+    withr::with_dir(parent_dir, render_book(project_dir)),
+    regexp = "Can't find book/navbar in _quarto.yml."
+  )
 })
