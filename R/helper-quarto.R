@@ -102,11 +102,11 @@ quarto_multilingual_project <- function(parent_dir,
   }
 
   ## Add language link placement ----
-  if (type == "book") {
-    placement <- "sidebar"
-  } else {
-    placement <- "navbar"
-  }
+  placement <- switch(type,
+    book = "sidebar",
+    website = "navbar"
+  )
+
   config_lines <- c(
     config_lines,
     "",
