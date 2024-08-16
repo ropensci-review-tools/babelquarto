@@ -370,7 +370,7 @@ add_links <- function(path, main_language = main_language,
         .where = 0
       )
 
-      xml2::xml_add_sibling(
+      xml2::xml_add_child(
         navbar_li,
         "div",
         class = "dropdown",
