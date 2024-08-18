@@ -330,7 +330,7 @@ add_links <- function(path, main_language = main_language,
   }
 
   if (language_code == main_language) {
-    new_path <-  if (type == "book") {
+    new_path <- if (type == "book") {
       sub(
         "\\...\\.html", ".html",
         path_rel(path, output_folder, path_language, main_language)
@@ -343,7 +343,7 @@ add_links <- function(path, main_language = main_language,
     if (no_translated_version) return()
   } else {
     base_path <- sub(
-      "\\..\\.html", ".html",
+      "\\...\\.html", ".html",
       path_rel(path, output_folder, path_language, main_language)
     )
     new_path <- if (type == "book") {
