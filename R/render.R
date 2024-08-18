@@ -87,7 +87,7 @@ render <- function(path = ".", site_url = NULL, type = c("book", "website")) {
   temporary_directory <- withr::local_tempdir()
   fs::dir_copy(path, temporary_directory)
   withr::with_dir(file.path(temporary_directory, fs::path_file(path)), {
-    fs::file_delete(fs::dir_ls(regexp = "\\...\\.qmd"))
+    fs::file_delete(fs::dir_ls(regexp = "\\...\\.qmd", recurse = TRUE))
     metadata <- list("true")
     names(metadata) <- sprintf("lang-%s", main_language)
     quarto::quarto_render(
@@ -190,6 +190,7 @@ render_quarto_lang <- function(language_code, path, output_dir, type) {
   )
   config$lang <- language_code
   config[[type]][["title"]] <- config[[sprintf("title-%s", language_code)]] %||% config[[type]][["title"]]
+  config[[type]][["subtitle"]] <- config[[sprintf("subtitle-%s", language_code)]] %||% config[[type]][["subtitle"]]
   config[[type]][["description"]] <- config[[sprintf("description-%s", language_code)]] %||% config[[type]][["description"]]
 
   if (type == "book") {
@@ -220,7 +221,8 @@ render_quarto_lang <- function(language_code, path, output_dir, type) {
     # only keep what's needed
     qmds <- fs::dir_ls(
       file.path(temporary_directory, fs::path_file(path)),
-      glob = "*.qmd"
+      glob = "*.qmd",
+      recurse = TRUE
     )
     language_qmds <- qmds[grepl(sprintf("%s.qmd", language_code), qmds)]
     fs::file_delete(qmds[!(qmds %in% language_qmds)])
@@ -329,6 +331,8 @@ add_links <- function(path, main_language = main_language,
       path_rel(path, output_folder, path_language, main_language)
     }
     href <- sprintf("%s/%s", site_url, new_path)
+    no_translated_version <- !fs::file_exists(file.path(output_folder, new_path))
+    if (no_translated_version) return()
   } else {
     base_path <- sub(
       "\\..\\.html", ".html",
@@ -340,6 +344,8 @@ add_links <- function(path, main_language = main_language,
       base_path
     }
     href <- sprintf("%s/%s/%s", site_url, language_code, new_path)
+    no_translated_version <- !fs::file_exists(file.path(output_folder, language_code, new_path))
+    if (no_translated_version) return()
   }
 
   if (type == "book") {
