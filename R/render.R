@@ -22,6 +22,7 @@
 #'
 #' @param project_path Path where the book/website source is located
 #' @param site_url Base URL of the book/website.
+#' @param profile Quarto profile(s) to use.
 #'
 #' @export
 #'
@@ -36,17 +37,17 @@
 #' }
 #'
 #' @rdname render
-render_book <- function(project_path = ".", site_url = NULL) {
-  render(path = project_path, site_url = site_url, type = "book")
+render_book <- function(project_path = ".", site_url = NULL, profile = c()) {
+  render(path = project_path, site_url = site_url, type = "book", profile = profile)
 }
 
 #' @export
 #' @rdname render
-render_website <- function(project_path = ".", site_url = NULL) {
-  render(path = project_path, site_url = site_url, type = "website")
+render_website <- function(project_path = ".", site_url = NULL, profile = c()) {
+  render(path = project_path, site_url = site_url, type = "website", profile = profile)
 }
 
-render <- function(path = ".", site_url = NULL, type = c("book", "website")) {
+render <- function(path = ".", site_url = NULL, type = c("book", "website"), profile = c()) {
   # configuration ----
   config <- file.path(path, "_quarto.yml")
   config_contents <- yaml::read_yaml(config, handlers = list(seq = function(x) x))
@@ -93,7 +94,7 @@ render <- function(path = ".", site_url = NULL, type = c("book", "website")) {
     quarto::quarto_render(
       as_job = FALSE,
       metadata = metadata,
-      profile = main_language
+      profile = c(main_language, profile)
     )
   })
   fs::dir_copy(
