@@ -376,3 +376,72 @@ test_that("website with sidebar placement has languagelinks in the sidebar", {
 
   expect_equal(sidebar_id, "quarto-sidebar")
 })
+
+test_that("render_book() works - all language links are present", {
+
+  parent_dir <- withr::local_tempdir()
+  project_dir <- "blop"
+
+  quarto_multilingual_book(
+    parent_dir = parent_dir,
+    project_dir = project_dir,
+    further_languages = c("es", "fr"),
+    main_language = "en",
+    site_url = "https://ropensci.org"
+  )
+
+  withr::with_dir(parent_dir, render_book(project_dir))
+  index <- xml2::read_html(file.path(parent_dir, project_dir, "_book", "index.html"))
+  index_link_fr <- xml2::xml_length(xml2::xml_find_all(index, '//a[@id="language-link-fr"]'), only_elements = FALSE)
+  index_link_es <- xml2::xml_length(xml2::xml_find_all(index, '//a[@id="language-link-es"]'), only_elements = FALSE)
+
+  index_fr <- xml2::read_html(file.path(parent_dir, project_dir, "_book", "fr", "index.fr.html"))
+  index_fr_link_en <- xml2::xml_length(xml2::xml_find_all(index_fr, '//a[@id="language-link-en"]'), only_elements = FALSE)
+  index_fr_link_es <- xml2::xml_length(xml2::xml_find_all(index_fr, '//a[@id="language-link-es"]'), only_elements = FALSE)
+
+  index_es <- xml2::read_html(file.path(parent_dir, project_dir, "_book", "es", "index.es.html"))
+  index_es_link_en <- xml2::xml_length(xml2::xml_find_all(index_es, '//a[@id="language-link-en"]'), only_elements = FALSE)
+  index_es_link_fr <- xml2::xml_length(xml2::xml_find_all(index_es, '//a[@id="language-link-fr"]'), only_elements = FALSE)
+
+  expect_equal(index_link_fr, 1)
+  expect_equal(index_link_es, 1)
+  expect_equal(index_fr_link_en, 1)
+  expect_equal(index_fr_link_es, 1)
+  expect_equal(index_es_link_en, 1)
+  expect_equal(index_es_link_fr, 1)
+})
+
+
+test_that("render_website() works - all language links are present", {
+
+  parent_dir <- withr::local_tempdir()
+  project_dir <- "blop"
+
+  quarto_multilingual_website(
+    parent_dir = parent_dir,
+    project_dir = project_dir,
+    further_languages = c("es", "fr"),
+    main_language = "en",
+    site_url = "https://ropensci.org"
+  )
+
+  withr::with_dir(parent_dir, render_website(project_dir))
+  index <- xml2::read_html(file.path(parent_dir, project_dir, "_site", "index.html"))
+  index_link_fr <- xml2::xml_length(xml2::xml_find_all(index, '//a[@id="language-link-fr"]'), only_elements = FALSE)
+  index_link_es <- xml2::xml_length(xml2::xml_find_all(index, '//a[@id="language-link-es"]'), only_elements = FALSE)
+
+  index_fr <- xml2::read_html(file.path(parent_dir, project_dir, "_site", "fr", "index.html"))
+  index_fr_link_en <- xml2::xml_length(xml2::xml_find_all(index_fr, '//a[@id="language-link-en"]'), only_elements = FALSE)
+  index_fr_link_es <- xml2::xml_length(xml2::xml_find_all(index_fr, '//a[@id="language-link-es"]'), only_elements = FALSE)
+
+  index_es <- xml2::read_html(file.path(parent_dir, project_dir, "_site", "es", "index.html"))
+  index_es_link_en <- xml2::xml_length(xml2::xml_find_all(index_es, '//a[@id="language-link-en"]'), only_elements = FALSE)
+  index_es_link_fr <- xml2::xml_length(xml2::xml_find_all(index_es, '//a[@id="language-link-fr"]'), only_elements = FALSE)
+
+  expect_equal(index_link_fr, 1)
+  expect_equal(index_link_es, 1)
+  expect_equal(index_fr_link_en, 1)
+  expect_equal(index_fr_link_es, 1)
+  expect_equal(index_es_link_en, 1)
+  expect_equal(index_es_link_fr, 1)
+})
