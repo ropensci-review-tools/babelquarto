@@ -86,12 +86,12 @@ quarto_multilingual_project <- function(parent_dir,
   config_path <- file.path(project_dir, "_quarto.yml")
   config_lines <- brio::read_lines(config_path)
 
-  where_project <- which(grepl(sprintf("%s:", type), config_lines))
+  where_project <- grep(sprintf("%s:", type), config_lines)
   config_lines <- append(config_lines, sprintf("  site-url: %s", site_url), after = where_project)
 
   ## Remove LaTeX lines ----
   if (type == "book") {
-    config_lines <- config_lines[1:(which(grepl("pdf:", config_lines)) - 1)]
+    config_lines <- config_lines[1:(grep("pdf:", config_lines) - 1)]
   }
 
   ## Change author ----
@@ -116,7 +116,7 @@ quarto_multilingual_project <- function(parent_dir,
   )
 
   if (type == "website" && placement == "sidebar") {
-    where_website <- which(grepl("website:", config_lines))
+    where_website <- grep("website:", config_lines)
     website_sidebar <- c(
       "  sidebar:",
       "    contents:",
@@ -126,7 +126,7 @@ quarto_multilingual_project <- function(parent_dir,
   }
 
   if (type == "book" && placement == "navbar") {
-    where_book <- which(grepl("book:", config_lines))
+    where_book <- grep("book:", config_lines)
     book_navbar <- c(
       "  navbar:",
       "    left:",

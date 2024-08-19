@@ -30,7 +30,7 @@ register_main_language <- function(main_language = "en", project_path = ".") {
     sprintf("  mainlanguage: '%s'", main_language),
     sprintf("lang: %s", main_language)
   )
-  babelquarto_config_exists <- which(grepl("babelquarto:", config_lines))
+  babelquarto_config_exists <- grep("babelquarto:", config_lines)
   if (length(babelquarto_config_exists) == 0) {
     mainlanguage_config <- c(
       "babelquarto:",
@@ -43,7 +43,7 @@ register_main_language <- function(main_language = "en", project_path = ".") {
       mainlanguage_config
     )
   } else {
-    where_languagelinks <- which(grepl("  languagelinks:", config_lines))
+    where_languagelinks <- grep("  languagelinks:", config_lines)
     config_lines <- append(config_lines, mainlanguage_config, after = where_languagelinks)
   }
   brio::write_lines(config_lines, path = config_path)
@@ -80,7 +80,7 @@ register_further_languages <- function(further_languages, project_path = ".") {
 
   config_lines <- brio::read_lines(config_path)
   config_lines <- config_lines[!grepl("languages\\:", config_lines)]
-  which_main <- which(grepl("mainlanguage\\:", trimws(config_lines)))
+  which_main <- grep("mainlanguage\\:", trimws(config_lines))
   languages <- sprintf("'%s'",union(config[["babelquarto"]][["languages"]], further_languages))
   config_lines <- append(
     config_lines,

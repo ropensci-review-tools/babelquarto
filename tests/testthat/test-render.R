@@ -291,7 +291,7 @@ test_that("render_website() fails when missing sidebar and languagelinks is set 
 
   config_path <- file.path(parent_dir, project_dir, "_quarto.yml")
   config_lines <- brio::read_lines(config_path)
-  where_languagelinks <- which(grepl("  languagelinks:", config_lines))
+  where_languagelinks <- grep("  languagelinks:", config_lines)
   config_lines[where_languagelinks] <- "  languagelinks: sidebar"
   brio::write_lines(config_lines, config_path)
 
@@ -317,7 +317,7 @@ test_that("render_book() fails when missing navbar and languagelinks is set to n
 
   config_path <- file.path(parent_dir, project_dir, "_quarto.yml")
   config_lines <- brio::read_lines(config_path)
-  where_languagelinks <- which(grepl("  languagelinks:", config_lines))
+  where_languagelinks <- grep("  languagelinks:", config_lines)
   config_lines[where_languagelinks] <- "  languagelinks: navbar"
   brio::write_lines(config_lines, config_path)
 
