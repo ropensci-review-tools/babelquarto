@@ -103,7 +103,24 @@ babelquarto:
 
 Using `babelquarto::register_main_language()` and `babelquarto::register_further_languages()` will create the boilertemplate for these fields.
 
-## Configure templates
+## Distinct configuration per language
+
+There are two complementary/overlapping solutions for making the different language versions distinct (different banner, different navbar for instance):
+
+### Configuration file per language
+
+For a book with French ("fr") and English ("en") versions you could have three Quarto configuration files:
+
+- `_quarto.yml` with the general configuration including the chapters list;
+- `_quarto.fr.yml` with an [announcement bar](https://quarto.org/docs/websites/website-tools.html#announcement-bar) in French;
+- `_quarto.en.yml` with an [announcement bar](https://quarto.org/docs/websites/website-tools.html#announcement-bar) in English.
+
+You could use the same strategy for having different navbars in the different language versions of a multilingual website.
+
+This uses [Quarto profiles](https://quarto.org/docs/projects/profiles.html) under the hood.
+You can still use other profiles such as development and production, by passing them as the `profile` argument of `render_book()` and `render_website()`.
+
+### Configure templates
 
 If you want, say, a banner with different content in the different languages, you can create a [partial template](https://quarto.org/docs/journals/templates.html#html-partials) and in it use the variables `lang-fr` and `lang-en` for instance for content in French and English.
 
