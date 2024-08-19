@@ -309,13 +309,11 @@ add_links <- function(path, main_language = main_language,
   codes <- config[["babelquarto"]][["languagecodes"]]
   current_lang <- purrr::keep(codes, ~.x[["name"]] == language_code)
 
-  if (type == "book") {
-    placement <- config[["babelquarto"]][["languagelinks"]] %||% "sidebar"
-  } else {
-    placement <- config[["babelquarto"]][["languagelinks"]] %||% "navbar"
-    if (placement == "sidebar" && is.null(config[["website"]][["sidebar"]])) {
-      cli::cli_abort("Can't find {.field website/sidebar} in {.field _quarto.yml}. You set the {.field babelquarto/languagelinks} to {.field sidebar} but also don't have a sidebar in your website.")
-    }
+  placement <- config[["babelquarto"]][["languagelinks"]] %||%
+    switch(type, website = "navbar", book = "sidebar")
+
+  if (type == "website" && placement == "sidebar" && is.null(config[["website"]][["sidebar"]])) {
+    cli::cli_abort("Can't find {.field website/sidebar} in {.field _quarto.yml}. You set the {.field babelquarto/languagelinks} to {.field sidebar} but also don't have a sidebar in your website.")
   }
 
   if (placement == "navbar" && is.null(config[[type]][["navbar"]])) {
