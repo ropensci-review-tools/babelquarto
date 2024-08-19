@@ -40,15 +40,12 @@ Create a starter/example book.
 parent_dir <- withr::local_tempdir()
 project_dir <- "blop"
 babelquarto::quarto_multilingual_book(parent_dir = parent_dir, project_dir = project_dir)
-#> [1] "/tmp/RtmpBoDnhG/filedc9c5c49d508/blop"
-```
-
-``` r
+#> [1] "/tmp/RtmpwufwUJ/filef6155cc859a6/blop"
 readLines(file.path(parent_dir, project_dir, "_quarto.yml"))
 #>  [1] "project:"                          "  type: book"                     
 #>  [3] ""                                  "book:"                            
 #>  [5] "  site-url: https://example.com"   "  title: \"blop\""                
-#>  [7] "  author: \"Maëlle Salmon\""       "  date: \"6/24/2024\""            
+#>  [7] "  author: \"Maëlle Salmon\""       "  date: \"8/19/2024\""            
 #>  [9] "  chapters:"                       "    - index.qmd"                  
 #> [11] "    - intro.qmd"                   "    - summary.qmd"                
 #> [13] "    - references.qmd"              ""                                 
@@ -64,11 +61,8 @@ readLines(file.path(parent_dir, project_dir, "_quarto.yml"))
 #> [33] "description-es: description in es" "description-fr: description in fr"
 #> [35] "author-es: author in es"           "author-fr: author in fr"          
 #> [37] "lang: en"
-```
-
-``` r
 fs::dir_tree(file.path(parent_dir, project_dir))
-#> /tmp/RtmpBoDnhG/filedc9c5c49d508/blop
+#> /tmp/RtmpwufwUJ/filef6155cc859a6/blop
 #> ├── _quarto.yml
 #> ├── cover.png
 #> ├── index.es.qmd
@@ -101,10 +95,7 @@ Create a starter/example website.
 parent_dir <- withr::local_tempdir()
 project_dir <- "blop"
 babelquarto::quarto_multilingual_website(parent_dir = parent_dir, project_dir = project_dir)
-#> [1] "/tmp/RtmpBoDnhG/filedc9c76c8fd6a/blop"
-```
-
-``` r
+#> [1] "/tmp/RtmpwufwUJ/filef6153a78d0ae/blop"
 readLines(file.path(parent_dir, project_dir, "_quarto.yml"))
 #>  [1] "project:"                          "  type: website"                  
 #>  [3] ""                                  "website:"                         
@@ -125,11 +116,8 @@ readLines(file.path(parent_dir, project_dir, "_quarto.yml"))
 #> [33] "title-fr: title in fr"             "description-es: description in es"
 #> [35] "description-fr: description in fr" "author-es: author in es"          
 #> [37] "author-fr: author in fr"           "lang: en"
-```
-
-``` r
 fs::dir_tree(file.path(parent_dir, project_dir))
-#> /tmp/RtmpBoDnhG/filedc9c76c8fd6a/blop
+#> /tmp/RtmpwufwUJ/filef6153a78d0ae/blop
 #> ├── _quarto.yml
 #> ├── about.es.qmd
 #> ├── about.fr.qmd
@@ -175,7 +163,36 @@ Using `babelquarto::register_main_language()` and
 `babelquarto::register_further_languages()` will create the
 boilertemplate for these fields.
 
-## Configure templates
+## Distinct configuration per language
+
+There are two complementary/overlapping solutions for making the
+different language versions distinct (different banner, different navbar
+for instance):
+
+### Configuration file per language
+
+For a book with French (“fr”) and English (“en”) versions you could have
+three Quarto configuration files:
+
+- `_quarto.yml` with the general configuration including the chapters
+  list;
+- `_quarto.fr.yml` with an [announcement
+  bar](https://quarto.org/docs/websites/website-tools.html#announcement-bar)
+  in French;
+- `_quarto.en.yml` with an [announcement
+  bar](https://quarto.org/docs/websites/website-tools.html#announcement-bar)
+  in English.
+
+You could use the same strategy for having different navbars in the
+different language versions of a multilingual website.
+
+This uses [Quarto
+profiles](https://quarto.org/docs/projects/profiles.html) under the
+hood. You can still use other profiles such as development and
+production, by passing them as the `profile` argument of `render_book()`
+and `render_website()`.
+
+### Configure templates
 
 If you want, say, a banner with different content in the different
 languages, you can create a [partial
@@ -237,7 +254,7 @@ project:
 book:
   title: "babelbook"
   author: "Norah Jones"
-  date: "6/24/2024"
+  date: "8/19/2024"
   chapters:
     - index.qmd
     - intro.qmd
