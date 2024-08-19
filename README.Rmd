@@ -106,7 +106,7 @@ Using `babelquarto::register_main_language()` and `babelquarto::register_further
 ## Configure the language link placement
 
 The language link menu can be placed in the *sidebar* or in the *navbar*. 
-To change the placement, use the languagelinks field in the babelquarto YAML key, in `_quarto.yml`:
+To change the placement, use the `languagelinks` field in the babelquarto YAML key, in `_quarto.yml`:
 
 ```yaml
 babelquarto:
