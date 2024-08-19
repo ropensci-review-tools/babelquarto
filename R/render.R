@@ -22,6 +22,7 @@
 #'
 #' @param project_path Path where the book/website source is located
 #' @param site_url Base URL of the book/website.
+#' @param profile Quarto profile(s) to use.
 #'
 #' @export
 #'
@@ -36,17 +37,17 @@
 #' }
 #'
 #' @rdname render
-render_book <- function(project_path = ".", site_url = NULL) {
-  render(path = project_path, site_url = site_url, type = "book")
+render_book <- function(project_path = ".", site_url = NULL, profile = NULL) {
+  render(path = project_path, site_url = site_url, type = "book", profile = profile)
 }
 
 #' @export
 #' @rdname render
-render_website <- function(project_path = ".", site_url = NULL) {
-  render(path = project_path, site_url = site_url, type = "website")
+render_website <- function(project_path = ".", site_url = NULL, profile = NULL) {
+  render(path = project_path, site_url = site_url, type = "website", profile = profile)
 }
 
-render <- function(path = ".", site_url = NULL, type = c("book", "website")) {
+render <- function(path = ".", site_url = NULL, type = c("book", "website"), profile) {
   # configuration ----
   config <- file.path(path, "_quarto.yml")
   config_contents <- yaml::read_yaml(config, handlers = list(seq = function(x) x))
@@ -85,12 +86,17 @@ render <- function(path = ".", site_url = NULL, type = c("book", "website")) {
 
   # render project ----
   temporary_directory <- withr::local_tempdir()
+  profile <- profile %||% Sys.getenv("QUARTO_PROFILE")
   fs::dir_copy(path, temporary_directory)
   withr::with_dir(file.path(temporary_directory, fs::path_file(path)), {
     fs::file_delete(fs::dir_ls(regexp = "\\...\\.qmd", recurse = TRUE))
     metadata <- list("true")
     names(metadata) <- sprintf("lang-%s", main_language)
-    quarto::quarto_render(as_job = FALSE, metadata = metadata)
+    quarto::quarto_render(
+      as_job = FALSE,
+      metadata = metadata,
+      profile = c(main_language, profile)
+    )
   })
   fs::dir_copy(
     file.path(temporary_directory, fs::path_file(path), output_dir),
@@ -244,7 +250,8 @@ render_quarto_lang <- function(language_code, path, output_dir, type) {
   withr::with_dir(file.path(temporary_directory, project_name), {
     quarto::quarto_render(
       as_job = FALSE,
-      metadata = metadata
+      metadata = metadata,
+      profile = language_code
     )
   })
 

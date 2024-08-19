@@ -5,14 +5,16 @@
 \alias{render_website}
 \title{Render a Quarto multilingual project}
 \usage{
-render_book(project_path = ".", site_url = NULL)
+render_book(project_path = ".", site_url = NULL, profile = NULL)
 
-render_website(project_path = ".", site_url = NULL)
+render_website(project_path = ".", site_url = NULL, profile = NULL)
 }
 \arguments{
 \item{project_path}{Path where the book/website source is located}
 
 \item{site_url}{Base URL of the book/website.}
+
+\item{profile}{Quarto profile(s) to use.}
 }
 \description{
 Render a Quarto multilingual project
