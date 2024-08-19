@@ -12,7 +12,7 @@ quarto_multilingual_book(
   further_languages = c("es", "fr"),
   register_languages = TRUE,
   site_url = "https://example.com",
-  placement = "sidebar"
+  placement = c("sidebar", "navbar")
 )
 
 quarto_multilingual_website(
@@ -22,7 +22,7 @@ quarto_multilingual_website(
   further_languages = c("es", "fr"),
   register_languages = TRUE,
   site_url = "https://example.com",
-  placement = "navbar"
+  placement = c("navbar", "sidebar")
 )
 }
 \arguments{
