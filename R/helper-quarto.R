@@ -18,7 +18,7 @@ quarto_multilingual_book <- function(parent_dir,
                                      further_languages = c("es", "fr"),
                                      register_languages = TRUE,
                                      site_url = "https://example.com",
-                                     placement = "sidebar") {
+                                     placement = c("sidebar", "navbar")) {
   quarto_multilingual_project(
     parent_dir = parent_dir,
     project_dir = project_dir,
@@ -39,7 +39,7 @@ quarto_multilingual_website <- function(parent_dir,
                                         further_languages = c("es", "fr"),
                                         register_languages = TRUE,
                                         site_url = "https://example.com",
-                                        placement = "navbar") {
+                                        placement = c("navbar", "sidebar")) {
   quarto_multilingual_project(
     parent_dir = parent_dir,
     project_dir = project_dir,
@@ -60,6 +60,8 @@ quarto_multilingual_project <- function(parent_dir,
                                         register_languages = TRUE,
                                         site_url = "https://example.com",
                                         placement = c("navbar", "sidebar")) {
+  
+  placement <- rlang::arg_match(placement)
 
   # Vanilla project from Quarto CLI ----
   if (parent_dir != getwd()) withr::local_dir(parent_dir)
