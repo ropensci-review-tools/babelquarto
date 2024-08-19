@@ -390,11 +390,8 @@ test_that("render_book() works - all language links are present in sidebar", {
     site_url = "https://ropensci.org"
   )
 
-  withr::with_envvar(new = c("BABELQUARTO_CI_URL" = "https://ropensci.org"),
-    withr::with_dir(
-      parent_dir, render_book(project_dir)
-    )
-  )
+  withr::local_envvar("BABELQUARTO_CI_URL" = "https://ropensci.org")
+  withr::with_dir(parent_dir, render_book(project_dir))
 
   index <- xml2::read_html(file.path(parent_dir, project_dir, "_book", "index.html"))
 
@@ -464,7 +461,7 @@ test_that("render_website() works - all language links are present in navbar", {
     site_url = "https://ropensci.org"
   )
 
-  withr::local_envvar(new = c("BABELQUARTO_CI_URL" = "https://ropensci.org"))
+  withr::local_envvar("BABELQUARTO_CI_URL" = "https://ropensci.org")
   withr::with_dir(parent_dir, render_website(project_dir))
 
   index <- xml2::read_html(file.path(parent_dir, project_dir, "_site", "index.html"))
