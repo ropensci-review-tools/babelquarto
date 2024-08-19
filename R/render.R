@@ -86,6 +86,7 @@ render <- function(path = ".", site_url = NULL, type = c("book", "website"), pro
 
   # render project ----
   temporary_directory <- withr::local_tempdir()
+  profile <- profile %||% Sys.getenv("QUARTO_PROFILE")
   fs::dir_copy(path, temporary_directory)
   withr::with_dir(file.path(temporary_directory, fs::path_file(path)), {
     fs::file_delete(fs::dir_ls(regexp = "\\...\\.qmd", recurse = TRUE))
