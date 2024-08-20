@@ -40,29 +40,29 @@ Create a starter/example book.
 parent_dir <- withr::local_tempdir()
 project_dir <- "blop"
 babelquarto::quarto_multilingual_book(parent_dir = parent_dir, project_dir = project_dir)
-#> [1] "/tmp/RtmpwufwUJ/filef6155cc859a6/blop"
+#> [1] "/var/folders/gd/rrsyq__147x_8y_3zcpymj_40000gn/T//RtmpriOJiL/file8469343ef080/blop"
 readLines(file.path(parent_dir, project_dir, "_quarto.yml"))
 #>  [1] "project:"                          "  type: book"                     
 #>  [3] ""                                  "book:"                            
 #>  [5] "  site-url: https://example.com"   "  title: \"blop\""                
-#>  [7] "  author: \"Maëlle Salmon\""       "  date: \"8/19/2024\""            
+#>  [7] "  author: \"Pascal Burkhard\""     "  date: \"19.08.2024\""           
 #>  [9] "  chapters:"                       "    - index.qmd"                  
 #> [11] "    - intro.qmd"                   "    - summary.qmd"                
 #> [13] "    - references.qmd"              ""                                 
 #> [15] "bibliography: references.bib"      ""                                 
 #> [17] "format:"                           "  html:"                          
 #> [19] "    theme: cosmo"                  ""                                 
-#> [21] "babelquarto:"                      "  languagecodes:"                 
-#> [23] "  - name: es"                      "    text: \"Version in es\""      
-#> [25] "  - name: fr"                      "    text: \"Version in fr\""      
-#> [27] "  - name: en"                      "    text: \"Version in en\""      
-#> [29] "  mainlanguage: 'en'"              "  languages: ['es', 'fr']"        
-#> [31] "title-es: title in es"             "title-fr: title in fr"            
-#> [33] "description-es: description in es" "description-fr: description in fr"
-#> [35] "author-es: author in es"           "author-fr: author in fr"          
-#> [37] "lang: en"
+#> [21] "babelquarto:"                      "  languagelinks: sidebar"         
+#> [23] "  languagecodes:"                  "  - name: es"                     
+#> [25] "    text: \"Version in es\""       "  - name: fr"                     
+#> [27] "    text: \"Version in fr\""       "  - name: en"                     
+#> [29] "    text: \"Version in en\""       "  mainlanguage: 'en'"             
+#> [31] "  languages: ['es', 'fr']"         "title-es: title in es"            
+#> [33] "title-fr: title in fr"             "description-es: description in es"
+#> [35] "description-fr: description in fr" "author-es: author in es"          
+#> [37] "author-fr: author in fr"           "lang: en"
 fs::dir_tree(file.path(parent_dir, project_dir))
-#> /tmp/RtmpwufwUJ/filef6155cc859a6/blop
+#> /var/folders/gd/rrsyq__147x_8y_3zcpymj_40000gn/T//RtmpriOJiL/file8469343ef080/blop
 #> ├── _quarto.yml
 #> ├── cover.png
 #> ├── index.es.qmd
@@ -95,7 +95,7 @@ Create a starter/example website.
 parent_dir <- withr::local_tempdir()
 project_dir <- "blop"
 babelquarto::quarto_multilingual_website(parent_dir = parent_dir, project_dir = project_dir)
-#> [1] "/tmp/RtmpwufwUJ/filef6153a78d0ae/blop"
+#> [1] "/var/folders/gd/rrsyq__147x_8y_3zcpymj_40000gn/T//RtmpriOJiL/file84692577354f/blop"
 readLines(file.path(parent_dir, project_dir, "_quarto.yml"))
 #>  [1] "project:"                          "  type: website"                  
 #>  [3] ""                                  "website:"                         
@@ -108,16 +108,17 @@ readLines(file.path(parent_dir, project_dir, "_quarto.yml"))
 #> [17] "    toc: true"                     ""                                 
 #> [19] ""                                  ""                                 
 #> [21] ""                                  "babelquarto:"                     
-#> [23] "  languagecodes:"                  "  - name: es"                     
-#> [25] "    text: \"Version in es\""       "  - name: fr"                     
-#> [27] "    text: \"Version in fr\""       "  - name: en"                     
-#> [29] "    text: \"Version in en\""       "  mainlanguage: 'en'"             
-#> [31] "  languages: ['es', 'fr']"         "title-es: title in es"            
-#> [33] "title-fr: title in fr"             "description-es: description in es"
-#> [35] "description-fr: description in fr" "author-es: author in es"          
-#> [37] "author-fr: author in fr"           "lang: en"
+#> [23] "  languagelinks: navbar"           "  languagecodes:"                 
+#> [25] "  - name: es"                      "    text: \"Version in es\""      
+#> [27] "  - name: fr"                      "    text: \"Version in fr\""      
+#> [29] "  - name: en"                      "    text: \"Version in en\""      
+#> [31] "  mainlanguage: 'en'"              "  languages: ['es', 'fr']"        
+#> [33] "title-es: title in es"             "title-fr: title in fr"            
+#> [35] "description-es: description in es" "description-fr: description in fr"
+#> [37] "author-es: author in es"           "author-fr: author in fr"          
+#> [39] "lang: en"
 fs::dir_tree(file.path(parent_dir, project_dir))
-#> /tmp/RtmpwufwUJ/filef6153a78d0ae/blop
+#> /var/folders/gd/rrsyq__147x_8y_3zcpymj_40000gn/T//RtmpriOJiL/file84692577354f/blop
 #> ├── _quarto.yml
 #> ├── about.es.qmd
 #> ├── about.fr.qmd
@@ -162,6 +163,23 @@ babelquarto:
 Using `babelquarto::register_main_language()` and
 `babelquarto::register_further_languages()` will create the
 boilertemplate for these fields.
+
+## Configure the language link placement
+
+The language link menu can be placed in the *sidebar* or in the
+*navbar*. To change the placement, use the `languagelinks` field in the
+babelquarto YAML key, in `_quarto.yml`:
+
+``` yaml
+babelquarto:
+  languagelinks: sidebar
+```
+
+Beware: depending on the value of `languagelinks`, the corresponding
+menu needs to be configured. Books always have a *sidebar*, but websites
+can have either *navbar* or *sidebar*. See [Quarto
+documentation](https://quarto.org/docs/websites/website-navigation.html#side-navigation)
+for more information.
 
 ## Distinct configuration per language
 
@@ -254,7 +272,7 @@ project:
 book:
   title: "babelbook"
   author: "Norah Jones"
-  date: "8/19/2024"
+  date: "19.08.2024"
   chapters:
     - index.qmd
     - intro.qmd

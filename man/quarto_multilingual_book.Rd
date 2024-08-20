@@ -11,7 +11,8 @@ quarto_multilingual_book(
   main_language = "en",
   further_languages = c("es", "fr"),
   register_languages = TRUE,
-  site_url = "https://example.com"
+  site_url = "https://example.com",
+  placement = c("sidebar", "navbar")
 )
 
 quarto_multilingual_website(
@@ -20,13 +21,14 @@ quarto_multilingual_website(
   main_language = "en",
   further_languages = c("es", "fr"),
   register_languages = TRUE,
-  site_url = "https://example.com"
+  site_url = "https://example.com",
+  placement = c("navbar", "sidebar")
 )
 }
 \arguments{
 \item{parent_dir}{Folder where to create the project folder.}
 
-\item{project_dir}{Project (book, webiste) folder name.}
+\item{project_dir}{Project (book, website) folder name.}
 
 \item{main_language}{Code for main languages.}
 
@@ -36,6 +38,8 @@ quarto_multilingual_website(
 
 \item{site_url}{Site URL for the book/site-url
 or website/site-url part of the Quarto configuration.}
+
+\item{placement}{Where to place the language links (sidebar, navbar).}
 }
 \value{
 The path to the created project.

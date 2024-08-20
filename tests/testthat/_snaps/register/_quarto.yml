@@ -19,6 +19,7 @@ format:
     theme: cosmo
 
 babelquarto:
+  languagelinks: sidebar
   languagecodes:
   - name: en
     text: "Version in en"

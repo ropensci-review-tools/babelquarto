@@ -316,6 +316,17 @@ add_links <- function(path, main_language = main_language,
   codes <- config[["babelquarto"]][["languagecodes"]]
   current_lang <- purrr::keep(codes, ~.x[["name"]] == language_code)
 
+  placement <- config[["babelquarto"]][["languagelinks"]] %||%
+    switch(type, website = "navbar", book = "sidebar")
+
+  if (type == "website" && placement == "sidebar" && is.null(config[["website"]][["sidebar"]])) {
+    cli::cli_abort("Can't find {.field website/sidebar} in {.field _quarto.yml}. You set the {.field babelquarto/languagelinks} to {.field sidebar} but also don't have a sidebar in your website.")
+  }
+
+  if (placement == "navbar" && is.null(config[[type]][["navbar"]])) {
+    cli::cli_abort("Can't find {.field {type}/navbar} in {.field _quarto.yml}. You set the {.field babelquarto/languagelinks} to {.field navbar} but also don't have a navbar in your {type}.")
+  }
+
   version_text <- if (length(current_lang) > 0) {
     current_lang[[1]][["text"]] %||%
       sprintf("Version in %s", toupper(language_code))
@@ -324,7 +335,7 @@ add_links <- function(path, main_language = main_language,
   }
 
   if (language_code == main_language) {
-    new_path <-  if (type == "book") {
+    new_path <- if (type == "book") {
       sub(
         "\\...\\.html", ".html",
         path_rel(path, output_folder, path_language, main_language)
@@ -337,7 +348,7 @@ add_links <- function(path, main_language = main_language,
     if (no_translated_version) return()
   } else {
     base_path <- sub(
-      "\\..\\.html", ".html",
+      "\\...\\.html", ".html",
       path_rel(path, output_folder, path_language, main_language)
     )
     new_path <- if (type == "book") {
@@ -350,14 +361,30 @@ add_links <- function(path, main_language = main_language,
     if (no_translated_version) return()
   }
 
-  if (type == "book") {
+  languages_links <- xml2::xml_find_first(html, "//ul[@id='languages-links']")
+  languages_links_div_exists <- (length(languages_links) > 0)
 
-    sidebar_menu <- xml2::xml_find_first(html, "//div[contains(@class,'sidebar-menu-container')]")
+  if (!languages_links_div_exists) {
+    if (placement == "navbar") {
+      navbar <- xml2::xml_find_first(html, "//ul[contains(@class, 'navbar-nav')]")
 
-    languages_links <- xml2::xml_find_first(html, "//ul[@id='languages-links']")
-    languages_links_div_exists <- (length(languages_links) > 0)
+      navbar_li <- xml2::xml_add_child(
+        navbar,
+        "li",
+        class = "nav-item",
+        .where = 0
+      )
 
-    if (!languages_links_div_exists) {
+      xml2::xml_add_child(
+        navbar_li,
+        "div",
+        class = "dropdown",
+        id = "languages-links-parent",
+        .where = "before"
+      )
+    } else {
+      sidebar_menu <- xml2::xml_find_first(html, "//div[contains(@class,'sidebar-menu-container')]")
+
       xml2::xml_add_sibling(
         sidebar_menu,
         "div",
@@ -365,109 +392,51 @@ add_links <- function(path, main_language = main_language,
         id = "languages-links-parent",
         .where = "before"
       )
-
-      parent <- xml2::xml_find_first(html, "//div[@id='languages-links-parent']")
-      xml2::xml_add_child(
-        parent,
-        "button",
-        "",
-        class = "btn btn-primary dropdown-toggle",
-        type="button",
-        `data-bs-toggle` = "dropdown",
-        `aria-expanded` = "false",
-        id = "languages-button"
-      )
-
-      xml2::xml_add_child(
-        xml2::xml_find_first(html, "//button[@id='languages-button']"),
-        "i",
-        class = "bi bi-globe2"
-      )
-
-      xml2::xml_add_child(
-        parent,
-        "ul",
-        class = "dropdown-menu",
-        id = "languages-links"
-      )
-
-      languages_links <- xml2::xml_find_first(html, "//ul[@id='languages-links']")
     }
 
+    parent <- xml2::xml_find_first(html, "//div[@id='languages-links-parent']")
     xml2::xml_add_child(
-      languages_links,
-      "a",
-      version_text,
-      class = "dropdown-item",
-      href = href,
-      id = sprintf("language-link-%s", language_code)
-    )
-    xml2::xml_add_parent(
-      xml2::xml_find_first(html, sprintf("a[id='%s']", sprintf("language-link-%s", language_code))),
-      "li"
+      parent,
+      "button",
+      "",
+      class = "btn btn-primary dropdown-toggle",
+      type = "button",
+      `data-bs-toggle` = "dropdown",
+      `aria-expanded` = "false",
+      id = "languages-button"
     )
 
-  } else {
+    xml2::xml_add_child(
+      xml2::xml_find_first(html, "//button[@id='languages-button']"),
+      "i",
+      class = "bi bi-globe2"
+    )
+
+    xml2::xml_add_child(
+      parent,
+      "ul",
+      class = "dropdown-menu",
+      id = "languages-links"
+    )
 
     languages_links <- xml2::xml_find_first(html, "//ul[@id='languages-links']")
-    languages_links_div_exists <- (length(languages_links) > 0)
-
-    if (!languages_links_div_exists) {
-      navbar <- xml2::xml_find_first(html, "//div[@id='navbarCollapse']")
-
-      xml2::xml_add_child(
-        navbar,
-        "div",
-        class = "dropdown",
-        id = "languages-links-parent",
-        .where = 0
-      )
-
-      parent <- xml2::xml_find_first(html, "//div[@id='languages-links-parent']")
-      xml2::xml_add_child(
-        parent,
-        "button",
-        "",
-        class = "btn btn-primary dropdown-toggle",
-        type="button",
-        `data-bs-toggle` = "dropdown",
-        `aria-expanded` = "false",
-        id = "languages-button"
-      )
-
-      xml2::xml_add_child(
-        xml2::xml_find_first(html, "//button[@id='languages-button']"),
-        "i",
-        class = "bi bi-globe2"
-      )
-
-      xml2::xml_add_child(
-        parent,
-        "ul",
-        class = "dropdown-menu",
-        id = "languages-links"
-      )
-
-      languages_links <- xml2::xml_find_first(html, "//ul[@id='languages-links']")
-    }
-    xml2::xml_add_child(
-      languages_links,
-      "a",
-      version_text,
-      class = "dropdown-item",
-      href = href,
-      id = sprintf("language-link-%s", language_code),
-      .where = 0
-    )
-    xml2::xml_add_parent(
-      xml2::xml_find_first(html, sprintf("//a[@id='language-link-%s']", language_code)),
-      "li"
-    )
   }
 
+  xml2::xml_add_child(
+    languages_links,
+    "a",
+    version_text,
+    class = "dropdown-item",
+    href = href,
+    id = sprintf("language-link-%s", language_code),
+    .where = 0
+  )
+  xml2::xml_add_parent(
+    xml2::xml_find_first(html, sprintf("//a[@id='language-link-%s']", language_code)),
+    "li"
+  )
+
   xml2::write_html(html, document_path)
-
-
 }
 
 add_cross_links <- function(path,
