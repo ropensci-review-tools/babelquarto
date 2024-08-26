@@ -54,11 +54,11 @@ register_further_languages <- function(further_languages, project_path = ".") {
   config_path <- file.path(project_path, "_quarto.yml")
 
   config <- yaml::read_yaml(config_path, handlers = list(seq = function(x) x))
-  if (!is.null(config[["babelquarto"]][["languages"]])) {
-    if (all(further_languages %in% config[["babelquarto"]][["languages"]])) {
-      cli::cli_alert_info("All languages already registered.")
-      return(invisible())
-    }
+  languages_config_present <- !is.null(config[["babelquarto"]][["languages"]])
+  if (languages_config_present &&
+        all(further_languages %in% config[["babelquarto"]][["languages"]])) {
+    cli::cli_alert_info("All languages already registered.")
+    return(invisible())
   }
 
   if (is.null(config[["babelquarto"]][["mainlanguage"]])) {
