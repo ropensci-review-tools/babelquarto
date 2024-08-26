@@ -307,7 +307,7 @@ use_lang_chapter <- function(chapters_list, language_code,
       )
     }
 
-    if (length(chapters_list[["chapters"]]) == 1) {
+    if (length(chapters_list[["chapters"]]) == 1L) {
       chapters_list[["chapters"]] <- as.list(chapters_list[["chapters"]]) # https://github.com/ropensci-review-tools/babelquarto/issues/32
     }
   } else {
