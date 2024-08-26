@@ -37,13 +37,15 @@
 #' }
 #'
 #' @rdname render
-render_book <- function(project_path = ".", site_url = NULL, profile = NULL) {
+render_book <- function(project_path = ".",
+                        site_url = NULL, profile = NULL) {
   render(project_path, site_url = site_url, type = "book", profile = profile)
 }
 
 #' @export
 #' @rdname render
-render_website <- function(project_path = ".", site_url = NULL, profile = NULL) {
+render_website <- function(project_path = ".",
+                           site_url = NULL, profile = NULL) {
   render(project_path, site_url = site_url, type = "website", profile = profile)
 }
 
