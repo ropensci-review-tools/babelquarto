@@ -84,9 +84,9 @@ register_further_languages <- function(further_languages, project_path = ".") {
     config_lines,
     c(
       sprintf("  languages: [%s]", toString(languages)),
-      purrr::map_chr(further_languages, ~sprintf("title-%s: title in %s", .x, .x)),
-      purrr::map_chr(further_languages, ~sprintf("description-%s: description in %s", .x, .x)),
-      purrr::map_chr(further_languages, ~sprintf("author-%s: author in %s", .x, .x))
+      sprintf("title-%s: title in %s", further_languages, further_languages),
+      sprintf("description-%s: description in %s", further_languages, further_languages), # nolint: line_length_linter
+      sprintf("author-%s: author in %s", further_languages, further_languages)
     ),
     after = which_main
   )
