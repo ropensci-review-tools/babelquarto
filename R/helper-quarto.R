@@ -72,9 +72,9 @@ quarto_multilingual_project <- function(parent_dir,
   )
 
   # Duplicated files for the different languages ----
-  qmds <- dir(project_dir, pattern = "\\.qmd", full.names = TRUE)
+  qmds <- dir(project_dir, pattern = "\\.qmd", full.names = TRUE) # nolint: object_usage_linter
 
-  create_new_lang_file <- function(qmd_file, language) {
+  create_new_lang_file <- function(qmd_file, language) { # nolint: object_usage_linter
     new_path <- fs::path_ext_set(qmd_file, sprintf(".%s.qmd", language))
     fs::file_copy(qmd_file, new_path)
   }
