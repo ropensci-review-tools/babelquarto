@@ -28,8 +28,10 @@ register_main_language <- function(main_language = "en", project_path = ".") {
     sprintf("  mainlanguage: '%s'", main_language),
     sprintf("lang: %s", main_language)
   )
-  babelquarto_config_exists <- grep("babelquarto:", config_lines, fixed = TRUE)
-  if (length(babelquarto_config_exists) == 0) {
+  babelquarto_config_exists <- any(
+    grepl("babelquarto:", config_lines, fixed = TRUE)
+  )
+  if (babelquarto_config_exists) {
     mainlanguage_config <- c(
       "babelquarto:",
       mainlanguage_config
