@@ -308,7 +308,8 @@ use_lang_chapter <- function(chapters_list, language_code,
     }
 
     if (length(chapters_list[["chapters"]]) == 1L) {
-      chapters_list[["chapters"]] <- as.list(chapters_list[["chapters"]]) # https://github.com/ropensci-review-tools/babelquarto/issues/32
+      # https://github.com/ropensci-review-tools/babelquarto/issues/32
+      chapters_list[["chapters"]] <- as.list(chapters_list[["chapters"]])
     }
   } else {
     chapters_list <- lang_code_chapter_list( # nolint: object_usage_linter
@@ -327,8 +328,8 @@ use_lang_chapter <- function(chapters_list, language_code,
 }
 
 add_links <- function(path, main_language = main_language,
-                     language_code, site_url, type, config, output_folder,
-                     path_language) {
+                      language_code, site_url, type, config, output_folder,
+                      path_language) {
   html <- xml2::read_html(path)
 
   document_path <- path
