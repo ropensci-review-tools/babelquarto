@@ -144,13 +144,14 @@ render <- function(path = ".",
     )
   )
   purrr::walk(
-      main_language_docs,
-      add_cross_links,
-      main_language = main_language,
-      site_url = site_url,
-      config = config_contents,
-      output_folder = output_folder,
-      path_language = main_language)
+    main_language_docs,
+    add_cross_links,
+    main_language = main_language,
+    site_url = site_url,
+    config = config_contents,
+    output_folder = output_folder,
+    path_language = main_language
+  )
   ## For other languages ----
   for (other_lang in language_codes) {
     other_lang_docs <- fs::dir_ls(
@@ -192,8 +193,8 @@ render_quarto_lang <- function(language_code, path, output_dir, type) {
   project_name <- fs::path_file(path)
 
   config_path <- file.path(temporary_directory, project_name, "_quarto.yml")
-  config <- read_yaml(config_path)
-  config$lang <- language_code
+  config <- read_yaml(config_path) # nolint: object_usage_linter
+  config[["lang"]] <- language_code
   config[[type]][["title"]] <- config[[sprintf("title-%s", language_code)]] %||% config[[type]][["title"]]
   config[[type]][["subtitle"]] <- config[[sprintf("subtitle-%s", language_code)]] %||% config[[type]][["subtitle"]]
   config[[type]][["description"]] <- config[[sprintf("description-%s", language_code)]] %||% config[[type]][["description"]]
