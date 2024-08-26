@@ -31,17 +31,9 @@ register_main_language <- function(main_language = "en", project_path = ".") {
   babelquarto_config_exists <- any(
     grepl("babelquarto:", config_lines, fixed = TRUE)
   )
-  if (babelquarto_config_exists) {
-    mainlanguage_config <- c(
-      "babelquarto:",
-      mainlanguage_config
-    )
-
-    config_lines <- c(
-      config_lines,
-      "",
-      mainlanguage_config
-    )
+  if (!babelquarto_config_exists) {
+    mainlanguage_config <- c("babelquarto:", mainlanguage_config)
+    config_lines <- c(config_lines, "", mainlanguage_config)
   } else {
     where_languagelinks <- grep("  languagelinks:", config_lines, fixed = TRUE)
     config_lines <- append(config_lines, mainlanguage_config, after = where_languagelinks)
