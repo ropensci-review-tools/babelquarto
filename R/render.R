@@ -79,11 +79,11 @@ render <- function(path = ".",
 
   language_codes <- config_contents[["babelquarto"]][["languages"]]
   if (is.null(language_codes)) {
-    cli::cli_abort("Can't find {.field babelquarto/languages} in {.field _quarto.yml}")
+    cli::cli_abort("Can't find {.field babelquarto.languages} in {.field _quarto.yml}") # nolint: line_length_linter
   }
   main_language <- config_contents[["babelquarto"]][["mainlanguage"]]
   if (is.null(main_language)) {
-    cli::cli_abort("Can't find {.field babelquarto/mainlanguage} in {.field _quarto.yml}")
+    cli::cli_abort("Can't find {.field babelquarto.mainlanguage} in {.field _quarto.yml}") # nolint: line_length_linter
   }
 
   output_folder <- file.path(path, output_dir)
