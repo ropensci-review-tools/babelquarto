@@ -300,10 +300,9 @@ use_lang_chapter <- function(chapters_list, language_code,
       chapters_not_translated <- !fs::file_exists(chapters_list[["chapters"]])
       fs::file_move(
         unlist(original_chapters_list[["chapters"]][chapters_not_translated]),
-        gsub("\\.Rmd", sprintf(".%s.Rmd", language_code) ,
-          gsub(
-            "\\.qmd", sprintf(".%s.qmd", language_code),
-            original_chapters_list[["chapters"]][chapters_not_translated])
+        lang_code_chapter_list( # nolint: object_usage_linter
+          original_chapters_list[["chapters"]][chapters_not_translated],
+          language_code = language_code
         )
       )
     }
