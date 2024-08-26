@@ -126,7 +126,7 @@ quarto_multilingual_project <- function(parent_dir,
   )
 
   if (type == "website" && placement == "sidebar") {
-    where_website <- grep("website:", config_lines)
+    where_website <- grep("website:", config_lines, fixed = TRUE)
     website_sidebar <- c(
       "  sidebar:",
       "    contents:",
@@ -136,7 +136,7 @@ quarto_multilingual_project <- function(parent_dir,
   }
 
   if (type == "book" && placement == "navbar") {
-    where_book <- grep("book:", config_lines)
+    where_book <- grep("book:", config_lines, fixed = TRUE)
     book_navbar <- c(
       "  navbar:",
       "    left:",
