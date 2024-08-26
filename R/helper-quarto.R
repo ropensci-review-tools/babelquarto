@@ -89,11 +89,16 @@ quarto_multilingual_project <- function(parent_dir,
   config_lines <- brio::read_lines(config_path)
 
   where_project <- grep(sprintf("%s:", type), config_lines)
-  config_lines <- append(config_lines, sprintf("  site-url: %s", site_url), after = where_project)
+  config_lines <- append(
+    config_lines,
+    sprintf("  site-url: %s", site_url),
+    after = where_project
+  )
 
   ## Remove LaTeX lines ----
   if (type == "book") {
-    config_lines <- config_lines[1:(grep("pdf:", config_lines, fixed = TRUE) - 1)]
+    where_pdf <- grep("pdf:", config_lines, fixed = TRUE)
+    config_lines <- config_lines[1:(where_pdf - 1)]
   }
 
   ## Change author ----
@@ -102,11 +107,14 @@ quarto_multilingual_project <- function(parent_dir,
   } else {
     whoami::fullname(fallback = "Firstname Lastname")
   }
-  config_lines[grepl("author:", config_lines, fixed = TRUE)] <- sprintf('  author: "%s"', author)
+  where_author <- grep("author:", config_lines, fixed = TRUE)
+  config_lines[where_author] <- sprintf('  author: "%s"', author)
 
   ## Change date ----
   if (nzchar(Sys.getenv("QUARTOBABELDATE"))) {
-    config_lines[grepl("date:", config_lines, fixed = TRUE)] <- sprintf('  date: "%s"', Sys.getenv("QUARTOBABELDATE"))
+    date_str <- sprintf('  date: "%s"', Sys.getenv("QUARTOBABELDATE"))
+    where_date <- grep("date:", config_lines, fixed = TRUE)
+    config_lines[where_date] <- date_str
   }
 
   ## Add language link placement ----
