@@ -194,10 +194,17 @@ render_quarto_lang <- function(language_code, path, output_dir, type) {
 
   config_path <- file.path(temporary_directory, project_name, "_quarto.yml")
   config <- read_yaml(config_path) # nolint: object_usage_linter
+
   config[["lang"]] <- language_code
-  config[[type]][["title"]] <- config[[sprintf("title-%s", language_code)]] %||% config[[type]][["title"]]
-  config[[type]][["subtitle"]] <- config[[sprintf("subtitle-%s", language_code)]] %||% config[[type]][["subtitle"]]
-  config[[type]][["description"]] <- config[[sprintf("description-%s", language_code)]] %||% config[[type]][["description"]]
+
+  config[[type]][["title"]] <- config[[sprintf("title-%s", language_code)]] %||% # nolint: line_length_linter
+    config[[type]][["title"]]
+
+  config[[type]][["subtitle"]] <- config[[sprintf("subtitle-%s", language_code)]] %||% # nolint: line_length_linter
+    config[[type]][["subtitle"]]
+
+  config[[type]][["description"]] <- config[[sprintf("description-%s", language_code)]] %||% # nolint: line_length_linter
+    config[[type]][["description"]]
 
   if (type == "book") {
     config[[type]][["author"]] <- config[[sprintf("author-%s", language_code)]] %||% config[[type]][["author"]]
