@@ -341,11 +341,17 @@ add_links <- function(path, main_language = main_language,
     switch(type, website = "navbar", book = "sidebar")
 
   if (type == "website" && placement == "sidebar" && is.null(config[["website"]][["sidebar"]])) {
-    cli::cli_abort("Can't find {.field website/sidebar} in {.field _quarto.yml}. You set the {.field babelquarto/languagelinks} to {.field sidebar} but also don't have a sidebar in your website.")
+    cli::cli_abort(c(
+      "Can't find {.field website.sidebar} in {.field _quarto.yml}.",
+      i = "You set the {.field babelquarto.languagelinks} to {.field sidebar} but also don't have a sidebar in your website." # nolint: line_length_linter
+    ))
   }
 
   if (placement == "navbar" && is.null(config[[type]][["navbar"]])) {
-    cli::cli_abort("Can't find {.field {type}/navbar} in {.field _quarto.yml}. You set the {.field babelquarto/languagelinks} to {.field navbar} but also don't have a navbar in your {type}.")
+    cli::cli_abort(c(
+      "Can't find {.field {type}.navbar} in {.field _quarto.yml}.",
+      i = "You set the {.field babelquarto/languagelinks} to {.field navbar} but also don't have a navbar in your {type}." # nolint: line_length_linter
+    ))
   }
 
   version_text <- if (length(current_lang) > 0) {
