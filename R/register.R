@@ -10,12 +10,10 @@ register_main_language <- function(main_language = "en", project_path = ".") {
   config <- yaml::read_yaml(config_path, handlers = list(seq = function(x) x))
   if (!is.null(config[["babelquarto"]][["mainlanguage"]])) {
     if (config[["babelquarto"]][["mainlanguage"]] != main_language) {
-      cli::cli_abort(
-        c(
-          "Can't register {main_language} as main language.",
-          'Main language registered as {config[["babelquarto"]][["mainlanguage"]]}.'
-        )
-      )
+      cli::cli_abort(c(
+        "Can't register {main_language} as main language.",
+        'Main language registered as {config[["babelquarto"]][["mainlanguage"]]}.' # nolint: line_length_linter
+      ))
     } else {
       cli::cli_alert_info("Main language already registered.")
       return(invisible())
