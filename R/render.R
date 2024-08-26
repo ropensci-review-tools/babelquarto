@@ -207,7 +207,8 @@ render_quarto_lang <- function(language_code, path, output_dir, type) {
     config[[type]][["description"]]
 
   if (type == "book") {
-    config[[type]][["author"]] <- config[[sprintf("author-%s", language_code)]] %||% config[[type]][["author"]]
+    config[[type]][["author"]] <- config[[sprintf("author-%s", language_code)]] %||% # nolint: line_length_linter
+      config[[type]][["author"]]
 
     config[["book"]][["chapters"]] <- purrr::map(
       config[["book"]][["chapters"]],
@@ -226,7 +227,10 @@ render_quarto_lang <- function(language_code, path, output_dir, type) {
     # Replace TRUE and FALSE with 'true' and 'false'
     # to avoid converting to "yes" and "no"
     config <- replace_true_false(config)
-    yaml::write_yaml(config, file.path(temporary_directory, project_name, "_quarto.yml"))
+    yaml::write_yaml(
+      config,
+      file = file.path(temporary_directory, project_name, "_quarto.yml")
+    )
   }
 
   if (type == "website") {
@@ -249,11 +253,11 @@ render_quarto_lang <- function(language_code, path, output_dir, type) {
     # to avoid converting to "yes" and "no"
     config <- replace_true_false(config)
 
-    yaml::write_yaml(config, file.path(temporary_directory, project_name, "_quarto.yml"))
+    yaml::write_yaml(config, file = config_path)
   }
 
-  config_lines <- brio::read_lines(file.path(temporary_directory, project_name, "_quarto.yml"))
-  brio::write_lines(config_lines, file.path(temporary_directory, project_name, "_quarto.yml"))
+  config_lines <- brio::read_lines(config_path)
+  brio::write_lines(config_lines, path = config_path)
 
   # Render language book
   metadata <- list("yes")
@@ -274,20 +278,24 @@ render_quarto_lang <- function(language_code, path, output_dir, type) {
 
 }
 
-use_lang_chapter <- function(chapters_list, language_code, book_name, directory) {
+use_lang_chapter <- function(chapters_list, language_code,
+                             book_name, directory) {
   withr::local_dir(file.path(directory, book_name))
 
   original_chapters_list <- chapters_list
 
   if (is.list(chapters_list)) {
     # part translation
-    chapters_list[["part"]] <- chapters_list[[sprintf("part-%s", language_code)]] %||%
+    chapters_list[["part"]] <- chapters_list[[sprintf("part-%s", language_code)]] %||% # nolint: line_length_linter
       chapters_list[["part"]]
 
     # chapters translation
 
-    chapters_list$chapters <- gsub("\\.Rmd", sprintf(".%s.Rmd", language_code), chapters_list$chapters)
-    chapters_list$chapters <- gsub("\\.qmd", sprintf(".%s.qmd", language_code), chapters_list$chapters)
+    chapters_list$chapters <- lang_code_chapter_list(
+      chapters_list$chapters,
+      language_code = language_code
+    )
+
     if (any(!fs::file_exists(chapters_list$chapters))) {
       chapters_not_translated <- !fs::file_exists(chapters_list$chapters)
       fs::file_move(
@@ -304,8 +312,10 @@ use_lang_chapter <- function(chapters_list, language_code, book_name, directory)
       chapters_list$chapters <- as.list(chapters_list$chapters) # https://github.com/ropensci-review-tools/babelquarto/issues/32
     }
   } else {
-    chapters_list <- gsub("\\.Rmd", sprintf(".%s.Rmd", language_code), chapters_list)
-    chapters_list <- gsub("\\.qmd", sprintf(".%s.qmd", language_code), chapters_list)
+    chapters_list <- lang_code_chapter_list(
+      chapters_list,
+      language_code = language_code
+    )
     if (!fs::file_exists(file.path(directory, book_name, chapters_list))) {
       fs::file_move(
         original_chapters_list,
