@@ -291,28 +291,28 @@ use_lang_chapter <- function(chapters_list, language_code,
 
     # chapters translation
 
-    chapters_list$chapters <- lang_code_chapter_list(
-      chapters_list$chapters,
+    chapters_list[["chapters"]] <- lang_code_chapter_list( # nolint: object_usage_linter
+      chapters_list[["chapters"]],
       language_code = language_code
     )
 
-    if (any(!fs::file_exists(chapters_list$chapters))) {
-      chapters_not_translated <- !fs::file_exists(chapters_list$chapters)
+    if (any(!fs::file_exists(chapters_list[["chapters"]]))) {
+      chapters_not_translated <- !fs::file_exists(chapters_list[["chapters"]])
       fs::file_move(
-        unlist(original_chapters_list$chapters[chapters_not_translated]),
+        unlist(original_chapters_list[["chapters"]][chapters_not_translated]),
         gsub("\\.Rmd", sprintf(".%s.Rmd", language_code) ,
           gsub(
             "\\.qmd", sprintf(".%s.qmd", language_code),
-            original_chapters_list$chapters[chapters_not_translated])
+            original_chapters_list[["chapters"]][chapters_not_translated])
         )
       )
     }
 
-    if (length(chapters_list$chapters) == 1) {
-      chapters_list$chapters <- as.list(chapters_list$chapters) # https://github.com/ropensci-review-tools/babelquarto/issues/32
+    if (length(chapters_list[["chapters"]]) == 1) {
+      chapters_list[["chapters"]] <- as.list(chapters_list[["chapters"]]) # https://github.com/ropensci-review-tools/babelquarto/issues/32
     }
   } else {
-    chapters_list <- lang_code_chapter_list(
+    chapters_list <- lang_code_chapter_list( # nolint: object_usage_linter
       chapters_list,
       language_code = language_code
     )
