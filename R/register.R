@@ -79,8 +79,8 @@ register_further_languages <- function(further_languages, project_path = ".") {
   }
 
   config_lines <- brio::read_lines(config_path)
-  config_lines <- config_lines[!grepl("languages\\:", config_lines, fixed = TRUE)]
-  which_main <- grep("mainlanguage\\:", trimws(config_lines), fixed = TRUE)
+  config_lines <- config_lines[grep("languages\\:", config_lines, invert = TRUE, fixed = TRUE)]
+  which_main <- grep("mainlanguage\\:", trimws(config_lines)) # nolint: fixed_regex_linter
   languages <- sprintf("'%s'",union(config[["babelquarto"]][["languages"]], further_languages))
   config_lines <- append(
     config_lines,
