@@ -49,7 +49,10 @@ render_website <- function(project_path = ".",
   render(project_path, site_url = site_url, type = "website", profile = profile)
 }
 
-render <- function(path = ".", site_url = NULL, type = c("book", "website"), profile) {
+render <- function(path = ".",
+                   site_url = NULL,
+                   type = c("book", "website"),
+                   profile = NULL) {
   # configuration ----
   config <- file.path(path, "_quarto.yml")
   config_contents <- yaml::read_yaml(config, handlers = list(seq = function(x) x))
