@@ -1,4 +1,4 @@
-# Replace logical TRUE and FALSE with character "true" and "false" 
+# Replace logical TRUE and FALSE with character "true" and "false"
 # in a nested list
 replace_true_false <- function(list) {
   if (is.list(list)) {
@@ -12,4 +12,17 @@ replace_true_false <- function(list) {
     class(list) <- "verbatim"
   }
   return(list)
+}
+
+lang_code_chapter_list <- function(chapters_list, language_code) {
+  chapters_list <- gsub(
+    "\\.Rmd", sprintf(".%s.Rmd", language_code),
+    chapters_list
+  )
+
+  gsub(
+    "\\.qmd",
+    sprintf(".%s.qmd", language_code),
+    chapters_list
+  )
 }
