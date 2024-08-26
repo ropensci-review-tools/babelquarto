@@ -98,7 +98,7 @@ quarto_multilingual_project <- function(parent_dir,
   ## Remove LaTeX lines ----
   if (type == "book") {
     where_pdf <- grep("pdf:", config_lines, fixed = TRUE)
-    config_lines <- config_lines[1:(where_pdf - 1)]
+    config_lines <- config_lines[1L:(where_pdf - 1L)]
   }
 
   ## Change author ----
