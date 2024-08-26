@@ -60,7 +60,7 @@ quarto_multilingual_project <- function(parent_dir,
                                         register_languages = TRUE,
                                         site_url = "https://example.com",
                                         placement = c("navbar", "sidebar")) {
-  
+
   placement <- rlang::arg_match(placement)
 
   # Vanilla project from Quarto CLI ----
@@ -93,7 +93,7 @@ quarto_multilingual_project <- function(parent_dir,
 
   ## Remove LaTeX lines ----
   if (type == "book") {
-    config_lines <- config_lines[1:(grep("pdf:", config_lines) - 1)]
+    config_lines <- config_lines[1:(grep("pdf:", config_lines, fixed = TRUE) - 1)]
   }
 
   ## Change author ----
@@ -102,11 +102,11 @@ quarto_multilingual_project <- function(parent_dir,
   } else {
     whoami::fullname(fallback = "Firstname Lastname")
   }
-  config_lines[grepl("author:", config_lines)] <- sprintf('  author: "%s"', author)
+  config_lines[grepl("author:", config_lines, fixed = TRUE)] <- sprintf('  author: "%s"', author)
 
   ## Change date ----
   if (nzchar(Sys.getenv("QUARTOBABELDATE"))) {
-    config_lines[grepl("date:", config_lines)] <- sprintf('  date: "%s"', Sys.getenv("QUARTOBABELDATE"))
+    config_lines[grepl("date:", config_lines, fixed = TRUE)] <- sprintf('  date: "%s"', Sys.getenv("QUARTOBABELDATE"))
   }
 
   ## Add language link placement ----
