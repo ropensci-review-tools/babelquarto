@@ -80,7 +80,7 @@ test_that("render_book() works -- chapters in folders", {
     "_book", "chapters", "references.html"
   )
   references <- xml2::read_html(references_path)
-  spanish_link <- xml2::xml_find_first(references, '//a[@id="language-link-es"]')
+  spanish_link <- xml2::xml_find_first(references, '//a[@id="language-link-es"]') # nolint: line_length_linter
   expect_identical(
     xml2::xml_attr(spanish_link, "href"),
     "https://example.com/es/chapters/references.es.html"
@@ -105,7 +105,7 @@ test_that("render_website() works", {
   brio::write_lines(config, config_path)
 
   withr::with_dir(parent_dir, render_website(project_dir))
-  expect_true(fs::dir_exists(file.path(parent_dir, project_dir, "_site")))
+  expect_dir_exists(file.path(parent_dir, project_dir, "_site"))
 
   index_path <- file.path(parent_dir, project_dir, "_site", "index.html")
   index <- xml2::read_html(index_path)
@@ -160,7 +160,7 @@ test_that("render_book() works -- partial template", {
   brio::write_lines(config, config_path)
 
   withr::with_dir(parent_dir, render_website(project_dir))
-  expect_true(fs::dir_exists(file.path(parent_dir, project_dir, "_site")))
+  expect_dir_exists(file.path(parent_dir, project_dir, "_site"))
 
   index_path <- file.path(parent_dir, project_dir, "_site", "index.html")
   index <- xml2::read_html(index_path)
@@ -217,7 +217,7 @@ test_that("render_book() works - appendices", {
   brio::write_lines(config_lines, config_path)
 
   withr::with_dir(parent_dir, render_book(project_dir))
-  expect_true(fs::dir_exists(file.path(parent_dir, project_dir, "_book")))
+  expect_dir_exists(file.path(parent_dir, project_dir, "_book"))
 
 
 })
@@ -246,7 +246,7 @@ test_that("render_book() works - chapters", {
   fs::file_delete(file.path(parent_dir, project_dir, "summary.es.qmd"))
 
   withr::with_dir(parent_dir, render_book(project_dir))
-  expect_true(fs::dir_exists(file.path(parent_dir, project_dir, "_book")))
+  expect_dir_exists(file.path(parent_dir, project_dir, "_book"))
 
 
 })
@@ -324,12 +324,17 @@ test_that("render_website() works - clean render for each language", {
   )
 
   withr::with_dir(parent_dir, render_website(project_dir))
-  expect_true(fs::dir_exists(file.path(parent_dir, project_dir, "_site", "subdir")))
-  expect_length(fs::dir_ls(file.path(parent_dir, project_dir, "_site", "subdir")), 1)
-  expect_true(fs::dir_exists(file.path(parent_dir, project_dir, "_site", "fr", "subdir")))
-  expect_length(fs::dir_ls(file.path(parent_dir, project_dir, "_site", "fr", "subdir")), 1)
-  expect_true(fs::file_exists(file.path(parent_dir, project_dir, "_site", "fr", "subdir", "about.html")))
-  expect_false(fs::dir_exists(file.path(parent_dir, project_dir, "_site", "es", "subdir")))
+  main_subdir <- file.path(parent_dir, project_dir, "_site", "subdir")
+  expect_dir_exists(main_subdir)
+  expect_length(fs::dir_ls(main_subdir), 1)
+
+  french_subdir <- file.path(parent_dir, project_dir, "_site", "fr", "subdir")
+  expect_dir_exists(french_subdir)
+  expect_length(fs::dir_ls(french_subdir), 1)
+  expect_file_exists(file.path(french_subdir, "about.html"))
+
+  spanish_subdir <- file.path(parent_dir, project_dir, "_site", "es", "subdir")
+  expect_dir_absent(spanish_subdir)
 })
 
 test_that("render_website() fails when missing sidebar and languagelinks is set to sidebar", {
