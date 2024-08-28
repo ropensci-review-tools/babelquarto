@@ -11,7 +11,7 @@ test_that("render_book() works", {
   )
 
   withr::with_dir(parent_dir, render_book(project_dir))
-  expect_true(fs::dir_exists(file.path(parent_dir, project_dir, "_book")))
+  expect_dir_exists(file.path(parent_dir, project_dir, "_book"))
 
   index_path <- file.path(parent_dir, project_dir, "_book", "index.html")
   index <- xml2::read_html(index_path)
@@ -36,7 +36,7 @@ test_that("render_book() works - change link", {
   )
 
   withr::with_dir(parent_dir, render_book(project_dir))
-  expect_true(fs::dir_exists(file.path(parent_dir, project_dir, "_book")))
+  expect_dir_exists(file.path(parent_dir, project_dir, "_book"))
 
   index_path <- file.path(parent_dir, project_dir, "_book", "index.html")
   index <- xml2::read_html(index_path)
@@ -73,7 +73,7 @@ test_that("render_book() works -- chapters in folders", {
   brio::write_lines(config_lines, config_path)
 
   withr::with_dir(parent_dir, render_book(project_dir))
-  expect_true(fs::dir_exists(file.path(parent_dir, project_dir, "_book")))
+  expect_dir_exists(file.path(parent_dir, project_dir, "_book"))
 
   references_path <- file.path(
     parent_dir, project_dir,
@@ -337,7 +337,8 @@ test_that("render_website() works - clean render for each language", {
   expect_dir_absent(spanish_subdir)
 })
 
-test_that("render_website() fails when missing sidebar and languagelinks is set to sidebar", {
+test_that("render_website() fails when missing sidebar
+           and languagelinks is set to sidebar", {
   withr::local_envvar(BABELQUARTO_TESTS_URL = "true")
 
   parent_dir <- withr::local_tempdir()
@@ -361,7 +362,8 @@ test_that("render_website() fails when missing sidebar and languagelinks is set 
   )
 })
 
-test_that("render_book() fails when missing navbar and languagelinks is set to navbar", {
+test_that("render_book() fails when missing navbar
+           and languagelinks is set to navbar", {
   withr::local_envvar(BABELQUARTO_TESTS_URL = "true")
 
   parent_dir <- withr::local_tempdir()
@@ -404,8 +406,12 @@ test_that("book with navbar placement has languagelinks in the navbar", {
 
   withr::with_dir(parent_dir, render_book(project_dir))
 
-  index <- xml2::read_html(file.path(parent_dir, project_dir, "_book", "index.html"))
-  language_links <- xml2::xml_find_first(index, '//div[@id="languages-links-parent"]')
+  index_path <- file.path(parent_dir, project_dir, "_book", "index.html")
+  index <- xml2::read_html(index_path)
+  language_links <- xml2::xml_find_first(
+    index,
+    '//div[@id="languages-links-parent"]'
+  )
   navbar_li <- xml2::xml_parent(language_links)
   navbar_li_class <- xml2::xml_attr(navbar_li, "class")
 
@@ -429,8 +435,12 @@ test_that("website with sidebar placement has languagelinks in the sidebar", {
 
   withr::with_dir(parent_dir, render_website(project_dir))
 
-  index <- xml2::read_html(file.path(parent_dir, project_dir, "_site", "index.html"))
-  language_links <- xml2::xml_find_first(index, '//div[@id="languages-links-parent"]')
+  index_path <- file.path(parent_dir, project_dir, "_site", "index.html")
+  index <- xml2::read_html(index_path)
+  language_links <- xml2::xml_find_first(
+    index,
+    '//div[@id="languages-links-parent"]'
+  )
   sidebar <- xml2::xml_parent(language_links)
   sidebar_id <- xml2::xml_attr(sidebar, "id")
 
@@ -450,12 +460,16 @@ test_that("render_book() works - all language links are present in sidebar", {
     site_url = "https://ropensci.org"
   )
 
-  withr::local_envvar("BABELQUARTO_CI_URL" = "https://ropensci.org")
+  withr::local_envvar(BABELQUARTO_CI_URL = "https://ropensci.org")
   withr::with_dir(parent_dir, render_book(project_dir))
 
-  index <- xml2::read_html(file.path(parent_dir, project_dir, "_book", "index.html"))
+  index_path <- file.path(parent_dir, project_dir, "_book", "index.html")
+  index <- xml2::read_html(index_path)
 
-  language_links <- xml2::xml_find_first(index, '//div[@id="languages-links-parent"]')
+  language_links <- xml2::xml_find_first(
+    index,
+    '//div[@id="languages-links-parent"]'
+  )
   sidebar <- xml2::xml_parent(language_links)
   sidebar_id <- xml2::xml_attr(sidebar, "id")
   expect_identical(sidebar_id, "quarto-sidebar")
@@ -475,8 +489,15 @@ test_that("render_book() works - all language links are present in sidebar", {
   )
   expect_identical(index_link_es_href, "https://ropensci.org/es/index.es.html")
 
-  index_fr <- xml2::read_html(file.path(parent_dir, project_dir, "_book", "fr", "index.fr.html"))
-  index_fr_links <- xml2::xml_find_first(index_fr, '//ul[@id="languages-links"]')
+  index_fr_path <- file.path(
+    parent_dir, project_dir,
+    "_book", "fr", "index.fr.html"
+  )
+  index_fr <- xml2::read_html(index_fr_path)
+  index_fr_links <- xml2::xml_find_first(
+    index_fr,
+    '//ul[@id="languages-links"]'
+  )
   expect_identical(xml2::xml_length(index_fr_links), 2L)
 
   index_fr_link_en <- xml2::xml_attr(
@@ -491,8 +512,15 @@ test_that("render_book() works - all language links are present in sidebar", {
   )
   expect_identical(index_fr_link_es, "https://ropensci.org/es/index.es.html")
 
-  index_es <- xml2::read_html(file.path(parent_dir, project_dir, "_book", "es", "index.es.html"))
-  index_es_links <- xml2::xml_find_first(index_es, '//ul[@id="languages-links"]')
+  index_es_path <- file.path(
+    parent_dir, project_dir,
+    "_book", "es", "index.es.html"
+  )
+  index_es <- xml2::read_html(index_es_path)
+  index_es_links <- xml2::xml_find_first(
+    index_es,
+    '//ul[@id="languages-links"]'
+  )
   expect_identical(xml2::xml_length(index_es_links), 2L)
 
   index_es_link_en <- xml2::xml_attr(
@@ -521,12 +549,16 @@ test_that("render_website() works - all language links are present in navbar", {
     site_url = "https://ropensci.org"
   )
 
-  withr::local_envvar("BABELQUARTO_CI_URL" = "https://ropensci.org")
+  withr::local_envvar(BABELQUARTO_CI_URL = "https://ropensci.org")
   withr::with_dir(parent_dir, render_website(project_dir))
 
-  index <- xml2::read_html(file.path(parent_dir, project_dir, "_site", "index.html"))
+  index_path <- file.path(parent_dir, project_dir, "_site", "index.html")
+  index <- xml2::read_html(index_path)
 
-  language_links <- xml2::xml_find_first(index, '//div[@id="languages-links-parent"]')
+  language_links <- xml2::xml_find_first(
+    index,
+    '//div[@id="languages-links-parent"]'
+  )
   navbar_li <- xml2::xml_parent(language_links)
   navbar_li_class <- xml2::xml_attr(navbar_li, "class")
   expect_identical(navbar_li_class, "nav-item")
@@ -546,8 +578,9 @@ test_that("render_website() works - all language links are present in navbar", {
   )
   expect_identical(index_link_es_href, "https://ropensci.org/es/index.html")
 
-  index_fr <- xml2::read_html(file.path(parent_dir, project_dir, "_site", "fr", "index.html"))
-  index_fr_links <- xml2::xml_find_first(index_fr, '//ul[@id="languages-links"]')
+  index_fr_path <- file.path(parent_dir, project_dir, "_site", "fr", "index.html") # nolint: line_length_linter
+  index_fr <- xml2::read_html(index_fr_path)
+  index_fr_links <- xml2::xml_find_first(index_fr, '//ul[@id="languages-links"]') # nolint: line_length_linter
   expect_identical(xml2::xml_length(index_fr_links), 2L)
 
   index_fr_link_en <- xml2::xml_attr(
@@ -562,9 +595,12 @@ test_that("render_website() works - all language links are present in navbar", {
   )
   expect_identical(index_fr_link_es, "https://ropensci.org/es/index.html")
 
-
-  index_es <- xml2::read_html(file.path(parent_dir, project_dir, "_site", "es", "index.html"))
-  index_es_links <- xml2::xml_find_first(index_es, '//ul[@id="languages-links"]')
+  index_es_path <- file.path(
+    parent_dir, project_dir,
+    "_site", "es", "index.html"
+  )
+  index_es <- xml2::read_html(index_es_path)
+  index_es_links <- xml2::xml_find_first(index_es, '//ul[@id="languages-links"]') # nolint: line_length_linter
   expect_identical(xml2::xml_length(index_es_links), 2L)
 
   index_es_link_en <- xml2::xml_attr(
