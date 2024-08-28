@@ -17,6 +17,6 @@ test_that("quarto_multilingual_book() works", {
       )
   )
   config <- yaml::read_yaml(file.path(parent_dir, "blop", "_quarto.yml"))
-  expect_equal(config[["babelquarto"]][["mainlanguage"]], "en")
-  expect_equal(config[["babelquarto"]][["languages"]], c("es", "fr"))
+  expect_identical(config[["babelquarto"]][["mainlanguage"]], "en")
+  expect_identical(config[["babelquarto"]][["languages"]], c("es", "fr"))
 })
