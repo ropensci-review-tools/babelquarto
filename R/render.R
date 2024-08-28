@@ -327,7 +327,7 @@ use_lang_chapter <- function(chapters_list, language_code,
   chapters_list
 }
 
-add_links <- function(path, main_language = main_language,
+add_links <- function(path, main_language = main_language, # nolint: cyclocomp_linter
                       language_code, site_url, type, config, output_folder,
                       path_language) {
   html <- xml2::read_html(path)
