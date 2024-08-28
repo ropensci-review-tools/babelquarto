@@ -340,7 +340,9 @@ add_links <- function(path, main_language, # nolint: cyclocomp_linter
   placement <- config[["babelquarto"]][["languagelinks"]] %||%
     switch(type, website = "navbar", book = "sidebar")
 
-  if (type == "website" && placement == "sidebar" && is.null(config[["website"]][["sidebar"]])) {
+  sidebar_wanted <- (type == "website" && placement == "sidebar")
+  no_sidebar_config <- (is.null(config[["website"]][["sidebar"]]))
+  if (sidebar_wanted && no_sidebar_config) {
     cli::cli_abort(c(
       "Can't find {.field website.sidebar} in {.field _quarto.yml}.",
       i = "You set the {.field babelquarto.languagelinks} to {.field sidebar} but also don't have a sidebar in your website." # nolint: line_length_linter
