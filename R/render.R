@@ -356,8 +356,8 @@ add_links <- function(path, main_language, # nolint: cyclocomp_linter
     ))
   }
 
-  version_text <- if (length(current_lang) > 0) {
-    current_lang[[1]][["text"]] %||%
+  version_text <- if (length(current_lang) > 0L) {
+    current_lang[[1L]][["text"]] %||%
       sprintf("Version in %s", toupper(language_code))
   } else {
     sprintf("Version in %s", toupper(language_code))
@@ -391,7 +391,7 @@ add_links <- function(path, main_language, # nolint: cyclocomp_linter
   }
 
   languages_links <- xml2::xml_find_first(html, "//ul[@id='languages-links']")
-  languages_links_div_exists <- (length(languages_links) > 0)
+  languages_links_div_exists <- (length(languages_links) > 0L)
 
   if (!languages_links_div_exists) {
     if (placement == "navbar") {
@@ -401,7 +401,7 @@ add_links <- function(path, main_language, # nolint: cyclocomp_linter
         navbar,
         "li",
         class = "nav-item",
-        .where = 0
+        .where = 0L
       )
 
       xml2::xml_add_child(
@@ -458,7 +458,7 @@ add_links <- function(path, main_language, # nolint: cyclocomp_linter
     class = "dropdown-item",
     href = href,
     id = sprintf("language-link-%s", language_code),
-    .where = 0
+    .where = 0L
   )
   xml2::xml_add_parent(
     xml2::xml_find_first(html, sprintf("//a[@id='language-link-%s']", language_code)),
@@ -504,7 +504,7 @@ add_cross_links <- function(path,
   html_lines <- append(
     html_lines,
     c(main_language_link, other_language_links),
-    after = 3
+    after = 3L
   )
   brio::write_lines(html_lines, path)
 }
