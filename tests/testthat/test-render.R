@@ -59,7 +59,7 @@ test_that("render_book() works -- chapters in folders", {
     main_language = "en"
   )
   qmds <- fs::dir_ls(file.path(parent_dir, project_dir), glob = "*.qmd")
-  qmds <- qmds[!grepl("index", fs::path_file(qmds))]
+  qmds <- qmds[grep("index", fs::path_file(qmds), invert = TRUE, fixed = TRUE)]
   fs::dir_create(file.path(parent_dir, project_dir, "chapters"))
   purrr::walk(
     qmds, fs::file_move,
@@ -69,7 +69,7 @@ test_that("render_book() works -- chapters in folders", {
   config_path <- file.path(parent_dir, project_dir, "_quarto.yml")
   config_lines <- brio::read_lines(config_path)
   config_lines <- gsub("- (.*)\\.qmd", "- chapters/\\1.qmd", config_lines)
-  config_lines <- gsub("- chapters/index.qmd", "- index.qmd", config_lines)
+  config_lines <- gsub("- chapters/index.qmd", "- index.qmd", config_lines) # nolint: nonportable_path_linter
   brio::write_lines(config_lines, config_path)
 
   withr::with_dir(parent_dir, render_book(project_dir))
@@ -155,7 +155,7 @@ test_that("render_book() works -- partial template", {
   config <- append(
     config,
     c("    template-partials:", "      - metadata.html"),
-    after = grep("theme: cosmo", config)
+    after = grep("theme: cosmo", config, fixed = TRUE)
   )
   brio::write_lines(config, config_path)
 
@@ -211,7 +211,7 @@ test_that("render_book() works - appendices", {
   config_lines <- brio::read_lines(config_path)
   config_lines <- append(
     config_lines,
-    c("  appendices:"),
+    "  appendices:",
     after = which(config_lines == "    - summary.qmd")
   )
   brio::write_lines(config_lines, config_path)
@@ -298,7 +298,7 @@ test_that("render_website() works - listing", {
     ".//div[contains(@class, 'quarto-grid-item')]"
   )
 
-  expect_length(grid_items, 1)
+  expect_length(grid_items, 1L)
 })
 
 test_that("render_website() works - clean render for each language", {
@@ -326,11 +326,11 @@ test_that("render_website() works - clean render for each language", {
   withr::with_dir(parent_dir, render_website(project_dir))
   main_subdir <- file.path(parent_dir, project_dir, "_site", "subdir")
   expect_dir_exists(main_subdir)
-  expect_length(fs::dir_ls(main_subdir), 1)
+  expect_length(fs::dir_ls(main_subdir), 1L)
 
   french_subdir <- file.path(parent_dir, project_dir, "_site", "fr", "subdir")
   expect_dir_exists(french_subdir)
-  expect_length(fs::dir_ls(french_subdir), 1)
+  expect_length(fs::dir_ls(french_subdir), 1L)
   expect_file_exists(file.path(french_subdir, "about.html"))
 
   spanish_subdir <- file.path(parent_dir, project_dir, "_site", "es", "subdir")
@@ -352,7 +352,7 @@ test_that("render_website() fails when missing sidebar
 
   config_path <- file.path(parent_dir, project_dir, "_quarto.yml")
   config_lines <- brio::read_lines(config_path)
-  where_languagelinks <- grep("  languagelinks:", config_lines)
+  where_languagelinks <- grep("  languagelinks:", config_lines, fixed = TRUE)
   config_lines[where_languagelinks] <- "  languagelinks: sidebar"
   brio::write_lines(config_lines, config_path)
 
@@ -379,7 +379,7 @@ test_that("render_book() fails when missing navbar
 
   config_path <- file.path(parent_dir, project_dir, "_quarto.yml")
   config_lines <- brio::read_lines(config_path)
-  where_languagelinks <- grep("  languagelinks:", config_lines)
+  where_languagelinks <- grep("  languagelinks:", config_lines, fixed = TRUE)
   config_lines[where_languagelinks] <- "  languagelinks: navbar"
   brio::write_lines(config_lines, config_path)
 
