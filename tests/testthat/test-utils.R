@@ -23,10 +23,10 @@ test_that("Replacing logicals with yes/no works", {
       )
     )
   )
-  class(replace_list$a) <- "verbatim"
-  class(replace_list$b$c) <- "verbatim"
-  class(replace_list$b$d$e) <- "verbatim"
-  class(replace_list$b$d$f) <- "verbatim"
+  class(replace_list[["a"]]) <- "verbatim"
+  class(replace_list[["b"]][["c"]]) <- "verbatim"
+  class(replace_list[["b"]][["d"]][["e"]]) <- "verbatim"
+  class(replace_list[["b"]][["d"]][["f"]]) <- "verbatim"
 
   expect_equal(
     replace_list,
