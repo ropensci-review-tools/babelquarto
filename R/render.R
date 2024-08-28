@@ -372,8 +372,8 @@ add_links <- function(path, main_language, # nolint: cyclocomp_linter
     } else {
       path_rel(path, output_folder, path_language, main_language)
     }
-    href <- sprintf("%s/%s", site_url, new_path)
-    no_translated_version <- !fs::file_exists(file.path(output_folder, new_path))
+    href <- sprintf("%s/%s", site_url, new_path) # nolint: nonportable_path_linter
+    no_translated_version <- !fs::file_exists(file.path(output_folder, new_path)) # nolint: line_length_linter
     if (no_translated_version) return()
   } else {
     base_path <- sub(
@@ -385,8 +385,10 @@ add_links <- function(path, main_language, # nolint: cyclocomp_linter
     } else {
       base_path
     }
-    href <- sprintf("%s/%s/%s", site_url, language_code, new_path)
-    no_translated_version <- !fs::file_exists(file.path(output_folder, language_code, new_path))
+    href <- sprintf("%s/%s/%s", site_url, language_code, new_path) # nolint: nonportable_path_linter
+    no_translated_version <- !fs::file_exists(
+      file.path(output_folder, language_code, new_path)
+    )
     if (no_translated_version) return()
   }
 
@@ -395,7 +397,7 @@ add_links <- function(path, main_language, # nolint: cyclocomp_linter
 
   if (!languages_links_div_exists) {
     if (placement == "navbar") {
-      navbar <- xml2::xml_find_first(html, "//ul[contains(@class, 'navbar-nav')]")
+      navbar <- xml2::xml_find_first(html, "//ul[contains(@class, 'navbar-nav')]") # nolint: line_length_linter
 
       navbar_li <- xml2::xml_add_child(
         navbar,
@@ -412,7 +414,10 @@ add_links <- function(path, main_language, # nolint: cyclocomp_linter
         .where = "before"
       )
     } else {
-      sidebar_menu <- xml2::xml_find_first(html, "//div[contains(@class,'sidebar-menu-container')]")
+      sidebar_menu <- xml2::xml_find_first(
+        html,
+        "//div[contains(@class,'sidebar-menu-container')]"
+      )
 
       xml2::xml_add_sibling(
         sidebar_menu,
@@ -461,7 +466,10 @@ add_links <- function(path, main_language, # nolint: cyclocomp_linter
     .where = 0L
   )
   xml2::xml_add_parent(
-    xml2::xml_find_first(html, sprintf("//a[@id='language-link-%s']", language_code)),
+    xml2::xml_find_first(
+      html,
+      sprintf("//a[@id='language-link-%s']", language_code)
+    ),
     "li"
   )
 
@@ -472,11 +480,15 @@ add_cross_links <- function(path,
                             path_language, main_language,
                             config, site_url, output_folder) {
   main_language_href <- if (path_language == main_language) {
-    sprintf("%s/%s", site_url, fs::path_rel(path, start = output_folder))
+    sprintf("%s/%s", site_url, fs::path_rel(path, start = output_folder)) # nolint: nonportable_path_linter
   } else {
     sub(
-      sprintf("%s\\.html", path_language), "html",
-      sprintf("%s/%s", site_url, fs::path_rel(path, start = file.path(output_folder, path_language)))
+      sprintf("%s\\.html", path_language), "html", # nolint: nonportable_path_linter
+      sprintf(
+        "%s/%s", # nolint: nonportable_path_linter
+        site_url,
+        fs::path_rel(path, start = file.path(output_folder, path_language))
+      )
     )
   }
   main_language_link <- sprintf(
@@ -486,8 +498,8 @@ add_cross_links <- function(path,
   )
 
   create_other_language_link <- function(lang, main_language_href, site_url) {
-    other_language_href <- sub(site_url, paste0(site_url, "/", lang), main_language_href)
-    other_language_href <- sub(".html", paste0(".", lang, ".html"), other_language_href)
+    other_language_href <- sub(site_url, paste0(site_url, "/", lang), main_language_href) # nolint: nonportable_path_linter, line_length_linter
+    other_language_href <- sub(".html", paste0(".", lang, ".html"), other_language_href) # nolint: line_length_linter
     sprintf(
       '<link rel="alternate" hreflang="%s" href="%s" />',
       lang,
