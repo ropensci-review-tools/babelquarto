@@ -15,7 +15,7 @@ test_that("render_book() works", {
 
   index <- xml2::read_html(file.path(parent_dir, project_dir, "_book", "index.html"))
   spanish_link <- xml2::xml_find_first(index, '//a[@id="language-link-es"]')
-  expect_equal(xml2::xml_attr(spanish_link, "href"), "https://example.com/es/index.es.html")
+  expect_identical(xml2::xml_attr(spanish_link, "href"), "https://example.com/es/index.es.html")
 })
 
 test_that("render_book() works - change link", {
@@ -36,7 +36,7 @@ test_that("render_book() works - change link", {
 
   index <- xml2::read_html(file.path(parent_dir, project_dir, "_book", "index.html"))
   spanish_link <- xml2::xml_find_first(index, '//a[@id="language-link-es"]')
-  expect_equal(xml2::xml_attr(spanish_link, "href"), "https://ropensci.org/es/index.es.html")
+  expect_identical(xml2::xml_attr(spanish_link, "href"), "https://ropensci.org/es/index.es.html")
 })
 
 test_that("render_book() works -- chapters in folders", {
@@ -68,7 +68,7 @@ test_that("render_book() works -- chapters in folders", {
 
   index <- xml2::read_html(file.path(parent_dir, project_dir, "_book", "chapters", "references.html"))
   spanish_link <- xml2::xml_find_first(index, '//a[@id="language-link-es"]')
-  expect_equal(xml2::xml_attr(spanish_link, "href"), "https://example.com/es/chapters/references.es.html")
+  expect_identical(xml2::xml_attr(spanish_link, "href"), "https://example.com/es/chapters/references.es.html")
 })
 
 test_that("render_website() works", {
@@ -93,13 +93,13 @@ test_that("render_website() works", {
 
   index <- xml2::read_html(file.path(parent_dir, project_dir, "_site", "index.html"))
   spanish_link <- xml2::xml_find_first(index, '//a[@id="language-link-es"]')
-  expect_equal(xml2::xml_attr(spanish_link, "href"), "https://example.com/es/index.html")
-  expect_equal(xml2::xml_text(spanish_link), "Version en Español")
+  expect_identical(xml2::xml_attr(spanish_link, "href"), "https://example.com/es/index.html")
+  expect_identical(xml2::xml_text(spanish_link), "Version en Español")
 
   spanish_index <- xml2::read_html(file.path(parent_dir, project_dir, "_site", "es", "index.html"))
   english_link <- xml2::xml_find_first(spanish_index, '//a[@id="language-link-en"]')
-  expect_equal(xml2::xml_attr(english_link, "href"), "https://example.com/index.html")
-  expect_equal(xml2::xml_text(english_link), "Version in en")
+  expect_identical(xml2::xml_attr(english_link, "href"), "https://example.com/index.html")
+  expect_identical(xml2::xml_text(english_link), "Version in en")
 
 })
 test_that("render_book() works -- partial template", {
@@ -349,7 +349,7 @@ test_that("book with navbar placement has languagelinks in the navbar", {
   navbar_li <- xml2::xml_parent(language_links)
   navbar_li_class <- xml2::xml_attr(navbar_li, "class")
 
-  expect_equal(navbar_li_class, "nav-item")
+  expect_identical(navbar_li_class, "nav-item")
 })
 
 test_that("website with sidebar placement has languagelinks in the sidebar", {
@@ -374,7 +374,7 @@ test_that("website with sidebar placement has languagelinks in the sidebar", {
   sidebar <- xml2::xml_parent(language_links)
   sidebar_id <- xml2::xml_attr(sidebar, "id")
 
-  expect_equal(sidebar_id, "quarto-sidebar")
+  expect_identical(sidebar_id, "quarto-sidebar")
 })
 
 test_that("render_book() works - all language links are present in sidebar", {
@@ -398,54 +398,54 @@ test_that("render_book() works - all language links are present in sidebar", {
   language_links <- xml2::xml_find_first(index, '//div[@id="languages-links-parent"]')
   sidebar <- xml2::xml_parent(language_links)
   sidebar_id <- xml2::xml_attr(sidebar, "id")
-  expect_equal(sidebar_id, "quarto-sidebar")
+  expect_identical(sidebar_id, "quarto-sidebar")
 
   index_links <- xml2::xml_find_first(index, '//ul[@id="languages-links"]')
-  expect_equal(xml2::xml_length(index_links), 2)
+  expect_identical(xml2::xml_length(index_links), 2L)
 
   index_link_fr_href <- xml2::xml_attr(
     xml2::xml_find_first(index, '//a[@id="language-link-fr"]'),
     "href"
   )
-  expect_equal(index_link_fr_href, "https://ropensci.org/fr/index.fr.html")
+  expect_identical(index_link_fr_href, "https://ropensci.org/fr/index.fr.html")
 
   index_link_es_href <- xml2::xml_attr(
     xml2::xml_find_first(index, '//a[@id="language-link-es"]'),
     "href"
   )
-  expect_equal(index_link_es_href, "https://ropensci.org/es/index.es.html")
+  expect_identical(index_link_es_href, "https://ropensci.org/es/index.es.html")
 
   index_fr <- xml2::read_html(file.path(parent_dir, project_dir, "_book", "fr", "index.fr.html"))
   index_fr_links <- xml2::xml_find_first(index_fr, '//ul[@id="languages-links"]')
-  expect_equal(xml2::xml_length(index_fr_links), 2)
+  expect_identical(xml2::xml_length(index_fr_links), 2L)
 
   index_fr_link_en <- xml2::xml_attr(
     xml2::xml_find_all(index_fr, '//a[@id="language-link-en"]'),
     "href"
   )
-  expect_equal(index_fr_link_en, "https://ropensci.org/index.html")
+  expect_identical(index_fr_link_en, "https://ropensci.org/index.html")
 
   index_fr_link_es <- xml2::xml_attr(
     xml2::xml_find_all(index_fr, '//a[@id="language-link-es"]'),
     "href"
   )
-  expect_equal(index_fr_link_es, "https://ropensci.org/es/index.es.html")
+  expect_identical(index_fr_link_es, "https://ropensci.org/es/index.es.html")
 
   index_es <- xml2::read_html(file.path(parent_dir, project_dir, "_book", "es", "index.es.html"))
   index_es_links <- xml2::xml_find_first(index_es, '//ul[@id="languages-links"]')
-  expect_equal(xml2::xml_length(index_es_links), 2)
+  expect_identical(xml2::xml_length(index_es_links), 2L)
 
   index_es_link_en <- xml2::xml_attr(
     xml2::xml_find_all(index_es, '//a[@id="language-link-en"]'),
     "href"
   )
-  expect_equal(index_es_link_en, "https://ropensci.org/index.html")
+  expect_identical(index_es_link_en, "https://ropensci.org/index.html")
 
   index_es_link_fr <- xml2::xml_attr(
     xml2::xml_find_all(index_es, '//a[@id="language-link-fr"]'),
     "href"
   )
-  expect_equal(index_es_link_fr, "https://ropensci.org/fr/index.fr.html")
+  expect_identical(index_es_link_fr, "https://ropensci.org/fr/index.fr.html")
 })
 
 test_that("render_website() works - all language links are present in navbar", {
@@ -469,54 +469,54 @@ test_that("render_website() works - all language links are present in navbar", {
   language_links <- xml2::xml_find_first(index, '//div[@id="languages-links-parent"]')
   navbar_li <- xml2::xml_parent(language_links)
   navbar_li_class <- xml2::xml_attr(navbar_li, "class")
-  expect_equal(navbar_li_class, "nav-item")
+  expect_identical(navbar_li_class, "nav-item")
 
   index_links <- xml2::xml_find_first(index, '//ul[@id="languages-links"]')
-  expect_equal(xml2::xml_length(index_links), 2)
+  expect_identical(xml2::xml_length(index_links), 2L)
 
   index_link_fr_href <- xml2::xml_attr(
     xml2::xml_find_first(index, '//a[@id="language-link-fr"]'),
     "href"
   )
-  expect_equal(index_link_fr_href, "https://ropensci.org/fr/index.html")
+  expect_identical(index_link_fr_href, "https://ropensci.org/fr/index.html")
 
   index_link_es_href <- xml2::xml_attr(
     xml2::xml_find_first(index, '//a[@id="language-link-es"]'),
     "href"
   )
-  expect_equal(index_link_es_href, "https://ropensci.org/es/index.html")
+  expect_identical(index_link_es_href, "https://ropensci.org/es/index.html")
 
   index_fr <- xml2::read_html(file.path(parent_dir, project_dir, "_site", "fr", "index.html"))
   index_fr_links <- xml2::xml_find_first(index_fr, '//ul[@id="languages-links"]')
-  expect_equal(xml2::xml_length(index_fr_links), 2)
+  expect_identical(xml2::xml_length(index_fr_links), 2L)
 
   index_fr_link_en <- xml2::xml_attr(
     xml2::xml_find_all(index_fr, '//a[@id="language-link-en"]'),
     "href"
   )
-  expect_equal(index_fr_link_en, "https://ropensci.org/index.html")
+  expect_identical(index_fr_link_en, "https://ropensci.org/index.html")
 
   index_fr_link_es <- xml2::xml_attr(
     xml2::xml_find_all(index_fr, '//a[@id="language-link-es"]'),
     "href"
   )
-  expect_equal(index_fr_link_es, "https://ropensci.org/es/index.html")
+  expect_identical(index_fr_link_es, "https://ropensci.org/es/index.html")
 
 
   index_es <- xml2::read_html(file.path(parent_dir, project_dir, "_site", "es", "index.html"))
   index_es_links <- xml2::xml_find_first(index_es, '//ul[@id="languages-links"]')
-  expect_equal(xml2::xml_length(index_es_links), 2)
+  expect_identical(xml2::xml_length(index_es_links), 2L)
 
   index_es_link_en <- xml2::xml_attr(
     xml2::xml_find_all(index_es, '//a[@id="language-link-en"]'),
     "href"
   )
-  expect_equal(index_es_link_en, "https://ropensci.org/index.html")
+  expect_identical(index_es_link_en, "https://ropensci.org/index.html")
 
   index_es_link_fr <- xml2::xml_attr(
     xml2::xml_find_all(index_es, '//a[@id="language-link-fr"]'),
     "href"
   )
-  expect_equal(index_es_link_fr, "https://ropensci.org/fr/index.html")
+  expect_identical(index_es_link_fr, "https://ropensci.org/fr/index.html")
 
 })
