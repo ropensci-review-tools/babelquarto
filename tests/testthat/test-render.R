@@ -1,5 +1,5 @@
 test_that("render_book() works", {
-  withr::local_envvar("BABELQUARTO_TESTS_URL" = "true")
+  withr::local_envvar(BABELQUARTO_TESTS_URL = "true")
 
   parent_dir <- withr::local_tempdir()
   project_dir <- "blop"
@@ -19,7 +19,7 @@ test_that("render_book() works", {
 })
 
 test_that("render_book() works - change link", {
-  withr::local_envvar("BABELQUARTO_TESTS_URL" = "true")
+  withr::local_envvar(BABELQUARTO_TESTS_URL = "true")
 
   parent_dir <- withr::local_tempdir()
   project_dir <- "blop"
@@ -40,7 +40,7 @@ test_that("render_book() works - change link", {
 })
 
 test_that("render_book() works -- chapters in folders", {
-  withr::local_envvar("BABELQUARTO_TESTS_URL" = "true")
+  withr::local_envvar(BABELQUARTO_TESTS_URL = "true")
 
   parent_dir <- withr::local_tempdir()
   project_dir <- "blop"
@@ -72,7 +72,7 @@ test_that("render_book() works -- chapters in folders", {
 })
 
 test_that("render_website() works", {
-  withr::local_envvar("BABELQUARTO_TESTS_URL" = "true")
+  withr::local_envvar(BABELQUARTO_TESTS_URL = "true")
 
   parent_dir <- withr::local_tempdir()
   project_dir <- "blop"
@@ -103,7 +103,7 @@ test_that("render_website() works", {
 
 })
 test_that("render_book() works -- partial template", {
-  withr::local_envvar("BABELQUARTO_TESTS_URL" = "true")
+  withr::local_envvar(BABELQUARTO_TESTS_URL = "true")
 
   parent_dir <- withr::local_tempdir()
   project_dir <- "blop"
@@ -147,7 +147,7 @@ test_that("render_book() works -- partial template", {
 })
 
 test_that("render_book() works - appendices", {
-  withr::local_envvar("BABELQUARTO_TESTS_URL" = "true")
+  withr::local_envvar(BABELQUARTO_TESTS_URL = "true")
 
   parent_dir <- withr::local_tempdir()
   project_dir <- "blop"
@@ -175,7 +175,7 @@ test_that("render_book() works - appendices", {
 })
 
 test_that("render_book() works - chapters", {
-  withr::local_envvar("BABELQUARTO_TESTS_URL" = "true")
+  withr::local_envvar(BABELQUARTO_TESTS_URL = "true")
 
   parent_dir <- withr::local_tempdir()
   project_dir <- "blop"
@@ -204,7 +204,7 @@ test_that("render_book() works - chapters", {
 })
 
 test_that("render_website() works - listing", {
-  withr::local_envvar("BABELQUARTO_TESTS_URL" = "true")
+  withr::local_envvar(BABELQUARTO_TESTS_URL = "true")
 
   parent_dir <- withr::local_tempdir()
   project_dir <- "blop"
@@ -247,7 +247,7 @@ test_that("render_website() works - listing", {
 })
 
 test_that("render_website() works - clean render for each language", {
-  withr::local_envvar("BABELQUARTO_TESTS_URL" = "true")
+  withr::local_envvar(BABELQUARTO_TESTS_URL = "true")
 
   parent_dir <- withr::local_tempdir()
   project_dir <- "blop"
@@ -278,7 +278,7 @@ test_that("render_website() works - clean render for each language", {
 })
 
 test_that("render_website() fails when missing sidebar and languagelinks is set to sidebar", {
-  withr::local_envvar("BABELQUARTO_TESTS_URL" = "true")
+  withr::local_envvar(BABELQUARTO_TESTS_URL = "true")
 
   parent_dir <- withr::local_tempdir()
   project_dir <- "blop"
@@ -302,7 +302,7 @@ test_that("render_website() fails when missing sidebar and languagelinks is set 
 })
 
 test_that("render_book() fails when missing navbar and languagelinks is set to navbar", {
-  withr::local_envvar("BABELQUARTO_TESTS_URL" = "true")
+  withr::local_envvar(BABELQUARTO_TESTS_URL = "true")
 
   parent_dir <- withr::local_tempdir()
   project_dir <- "blop"
@@ -328,7 +328,7 @@ test_that("render_book() fails when missing navbar and languagelinks is set to n
 })
 
 test_that("book with navbar placement has languagelinks in the navbar", {
-  withr::local_envvar("BABELQUARTO_TESTS_URL" = "true")
+  withr::local_envvar(BABELQUARTO_TESTS_URL = "true")
 
   parent_dir <- withr::local_tempdir()
   project_dir <- "blop"
@@ -353,7 +353,7 @@ test_that("book with navbar placement has languagelinks in the navbar", {
 })
 
 test_that("website with sidebar placement has languagelinks in the sidebar", {
-  withr::local_envvar("BABELQUARTO_TESTS_URL" = "true")
+  withr::local_envvar(BABELQUARTO_TESTS_URL = "true")
 
   parent_dir <- withr::local_tempdir()
   project_dir <- "blop"
