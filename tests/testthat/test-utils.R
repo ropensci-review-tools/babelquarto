@@ -1,8 +1,8 @@
-test_that("Replacing logicals with yes/no works", {
+test_that("Replacing logicals with yes or no works", {
   original_list <- list(
     a = TRUE,
     z = "hey",
-    y = 12,
+    y = 12L,
     b = list(
       c = FALSE,
       d = list(
@@ -14,7 +14,7 @@ test_that("Replacing logicals with yes/no works", {
   replace_list <- list(
     a = "true",
     z = "hey",
-    y = 12,
+    y = 12L,
     b = list(
       c = "false",
       d = list(
@@ -28,7 +28,7 @@ test_that("Replacing logicals with yes/no works", {
   class(replace_list[["b"]][["d"]][["e"]]) <- "verbatim"
   class(replace_list[["b"]][["d"]][["f"]]) <- "verbatim"
 
-  expect_equal(
+  expect_identical(
     replace_list,
     replace_true_false(original_list)
   )
