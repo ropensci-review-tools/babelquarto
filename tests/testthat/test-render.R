@@ -13,9 +13,13 @@ test_that("render_book() works", {
   withr::with_dir(parent_dir, render_book(project_dir))
   expect_true(fs::dir_exists(file.path(parent_dir, project_dir, "_book")))
 
-  index <- xml2::read_html(file.path(parent_dir, project_dir, "_book", "index.html"))
+  index_path <- file.path(parent_dir, project_dir, "_book", "index.html")
+  index <- xml2::read_html(index_path)
   spanish_link <- xml2::xml_find_first(index, '//a[@id="language-link-es"]')
-  expect_identical(xml2::xml_attr(spanish_link, "href"), "https://example.com/es/index.es.html")
+  expect_identical(
+    xml2::xml_attr(spanish_link, "href"),
+    "https://example.com/es/index.es.html"
+  )
 })
 
 test_that("render_book() works - change link", {
@@ -34,9 +38,13 @@ test_that("render_book() works - change link", {
   withr::with_dir(parent_dir, render_book(project_dir))
   expect_true(fs::dir_exists(file.path(parent_dir, project_dir, "_book")))
 
-  index <- xml2::read_html(file.path(parent_dir, project_dir, "_book", "index.html"))
+  index_path <- file.path(parent_dir, project_dir, "_book", "index.html")
+  index <- xml2::read_html(index_path)
   spanish_link <- xml2::xml_find_first(index, '//a[@id="language-link-es"]')
-  expect_identical(xml2::xml_attr(spanish_link, "href"), "https://ropensci.org/es/index.es.html")
+  expect_identical(
+    xml2::xml_attr(spanish_link, "href"),
+    "https://ropensci.org/es/index.es.html"
+  )
 })
 
 test_that("render_book() works -- chapters in folders", {
@@ -58,17 +66,25 @@ test_that("render_book() works -- chapters in folders", {
     new_path = file.path(parent_dir, project_dir, "chapters")
   )
 
-  config_lines <- brio::read_lines(file.path(parent_dir, project_dir, "_quarto.yml"))
+  config_path <- file.path(parent_dir, project_dir, "_quarto.yml")
+  config_lines <- brio::read_lines(config_path)
   config_lines <- gsub("- (.*)\\.qmd", "- chapters/\\1.qmd", config_lines)
   config_lines <- gsub("- chapters/index.qmd", "- index.qmd", config_lines)
-  brio::write_lines(config_lines, file.path(parent_dir, project_dir, "_quarto.yml"))
+  brio::write_lines(config_lines, config_path)
 
   withr::with_dir(parent_dir, render_book(project_dir))
   expect_true(fs::dir_exists(file.path(parent_dir, project_dir, "_book")))
 
-  index <- xml2::read_html(file.path(parent_dir, project_dir, "_book", "chapters", "references.html"))
-  spanish_link <- xml2::xml_find_first(index, '//a[@id="language-link-es"]')
-  expect_identical(xml2::xml_attr(spanish_link, "href"), "https://example.com/es/chapters/references.es.html")
+  references_path <- file.path(
+    parent_dir, project_dir,
+    "_book", "chapters", "references.html"
+  )
+  references <- xml2::read_html(references_path)
+  spanish_link <- xml2::xml_find_first(references, '//a[@id="language-link-es"]')
+  expect_identical(
+    xml2::xml_attr(spanish_link, "href"),
+    "https://example.com/es/chapters/references.es.html"
+  )
 })
 
 test_that("render_website() works", {
@@ -85,21 +101,35 @@ test_that("render_website() works", {
 
   config_path <- file.path(parent_dir, project_dir, "_quarto.yml")
   config <- brio::read_lines(config_path)
-  config[config == '    text: "Version in es"'] <- '    text: "Version en Español"'
+  config[config == '    text: "Version in es"'] <- '    text: "Version en Español"' # nolint: line_length_linter
   brio::write_lines(config, config_path)
 
   withr::with_dir(parent_dir, render_website(project_dir))
   expect_true(fs::dir_exists(file.path(parent_dir, project_dir, "_site")))
 
-  index <- xml2::read_html(file.path(parent_dir, project_dir, "_site", "index.html"))
+  index_path <- file.path(parent_dir, project_dir, "_site", "index.html")
+  index <- xml2::read_html(index_path)
   spanish_link <- xml2::xml_find_first(index, '//a[@id="language-link-es"]')
-  expect_identical(xml2::xml_attr(spanish_link, "href"), "https://example.com/es/index.html")
+  expect_identical(
+    xml2::xml_attr(spanish_link, "href"),
+    "https://example.com/es/index.html"
+  )
   expect_identical(xml2::xml_text(spanish_link), "Version en Español")
 
-  spanish_index <- xml2::read_html(file.path(parent_dir, project_dir, "_site", "es", "index.html"))
-  english_link <- xml2::xml_find_first(spanish_index, '//a[@id="language-link-en"]')
-  expect_identical(xml2::xml_attr(english_link, "href"), "https://example.com/index.html")
-  expect_identical(xml2::xml_text(english_link), "Version in en")
+  spanish_index_path <- file.path(
+    parent_dir, project_dir,
+    "_site", "es", "index.html"
+  )
+  spanish_index <- xml2::read_html(spanish_index_path)
+  english_link <- xml2::xml_find_first(
+    spanish_index,
+    '//a[@id="language-link-en"]'
+  )
+  expect_identical(
+    xml2::xml_attr(english_link, "href"),
+    "https://example.com/index.html")
+  expect_identical(xml2::xml_text(english_link), "Version in en"
+  )
 
 })
 test_that("render_book() works -- partial template", {
@@ -121,7 +151,7 @@ test_that("render_book() works -- partial template", {
 
   config_path <- file.path(parent_dir, project_dir, "_quarto.yml")
   config <- brio::read_lines(config_path)
-  config[config == '    text: "Version in es"'] <- '    text: "Version en Español"'
+  config[config == '    text: "Version in es"'] <- '    text: "Version en Español"' # nolint: line_length_linter
   config <- append(
     config,
     c("    template-partials:", "      - metadata.html"),
@@ -132,16 +162,34 @@ test_that("render_book() works -- partial template", {
   withr::with_dir(parent_dir, render_website(project_dir))
   expect_true(fs::dir_exists(file.path(parent_dir, project_dir, "_site")))
 
-  index <- xml2::read_html(file.path(parent_dir, project_dir, "_site", "index.html"))
-  div <- xml2::xml_find_first(index, '//div[@class="alert alert-info alert-dismissible"]')
+  index_path <- file.path(parent_dir, project_dir, "_site", "index.html")
+  index <- xml2::read_html(index_path)
+  div <- xml2::xml_find_first(
+    index,
+    '//div[@class="alert alert-info alert-dismissible"]'
+  )
   expect_match(xml2::xml_text(div), "Hello")
 
-  index <- xml2::read_html(file.path(parent_dir, project_dir, "_site", "es", "index.html"))
-  div <- xml2::xml_find_first(index, '//div[@class="alert alert-info alert-dismissible"]')
+  spanish_index_path <- file.path(
+    parent_dir, project_dir,
+    "_site", "es", "index.html"
+  )
+  spanish_index <- xml2::read_html(spanish_index_path)
+  div <- xml2::xml_find_first(
+    spanish_index,
+    '//div[@class="alert alert-info alert-dismissible"]'
+  )
   expect_match(xml2::xml_text(div), "Hola")
 
-  index <- xml2::read_html(file.path(parent_dir, project_dir, "_site", "fr", "index.html"))
-  div <- xml2::xml_find_first(index, '//div[@class="alert alert-info alert-dismissible"]')
+  french_index_path <- file.path(
+    parent_dir, project_dir, "_site",
+    "fr", "index.html"
+  )
+  french_index <- xml2::read_html(french_index_path)
+  div <- xml2::xml_find_first(
+    french_index,
+    '//div[@class="alert alert-info alert-dismissible"]'
+  )
   expect_match(xml2::xml_text(div), "Salut")
 
 })
@@ -239,9 +287,16 @@ test_that("render_website() works - listing", {
 
   withr::with_dir(parent_dir, render_website(project_dir))
 
-  index <- xml2::read_html(file.path(parent_dir, project_dir, "_site", "listing.html"))
-  listing_grid <- xml2::xml_find_first(index, "//div[contains(@class, 'quarto-listing-cols-3')]")
-  grid_items <- xml2::xml_find_all(listing_grid, ".//div[contains(@class, 'quarto-grid-item')]")
+  listing_path <- file.path(parent_dir, project_dir, "_site", "listing.html")
+  listing <- xml2::read_html(listing_path)
+  listing_grid <- xml2::xml_find_first(
+    listing,
+    "//div[contains(@class, 'quarto-listing-cols-3')]"
+  )
+  grid_items <- xml2::xml_find_all(
+    listing_grid,
+    ".//div[contains(@class, 'quarto-grid-item')]"
+  )
 
   expect_length(grid_items, 1)
 })
