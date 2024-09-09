@@ -4,3 +4,4 @@
 ^\.github$
 ^LICENSE\.md$
 ^\.lintr$
+^man/read_yaml\.Rd$
