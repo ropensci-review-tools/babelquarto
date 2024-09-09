@@ -7,7 +7,7 @@
 register_main_language <- function(main_language = "en", project_path = ".") {
   config_path <- file.path(project_path, "_quarto.yml")
 
-  config <- read_yaml(config_path) # nolint: object_usage_linter
+  config <- read_yaml(config_path)
   if (!is.null(config[["babelquarto"]][["mainlanguage"]])) {
     if (config[["babelquarto"]][["mainlanguage"]] != main_language) {
       cli::cli_abort(c(
@@ -53,7 +53,7 @@ register_further_languages <- function(further_languages, project_path = ".") {
 
   config_path <- file.path(project_path, "_quarto.yml")
 
-  config <- read_yaml(config_path) # nolint: object_usage_linter
+  config <- read_yaml(config_path)
   languages_config_present <- !is.null(config[["babelquarto"]][["languages"]])
   if (languages_config_present &&
         all(further_languages %in% config[["babelquarto"]][["languages"]])) {

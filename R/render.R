@@ -55,7 +55,7 @@ render <- function(path = ".",
                    profile = NULL) {
   # configuration ----
   config <- file.path(path, "_quarto.yml")
-  config_contents <- read_yaml(config) # nolint: object_usage_linter
+  config_contents <- read_yaml(config)
 
   if (is.null(site_url)) {
     if (nzchar(Sys.getenv("BABELQUARTO_TESTS_URL")) || !on_ci()) {
@@ -193,7 +193,7 @@ render_quarto_lang <- function(language_code, path, output_dir, type) {
   project_name <- fs::path_file(path)
 
   config_path <- file.path(temporary_directory, project_name, "_quarto.yml")
-  config <- read_yaml(config_path) # nolint: object_usage_linter
+  config <- read_yaml(config_path)
 
   config[["lang"]] <- language_code
 
