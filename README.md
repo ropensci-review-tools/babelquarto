@@ -40,12 +40,12 @@ Create a starter/example book.
 parent_dir <- withr::local_tempdir()
 project_dir <- "blop"
 babelquarto::quarto_multilingual_book(parent_dir = parent_dir, project_dir = project_dir)
-#> [1] "/var/folders/gd/rrsyq__147x_8y_3zcpymj_40000gn/T//RtmpriOJiL/file8469343ef080/blop"
+#> [1] "/var/folders/gd/rrsyq__147x_8y_3zcpymj_40000gn/T//Rtmpr3nsvT/filed2be237749e5/blop"
 readLines(file.path(parent_dir, project_dir, "_quarto.yml"))
 #>  [1] "project:"                          "  type: book"                     
 #>  [3] ""                                  "book:"                            
 #>  [5] "  site-url: https://example.com"   "  title: \"blop\""                
-#>  [7] "  author: \"Pascal Burkhard\""     "  date: \"19.08.2024\""           
+#>  [7] "  author: \"Pascal Burkhard\""     "  date: \"11.09.2024\""           
 #>  [9] "  chapters:"                       "    - index.qmd"                  
 #> [11] "    - intro.qmd"                   "    - summary.qmd"                
 #> [13] "    - references.qmd"              ""                                 
@@ -62,7 +62,7 @@ readLines(file.path(parent_dir, project_dir, "_quarto.yml"))
 #> [35] "description-fr: description in fr" "author-es: author in es"          
 #> [37] "author-fr: author in fr"           "lang: en"
 fs::dir_tree(file.path(parent_dir, project_dir))
-#> /var/folders/gd/rrsyq__147x_8y_3zcpymj_40000gn/T//RtmpriOJiL/file8469343ef080/blop
+#> /var/folders/gd/rrsyq__147x_8y_3zcpymj_40000gn/T//Rtmpr3nsvT/filed2be237749e5/blop
 #> ├── _quarto.yml
 #> ├── cover.png
 #> ├── index.es.qmd
@@ -95,7 +95,7 @@ Create a starter/example website.
 parent_dir <- withr::local_tempdir()
 project_dir <- "blop"
 babelquarto::quarto_multilingual_website(parent_dir = parent_dir, project_dir = project_dir)
-#> [1] "/var/folders/gd/rrsyq__147x_8y_3zcpymj_40000gn/T//RtmpriOJiL/file84692577354f/blop"
+#> [1] "/var/folders/gd/rrsyq__147x_8y_3zcpymj_40000gn/T//Rtmpr3nsvT/filed2be4d2b3e3/blop"
 readLines(file.path(parent_dir, project_dir, "_quarto.yml"))
 #>  [1] "project:"                          "  type: website"                  
 #>  [3] ""                                  "website:"                         
@@ -118,7 +118,7 @@ readLines(file.path(parent_dir, project_dir, "_quarto.yml"))
 #> [37] "author-es: author in es"           "author-fr: author in fr"          
 #> [39] "lang: en"
 fs::dir_tree(file.path(parent_dir, project_dir))
-#> /var/folders/gd/rrsyq__147x_8y_3zcpymj_40000gn/T//RtmpriOJiL/file84692577354f/blop
+#> /var/folders/gd/rrsyq__147x_8y_3zcpymj_40000gn/T//Rtmpr3nsvT/filed2be4d2b3e3/blop
 #> ├── _quarto.yml
 #> ├── about.es.qmd
 #> ├── about.fr.qmd
@@ -194,10 +194,10 @@ three Quarto configuration files:
 
 - `_quarto.yml` with the general configuration including the chapters
   list;
-- `_quarto.fr.yml` with an [announcement
+- `_quarto-fr.yml` with an [announcement
   bar](https://quarto.org/docs/websites/website-tools.html#announcement-bar)
   in French;
-- `_quarto.en.yml` with an [announcement
+- `_quarto-en.yml` with an [announcement
   bar](https://quarto.org/docs/websites/website-tools.html#announcement-bar)
   in English.
 
@@ -272,7 +272,7 @@ project:
 book:
   title: "babelbook"
   author: "Norah Jones"
-  date: "19.08.2024"
+  date: "11.09.2024"
   chapters:
     - index.qmd
     - intro.qmd
