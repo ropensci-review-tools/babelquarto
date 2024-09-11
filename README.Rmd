@@ -125,8 +125,8 @@ There are two complementary/overlapping solutions for making the different langu
 For a book with French ("fr") and English ("en") versions you could have three Quarto configuration files:
 
 - `_quarto.yml` with the general configuration including the chapters list;
-- `_quarto.fr.yml` with an [announcement bar](https://quarto.org/docs/websites/website-tools.html#announcement-bar) in French;
-- `_quarto.en.yml` with an [announcement bar](https://quarto.org/docs/websites/website-tools.html#announcement-bar) in English.
+- `_quarto-fr.yml` with an [announcement bar](https://quarto.org/docs/websites/website-tools.html#announcement-bar) in French;
+- `_quarto-en.yml` with an [announcement bar](https://quarto.org/docs/websites/website-tools.html#announcement-bar) in English.
 
 You could use the same strategy for having different navbars in the different language versions of a multilingual website.
 
