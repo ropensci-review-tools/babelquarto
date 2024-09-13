@@ -251,6 +251,48 @@ test_that("render_book() works - chapters", {
 
 })
 
+test_that("render_book() works - parts and chapters", {
+  withr::local_envvar(BABELQUARTO_TESTS_URL = "true")
+
+  parent_dir <- withr::local_tempdir()
+  project_dir <- "blop"
+  quarto_multilingual_book(
+    parent_dir = parent_dir,
+    project_dir = project_dir,
+    further_languages = c("es", "fr"),
+    main_language = "en",
+    site_url = "https://ropensci.org"
+  )
+
+  config_path <- file.path(parent_dir, project_dir, "_quarto.yml")
+  config <- read_yaml(config_path)
+  config[["book"]][["chapters"]] <- list(
+    "index.qmd",
+    list(
+      part = "Introduction",
+      `part-fr` = "Introduction",
+      `part-es` = "Introducción",
+      chapters = list(
+        "intro.qmd"
+      )
+    ),
+    list(
+      part = "Summary",
+      `part-fr` = "Résumé",
+      `part-es` = "Resumen",
+      chapters = list(
+        "summary.qmd"
+      )
+    ),
+    "references.qmd"
+  )
+  yaml::write_yaml(config, config_path)
+
+  withr::with_dir(parent_dir, render_book(project_dir))
+  expect_dir_exists(file.path(parent_dir, project_dir, "_book"))
+
+})
+
 test_that("render_website() works - listing", {
   withr::local_envvar(BABELQUARTO_TESTS_URL = "true")
 
