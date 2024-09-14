@@ -296,7 +296,7 @@ use_lang_chapter <- function(chapters_list, language_code,
       language_code = language_code
     )
 
-    if (any(!fs::file_exists(chapters_list[["chapters"]]))) {
+    if (!all(fs::file_exists(chapters_list[["chapters"]]))) {
       chapters_not_translated <- !fs::file_exists(chapters_list[["chapters"]])
       fs::file_move(
         unlist(original_chapters_list[["chapters"]][chapters_not_translated]),
