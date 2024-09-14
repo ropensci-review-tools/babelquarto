@@ -140,7 +140,8 @@ render <- function(path = ".",
       type = type,
       config = config_contents,
       output_folder = output_folder,
-      path_language = main_language
+      path_language = main_language,
+      project_dir = path
     )
   )
   purrr::walk(
@@ -170,7 +171,8 @@ render <- function(path = ".",
         type = type,
         config = config_contents,
         output_folder = output_folder,
-        path_language = other_lang
+        path_language = other_lang,
+        project_dir = path
       )
     )
     purrr::walk(
@@ -329,10 +331,18 @@ use_lang_chapter <- function(chapters_list, language_code,
 
 add_links <- function(path, main_language, # nolint: cyclocomp_linter
                       language_code, site_url, type, config, output_folder,
-                      path_language) {
+                      path_language, project_dir) {
   html <- xml2::read_html(path)
 
   document_path <- path
+
+  lang_profile <- file.path(
+    project_dir, paste0("_quarto-", language_code, ".yml")
+  )
+  if (fs::file_exists(lang_profile)) {
+    lang_config <- read_yaml(lang_profile)
+    config <- utils::modifyList(config, lang_config)
+  }
 
   codes <- config[["babelquarto"]][["languagecodes"]]
   current_lang <- purrr::keep(codes, ~.x[["name"]] == language_code)
