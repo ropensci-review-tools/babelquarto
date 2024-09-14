@@ -658,3 +658,74 @@ test_that("render_website() works - all language links are present in navbar", {
   expect_identical(index_es_link_fr, "https://ropensci.org/fr/index.html")
 
 })
+
+test_that("render_website() works - sidebar in language profile", {
+  parent_dir <- withr::local_tempdir()
+  project_dir <- "blop"
+
+  quarto_multilingual_website(
+    parent_dir = parent_dir,
+    project_dir = project_dir,
+    further_languages = "fr",
+    main_language = "en",
+    site_url = "https://ropensci.org"
+  )
+
+  config_path <- file.path(parent_dir, project_dir, "_quarto.yml")
+  config_lines <- brio::read_lines(config_path)
+  where_languagelinks <- grep("  languagelinks:", config_lines, fixed = TRUE)
+  config_lines[where_languagelinks] <- "  languagelinks: sidebar"
+  brio::write_lines(config_lines, config_path)
+
+  sidebar <- c(
+    "website:",
+    "  sidebar:",
+    "    contents:"
+  )
+
+  profile_path_en <- file.path(parent_dir, project_dir, "_quarto-en.yml")
+  sidebar_en <- c(
+    sidebar,
+    "      - text: Home",
+    "        href: index.qmd"
+  )
+  brio::write_lines(sidebar_en, profile_path_en)
+
+  profile_path_fr <- file.path(parent_dir, project_dir, "_quarto-fr.yml")
+  sidebar_fr <- c(
+    sidebar,
+    "      - text: Accueil",
+    "        href: index.qmd"
+  )
+  brio::write_lines(sidebar_fr, profile_path_fr)
+
+
+  withr::with_dir(parent_dir, render_website(project_dir))
+  main <- file.path(parent_dir, project_dir, "_site")
+  expect_dir_exists(main)
+
+  index_path <- file.path(main, "index.html")
+  index <- xml2::read_html(index_path)
+  language_links <- xml2::xml_find_first(
+    index,
+    '//div[@id="languages-links-parent"]'
+  )
+  sidebar <- xml2::xml_parent(language_links)
+  sidebar_id <- xml2::xml_attr(sidebar, "id")
+
+  expect_identical(sidebar_id, "quarto-sidebar")
+
+  french <- file.path(parent_dir, project_dir, "_site", "fr")
+  expect_dir_exists(french)
+
+  index_fr_path <- file.path(french, "index.html")
+  index_fr <- xml2::read_html(index_fr_path)
+  language_links_fr <- xml2::xml_find_first(
+    index_fr,
+    '//div[@id="languages-links-parent"]'
+  )
+  sidebar_fr <- xml2::xml_parent(language_links_fr)
+  sidebar_fr_id <- xml2::xml_attr(sidebar_fr, "id")
+
+  expect_identical(sidebar_fr_id, "quarto-sidebar")
+})
