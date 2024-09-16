@@ -336,8 +336,9 @@ add_links <- function(path, main_language, # nolint: cyclocomp_linter
 
   document_path <- path
 
-  lang_profile <- file.path(
-    project_dir, paste0("_quarto-", language_code, ".yml")
+  lang_profile <- fs::path(
+    project_dir, paste0("_quarto-", language_code),
+    ext = "yml"
   )
   if (fs::file_exists(lang_profile)) {
     lang_config <- read_yaml(lang_profile)
