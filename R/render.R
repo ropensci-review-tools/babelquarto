@@ -197,6 +197,33 @@ render_quarto_lang <- function(language_code, path, output_dir, type) {
   config_path <- file.path(temporary_directory, project_name, "_quarto.yml")
   config <- read_yaml(config_path)
 
+  freeze_folder_exists <- fs::dir_exists(
+    file.path(temporary_directory, project_name, "_freeze")
+  )
+
+  if (freeze_folder_exists) {
+    freeze_path <- fs::path(temporary_directory, project_name, "_freeze")
+    freeze_temp <- fs::path(
+      temporary_directory,
+      project_name, paste0("_freeze.", language_code)
+    )
+    freeze_ls <- fs::dir_ls(freeze_path, recurse = TRUE)
+
+    freeze_lang <- freeze_ls[grep(paste0("\\.", language_code, "$"), freeze_ls)]
+    freeze_dirs <- fs::path_rel(freeze_lang, start = freeze_path)
+    freeze_dirs <- gsub(
+      paste0(".", language_code), "",
+      freeze_dirs, fixed = TRUE
+    )
+
+    fs::dir_copy(freeze_lang, fs::path(freeze_temp, freeze_dirs))
+    fs::dir_copy(fs::path(freeze_path, "site_libs"), freeze_temp)
+
+    fs::dir_delete(freeze_path)
+    fs::dir_copy(freeze_temp, freeze_path)
+    fs::dir_delete(freeze_temp)
+  }
+
   config[["lang"]] <- language_code
 
   config[[type]][["title"]] <- config[[sprintf("title-%s", language_code)]] %||% # nolint: line_length_linter
