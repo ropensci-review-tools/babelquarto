@@ -41,7 +41,10 @@ To start with a multilingual book, use `quarto_multilingual_book()` with the `pa
 #| results: 'hide'
 parent_dir <- withr::local_tempdir()
 project_dir <- "multilingual_book"
-quarto_multilingual_book(parent_dir = parent_dir, project_dir = project_dir)
+quarto_multilingual_book(
+  parent_dir = parent_dir,
+  project_dir = project_dir
+)
 ```
 
 Look at the `_quarto.yml` file in the project directory. To get familiar with the configuration, take a look at the example below:
@@ -51,10 +54,8 @@ Look at the `_quarto.yml` file in the project directory. To get familiar with th
 #| echo: false
 #| results: 'asis'
 
-# Awaiting r-lib/pkgdown#2776
-# cat("```{.yaml filename='_quarto.yml'}\n")
 cat("```yaml\n")
-readLines(file.path(parent_dir, project_dir, "_quarto.yml")) |> 
+readLines(file.path(parent_dir, project_dir, "_quarto.yml")) |>
   cat(sep = "\n")
 cat("```\n")
 ```
@@ -88,7 +89,10 @@ To start a multilingual website, use `quarto_multilingual_website()` with the `p
 #| results: 'hide'
 parent_dir <- withr::local_tempdir()
 project_dir <- "multilingual_website"
-babelquarto::quarto_multilingual_website(parent_dir = parent_dir, project_dir = project_dir)
+babelquarto::quarto_multilingual_website(
+  parent_dir = parent_dir,
+  project_dir = project_dir
+)
 ```
 
 Look at the `_quarto.yml` file in the project directory. To get familiar with the configuration, take a look at the example below:
@@ -98,9 +102,8 @@ Look at the `_quarto.yml` file in the project directory. To get familiar with th
 #| echo: false
 #| results: 'asis'
 
-# cat("```{.yaml filename='_quarto.yml'}\n")
 cat("```yaml\n")
-readLines(file.path(parent_dir, project_dir, "_quarto.yml")) |> 
+readLines(file.path(parent_dir, project_dir, "_quarto.yml")) |>
   cat(sep = "\n")
 cat("```\n")
 ```
