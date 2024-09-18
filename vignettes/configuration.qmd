@@ -1,7 +1,7 @@
 ---
 title: "Configuration"
 vignette: >
-  %\VignetteIndexEntry{Get started}
+  %\VignetteIndexEntry{Configuration}
   %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
 ---
