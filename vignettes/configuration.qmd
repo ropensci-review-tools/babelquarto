@@ -1,0 +1,134 @@
+---
+title: "Configuration"
+vignette: >
+  %\VignetteIndexEntry{Get started}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+---
+
+The goal of this vignette is to show the configuration options that are available in {babelquarto}.
+
+## Basic configuration
+
+When you start a {babelquarto} project, from scratch or from an existing project, your `_quarto.yml` file will contain a number of new options:
+
+```{r}
+#| echo: false
+#| message: false
+#| results: 'asis'
+parent_dir <- withr::local_tempdir()
+project_dir <- "multilingual_book"
+book <- babelquarto::quarto_multilingual_book(parent_dir = parent_dir, project_dir = project_dir)
+config_path <- file.path(parent_dir, project_dir, "_quarto.yml")
+config_lines <- brio::read_lines(config_path)
+where_babelquarto <- grep("babelquarto:", config_lines, fixed = TRUE)
+
+# Awaiting r-lib/pkgdown#2776
+# cat("```{.yaml filename='_quarto.yml'}\n")
+cat("```yaml\n")
+config_lines[where_babelquarto:length(config_lines)] |> 
+  cat(sep = "\n")
+cat("```\n")
+```
+
+By default, {babelquarto} will have the following options under the `babelquarto` key:
+
+|  |  |
+|------------------------------------|------------------------------------|
+| `languagelinks` | Where the menu with the links to other languages will be placed. Can be either `sidebar` or `navbar`. |
+| `languagecodes` | A list with each language defined. Each entry has a `name` with the language abbreviation (for example *en* or *es*. The `text` key changes the text used for the links to this language. |
+| `mainlanguage` | The main language of the project. |
+| `languages` | An array of the additional languages (not including the main language). |
+
+In addition to the `babelquarto` key, you will see language specific keys for `title`, `description` and `author`. These keys allow you to have a specific title, description or author in for each additional language.
+
+### Configure the version text
+
+If you want the choice to be between, say "English" and "Español" rather than "Version in EN" and "Version in ES", add these fields under the `babelquarto/languagecodes` key, in `_quarto.yml`:
+
+```yaml
+babelquarto:
+  languagecodes:
+  - name: es
+    text: "Español"
+  - name: en
+    text: "English"
+```
+
+Using `register_main_language()` and `register_further_languages()` will create the boilertemplate for these fields.
+
+## Configure the base URL
+
+If you need to configure a base URL, you can use the [usual Quarto field](https://quarto.org/docs/websites/website-tools.html), or use the `site_url` argument of `render_book()`.
+
+```yaml
+book:
+  site-url: https://example.com
+```
+
+```yaml
+website:
+  site-url: https://example.com
+```
+
+If you render your multilingual book or website in a CI context, you need will need to set the `BABELQUARTO_CI_URL` environment variable. See `vignette("render-with-ci")` for more information.
+
+## Translate parts in multilingual books
+
+In multilingual books, if you use parts to structure your book, you can translate the part titles like so:
+
+<!-- ``` {.yaml filename="_quarto.yml"} -->
+```yaml
+book:
+  chapters:
+    - index.qmd
+    - part: Foreword
+      part-fr: Préface
+      chapters:
+        - foreword.qmd
+    - part: Explore
+      part-fr: Explorer
+      chapters:
+        - intro-explore.qmd
+        - data-visualisation.qmd
+```
+
+For each additional language, you can use a `part-xx` key to translate the part title.
+
+## Using profiles for advanced configuration
+
+For more advanced customalization, you can use [Quarto project profiles](https://quarto.org/docs/projects/profiles.html). In {babelquarto} we will automatically load a profile if it exists in the project directory. Profile configuration are **merged** with the main `_quarto.yml` file.
+
+For example, if you have a project with English as the main language and French as an additional language. When rendering the main English language, {babelquarto} will load the *en* profile and the *fr* profile when rendering the French version.
+
+You could for example have different navigation menus for each language:
+
+```{.yaml filename="_quarto-en.yml"}
+website:
+  navbar:
+    title: "My Website"
+    left:
+      - label: "Home"
+        href: "index.qmd"
+    right:
+      - label: "About"
+        href: "about.qmd"
+```
+<!-- ```{.yaml filename="_quarto-fr.yml"} -->
+```yaml
+website:
+  navbar:
+    title: "Mon site web"
+    left:
+      - label: "Accueil"
+        href: "index.qmd"
+    right:
+      - label: "À propos"
+        href: "about.qmd"
+```
+
+Profiles allow for advanced configuration, but a careful read of the [profiles documentation](https://quarto.org/docs/projects/profiles.html) is recommended. The main `_quarto.yml` file will be merged with the profile options and this often needs a careful planning of what keys are put in the different configuration files.
+
+### Additional profiles
+
+For complex project, you might want to use additional profiles. When you render a project, you can pass a `profile` argument to `render_book()` and `render_website()` to use additional profiles. The profile will be merged with the main `_quarto.yml` and the language profile.
