@@ -18,15 +18,16 @@ When you start a {babelquarto} project, from scratch or from an existing project
 #| results: 'asis'
 parent_dir <- withr::local_tempdir()
 project_dir <- "multilingual_book"
-book <- babelquarto::quarto_multilingual_book(parent_dir = parent_dir, project_dir = project_dir)
+book <- babelquarto::quarto_multilingual_book(
+  parent_dir = parent_dir,
+  project_dir = project_dir
+)
 config_path <- file.path(parent_dir, project_dir, "_quarto.yml")
 config_lines <- brio::read_lines(config_path)
 where_babelquarto <- grep("babelquarto:", config_lines, fixed = TRUE)
 
-# Awaiting r-lib/pkgdown#2776
-# cat("```{.yaml filename='_quarto.yml'}\n")
 cat("```yaml\n")
-config_lines[where_babelquarto:length(config_lines)] |> 
+config_lines[where_babelquarto:length(config_lines)] |>
   cat(sep = "\n")
 cat("```\n")
 ```

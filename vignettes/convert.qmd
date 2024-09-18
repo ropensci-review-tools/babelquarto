@@ -50,10 +50,8 @@ We end up with a multilingual book in English and Spanish. If you look at the `_
 #| echo: false
 #| results: 'asis'
 
-# Awaiting r-lib/pkgdown#2776
-#cat("```{.yaml filename='_quarto.yml'}\n")
 cat("```yaml\n")
-readLines(file.path(parent_dir, project_dir, "_quarto.yml")) |> 
+readLines(file.path(parent_dir, project_dir, "_quarto.yml")) |>
   cat(sep = "\n")
 cat("```\n")
 ```
