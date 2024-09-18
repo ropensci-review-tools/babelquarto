@@ -1,0 +1,95 @@
+---
+title: "Render with CI"
+description: >
+  How to render with CI
+vignette: >
+  %\VignetteIndexEntry{Render with CI}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+---
+
+If you want to render and publish your multilingual book or website with CI, you must render your project with `render_book()` or `render_website()`, respectively. Don't use Quarto's own render and publish steps.
+
+## Github Actions and Github Pages
+
+If you want to use GitHub Pages to deploy your website, use the Quarto CLI to setup the branch for you:
+
+```bash
+quarto publish gh-pages
+```
+
+This will create a new branch called `gh-pages` in your repository. **Note: as your project was rendered using `quarto render` it won't be multilingual yet.**
+
+You can then setup your GitHub Actions. In your repository in `.github/workflows/` create a file named `publish.yml` with the following content.
+Make sure you set the correct url for the environment variable `BABELQUARTO_CI_URL`. This is used as `site-url` parameter in a CI context.
+
+### Multilingual Book
+
+<!-- Awaiting r-lib/pkgdown#2776 -->
+<!-- ```{.yaml filename="publish.yml"} -->
+```yaml
+name: Render Book
+on:
+  push:
+    branches: main
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    env:
+      BABELQUARTO_CI_URL: https://nenuial.github.io/babelbook/
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v2
+      - uses: r-lib/actions/setup-r@v1
+      - uses: r-lib/actions/setup-pandoc@v1
+      - name: Set up R dependencies
+        uses: r-lib/actions/setup-r-dependencies@v2 
+        with: 
+          packages: |
+            github::ropensci-review-tools/babelquarto
+      - name: Render Book with babelquarto
+        run: Rscript -e 'babelquarto::render_book()'
+      - name: Publish
+        uses: quarto-dev/quarto-actions/publish@v2
+        with:
+          target: gh-pages
+          render: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
+
+### Multilingual Website
+
+<!-- ```{.yaml filename="publish.yml"} -->
+```yaml
+name: Render Website
+on:
+  push:
+    branches: main
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    env:
+      BABELQUARTO_CI_URL: https://nenuial.github.io/babelbook/
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v2
+      - uses: r-lib/actions/setup-r@v1
+      - uses: r-lib/actions/setup-pandoc@v1
+      - name: Set up R dependencies
+        uses: r-lib/actions/setup-r-dependencies@v2 
+        with: 
+          packages: |
+            github::ropensci-review-tools/babelquarto
+      - name: Render Book with babelquarto
+        run: Rscript -e 'babelquarto::render_website()'
+      - name: Publish
+        uses: quarto-dev/quarto-actions/publish@v2
+        with:
+          target: gh-pages
+          render: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
