@@ -729,3 +729,77 @@ test_that("render_website() works - sidebar in language profile", {
 
   expect_identical(sidebar_fr_id, "quarto-sidebar")
 })
+
+test_that("render_website() works - quarto freeze for languages is working", {
+  parent_dir <- withr::local_tempdir()
+  project_dir <- "blop"
+
+  quarto_multilingual_website(
+    parent_dir = parent_dir,
+    project_dir = project_dir,
+    further_languages = "fr",
+    main_language = "en",
+    site_url = "https://ropensci.org"
+  )
+
+  config <- brio::read_lines(file.path(parent_dir, project_dir, "_quarto.yml"))
+  config <- c(
+    config,
+    "",
+    "execute:",
+    "  freeze: true"
+  )
+  brio::write_lines(config, file.path(parent_dir, project_dir, "_quarto.yml"))
+
+  index <- brio::read_lines(file.path(parent_dir, project_dir, "index.qmd"))
+  index <- c(
+    index,
+    "",
+    "```{r}",
+    "print('Hello World!')",
+    "```"
+  )
+  brio::write_lines(index, file.path(parent_dir, project_dir, "index.qmd"))
+
+  index_fr <- brio::read_lines(
+    file.path(parent_dir, project_dir, "index.fr.qmd")
+  )
+  index_fr <- c(
+    index_fr,
+    "",
+    "```{r}",
+    "print('Bonjour le monde!')",
+    "```"
+  )
+  brio::write_lines(
+    index_fr, file.path(parent_dir, project_dir, "index.fr.qmd")
+  )
+
+  # Render with quarto to generate the _freeze folder
+  withr::with_dir(
+    parent_dir,
+    quarto::quarto_render(input = project_dir, as_job = FALSE)
+  )
+
+  withr::with_dir(parent_dir, render_website(project_dir))
+
+  index_html <- brio::read_lines(
+    file.path(parent_dir, project_dir, "_site", "index.html")
+  )
+  hello_world_present <- any(grepl(
+    "Hello World!",
+    index_html,
+    fixed = TRUE
+  ))
+  expect_true(hello_world_present)
+
+  index_html_fr <- brio::read_lines(
+    file.path(parent_dir, project_dir, "_site", "fr", "index.html")
+  )
+  bonjour_monde_present <- any(grepl(
+    "Bonjour le monde!",
+    index_html_fr,
+    fixed = TRUE
+  ))
+  expect_true(bonjour_monde_present)
+})
