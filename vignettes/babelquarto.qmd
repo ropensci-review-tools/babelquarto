@@ -1,0 +1,146 @@
+---
+title: "Get started"
+vignette: >
+  %\VignetteIndexEntry{Get started}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+---
+
+The goal of this vignette is to show how you can start a new multilingual Quarto project using {babelquarto}.
+There are two types of project you can start: a book or a website. We will look at each type seperately below.
+
+If you want to turn an existing project into a multilingual project, have a look at `vignette("convert")`.
+
+## Installing babelquarto
+
+Before you can start a new multilingual project, you need to install {babelquarto}.
+
+```r
+install.packages('babelquarto', repos = c('https://ropensci.r-universe.dev', 'https://cloud.r-project.org'))
+```
+
+Or from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("pak")
+pak::pak("ropensci-review-tools/babelquarto")
+```
+
+Load the babelquarto package:
+
+```{r}
+library(babelquarto)
+```
+
+## Starting a multilingual book
+
+To start with a multilingual book, use `quarto_multilingual_book()` with the `parent_dir` argument to specify where you want to create the project and the `project_dir` argument to specify the name of the project.
+
+```{r}
+#| label: setup_book
+#| results: 'hide'
+parent_dir <- withr::local_tempdir()
+project_dir <- "multilingual_book"
+quarto_multilingual_book(parent_dir = parent_dir, project_dir = project_dir)
+```
+
+Look at the `_quarto.yml` file in the project directory. To get familiar with the configuration, take a look at the example below:
+
+```{r}
+#| label: display_book_config
+#| echo: false
+#| results: 'asis'
+
+# Awaiting r-lib/pkgdown#2776
+# cat("```{.yaml filename='_quarto.yml'}\n")
+cat("```yaml\n")
+readLines(file.path(parent_dir, project_dir, "_quarto.yml")) |> 
+  cat(sep = "\n")
+cat("```\n")
+```
+
+The file structure of the project looks like this:
+
+```{r}
+#| label: book_dir_structure
+fs::dir_tree(file.path(parent_dir, project_dir))
+```
+
+Each quarto file has a spanish and a french translation. If you look at the `index.qmd` file, you'll see that the french translation is `index.fr.qmd` and the spanish translation is `index.es.qmd`.
+
+When you're ready to render your book, use `render_book()`:
+
+```{r}
+#| label: render_book
+#| eval: false
+babelquarto::render_book(file.path(parent_dir, project_dir))
+```
+
+We end up with three books, that cross-link to each other from the left sidebar.
+[Example](https://devdevguide.netlify.app).
+
+## Starting a multilingual website
+
+To start a multilingual website, use `quarto_multilingual_website()` with the `parent_dir` argument to specify where you want to create the project and the `project_dir` argument to specify the name of the project.
+
+```{r}
+#| label: setup_website
+#| results: 'hide'
+parent_dir <- withr::local_tempdir()
+project_dir <- "multilingual_website"
+babelquarto::quarto_multilingual_website(parent_dir = parent_dir, project_dir = project_dir)
+```
+
+Look at the `_quarto.yml` file in the project directory. To get familiar with the configuration, take a look at the example below:
+
+```{r}
+#| label: display_website_config
+#| echo: false
+#| results: 'asis'
+
+# cat("```{.yaml filename='_quarto.yml'}\n")
+cat("```yaml\n")
+readLines(file.path(parent_dir, project_dir, "_quarto.yml")) |> 
+  cat(sep = "\n")
+cat("```\n")
+```
+
+The file structure of the project looks like this:
+
+```{r}
+#| label: website_dir_structure
+fs::dir_tree(file.path(parent_dir, project_dir))
+```
+
+Each quarto file has a spanish and a french translation. If you look at the `index.qmd` file, you'll see that the french translation is `index.fr.qmd` and the spanish translation is `index.es.qmd`.
+
+When you're ready to render your website, use `render_website()`:
+
+```{r}
+#| label: render_website
+#| eval: false
+babelquarto::render_website(file.path(parent_dir, project_dir))
+```
+
+We end up with a multilingual website. [Example](https://maelle.github.io/babelsite), [source](https://github.com/maelle/babelsite)
+
+## Previewing your multilingual project
+
+Once you have rendered your project, you will have a `_site` or `_book` folder in your project. To easily preview your project, can use the [`servr` package](https://cran.rstudio.com/web/packages/servr/index.html).
+
+You can use `servr::httw()` to preview your project.
+
+```{r}
+#| eval: false
+# For a multilingual website
+servr::httw("_site")
+
+# For a multilingual book
+servr::httw("_book")
+```
+
+## Next steps
+
+Take a deeper dive into the configuration options available in {babelquarto} you can have a look at `vignette("configuration")`.
+
+If you want to setup your own CI and deploy your website, have a look at `vignette("render-with-ci")`.
