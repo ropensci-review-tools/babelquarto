@@ -1,0 +1,65 @@
+---
+title: "Convert an existing project"
+description: >
+  How to convert an existing project to a multilingual Quarto project
+vignette: >
+  %\VignetteIndexEntry{Convert an existing project}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+---
+
+If you want to turn an existing project into a multilingual project, you can use {babelquarto}'s `register_main_language()` and `register_further_languages()` functions.
+
+Let's start with a book whose main language is English.
+
+```{r}
+#| results: 'hide'
+parent_dir <- withr::local_tempdir()
+project_dir <- "babelbook"
+quarto_bin <- quarto::quarto_path()
+withr::with_dir(parent_dir, {
+  sys::exec_wait(
+    quarto_bin,
+    args = c("create-project", project_dir, "--type", "book")
+  )
+})
+```
+
+First you'll need to register the main language in the Quarto configuration:
+
+```{r}
+project_path <- file.path(parent_dir, project_dir)
+babelquarto::register_main_language(
+  main_language = "en",
+  project_path = project_path
+)
+```
+
+Then you can add further languages, say Spanish and French:
+
+```{r}
+babelquarto::register_further_languages(
+  further_languages = c("es", "fr"),
+  project_path = project_path
+)
+```
+
+We end up with a multilingual book in English and Spanish. If you look at the `_quarto.yml` file in the project directory, you'll see that the `main_language` key is `en` and the `languages` key contains `es` and `fr`.
+
+```{r}
+#| echo: false
+#| results: 'asis'
+
+# Awaiting r-lib/pkgdown#2776
+#cat("```{.yaml filename='_quarto.yml'}\n")
+cat("```yaml\n")
+readLines(file.path(parent_dir, project_dir, "_quarto.yml")) |> 
+  cat(sep = "\n")
+cat("```\n")
+```
+
+## Next steps
+
+Take a deeper dive into the configuration options available in {babelquarto} you can have a look at `vignette("configuration")`.
+
+If you want to setup your own CI and deploy your website, have a look at `vignette("render-with-ci")`.
