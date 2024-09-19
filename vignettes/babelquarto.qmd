@@ -62,7 +62,10 @@ The file structure of the project looks like this:
 fs::dir_tree(file.path(parent_dir, project_dir))
 ```
 
-Each quarto file has a spanish and a french translation. If you look at the `index.qmd` file, you'll see that the french translation is `index.fr.qmd` and the spanish translation is `index.es.qmd`.
+Each Quarto file has a Spanish and a French version.
+These files aren't automatically translated and are just copies of the original English version.
+You will have to provide the translations yourself, or look at {[babeldown](https://docs.ropensci.org/babeldown/)} for automatic translation.
+If you look at the `index.qmd` file, you'll see that the French file is called `index.fr.qmd` and the Spanish file is called `index.es.qmd`.
 
 When you're ready to render your book, use `render_book()`:
 
@@ -110,8 +113,10 @@ The file structure of the project looks like this:
 fs::dir_tree(file.path(parent_dir, project_dir))
 ```
 
-Each Quarto file has a Spanish and a French translation. 
-If you look at the `index.qmd` file, you'll see that the French translation is `index.fr.qmd` and the Spanish translation is `index.es.qmd`.
+Each Quarto file has a Spanish and a French version.
+These files aren't automatically translated and are just copies of the original English version.
+You will have to provide the translations yourself, or look at {[babeldown](https://docs.ropensci.org/babeldown/)} for automatic translation.
+If you look at the `index.qmd` file, you'll see that the French file is called `index.fr.qmd` and the Spanish file is called `index.es.qmd`.
 
 When you're ready to render your website, use `babelquarto::render_website()`:
 
