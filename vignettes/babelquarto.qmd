@@ -125,7 +125,10 @@ We end up with a multilingual website. [Example](https://maelle.github.io/babels
 
 ## Previewing your multilingual project
 
-Once you have rendered your project, you will have a `_site` or `_book` folder in your project. To easily preview your project, can use the [`servr` package](https://cran.rstudio.com/web/packages/servr/index.html).
+Once you have rendered your project, you will have a `_site` or `_book` folder in your project.
+In Quarto you would use `quarto preview` to be able to get a look at what you project looks like.
+Because of the way {babelquarto} operates, this isn't possible.
+You can however preview your files using the [{servr} package](https://cran.rstudio.com/web/packages/servr/index.html).
 
 You can use `servr::httw()` to preview your project.
 
