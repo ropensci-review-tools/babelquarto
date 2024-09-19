@@ -30,5 +30,11 @@ pak::pak("ropensci-review-tools/babelquarto")
 
 ## Getting Started
 
-If you are just getting started with {babelquarto}, 
-you should start by reading the tutorial `vignette("babelquarto")`.
+The {babelquarto} package allows you to create a multilingual Quarto project (a book or a website).
+A multilingual project is based on a main language and can feature any number of additional languages.
+The languages are registered once and are then present in your `_quarto.yml` configuration file under the `babelquarto` key.
+Each Quarto markdown file in your project can then be translated into these further languages and these will be used to generate the project in each language.
+
+If you start from scratch, you might want to look at `babelquarto::quarto_multilingual_book()` or `babelquarto::quarto_multilingual_website()` and read `vignette("babelquarto")`.
+
+If you already have and existing Quarto project and want to convert it to a multilingual project, you can use `babelquarto::register_main_language()` and `babelquarto::register_further_languages()` to get started. For more information you can read `vignette("convert)`.
