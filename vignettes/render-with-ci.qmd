@@ -1,5 +1,5 @@
 ---
-title: "Render with CI"
+title: "Render with continuous integration (CI)"
 description: >
   How to render with CI
 vignette: >
