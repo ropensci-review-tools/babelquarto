@@ -6,8 +6,8 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-The goal of this vignette is to show how you can start a new multilingual Quarto project using {babelquarto}.
-There are two types of project you can start: a book or a website. We will look at each type seperately below.
+The goal of this vignette is to show how you can start and maintain a new multilingual Quarto project using {babelquarto}.
+There are two types of projects: a book or a website. We will look at each type separately below.
 
 If you want to turn an existing project into a multilingual project, have a look at `vignette("convert")`.
 
@@ -41,7 +41,8 @@ babelquarto::quarto_multilingual_book(
 )
 ```
 
-Look at the `_quarto.yml` file in the project directory. To get familiar with the configuration, take a look at the example below:
+Look at the `_quarto.yml` file in the project directory. 
+To get familiar with the configuration, take a look at the example below:
 
 ```{r}
 #| label: display_book_config
@@ -109,9 +110,10 @@ The file structure of the project looks like this:
 fs::dir_tree(file.path(parent_dir, project_dir))
 ```
 
-Each quarto file has a spanish and a french translation. If you look at the `index.qmd` file, you'll see that the french translation is `index.fr.qmd` and the spanish translation is `index.es.qmd`.
+Each Quarto file has a Spanish and a French translation. 
+If you look at the `index.qmd` file, you'll see that the French translation is `index.fr.qmd` and the Spanish translation is `index.es.qmd`.
 
-When you're ready to render your website, use `render_website()`:
+When you're ready to render your website, use `babelquarto::render_website()`:
 
 ```{r}
 #| label: render_website
