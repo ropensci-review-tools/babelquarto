@@ -209,7 +209,9 @@ render_quarto_lang <- function(language_code, path, output_dir, type) {
     )
     freeze_ls <- fs::dir_ls(freeze_path, recurse = TRUE)
 
-    freeze_lang <- freeze_ls[grep(paste0("\\.", language_code, "$"), freeze_ls)]
+    freeze_lang <- purrr::keep(
+      freeze_ls, \(x) grepl(paste0("\\.", language_code, "$"), x)
+    )
     freeze_dirs <- fs::path_rel(freeze_lang, start = freeze_path)
     freeze_dirs <- gsub(
       paste0(".", language_code), "",
