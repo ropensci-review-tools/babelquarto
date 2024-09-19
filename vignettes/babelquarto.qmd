@@ -28,7 +28,8 @@ pak::pak("ropensci-review-tools/babelquarto")
 
 ## Starting a multilingual book
 
-To start with a multilingual book, use `quarto_multilingual_book()` with the `parent_dir` argument to specify where you want to create the project and the `project_dir` argument to specify the name of the project.
+To start a multilingual book, use `quarto_multilingual_book()` with the `parent_dir` argument to specify where you want to create the project and the `project_dir` argument to specify the name of the project.
+The argument `main_language` is used to specify the main language of the project and `further_languages` lists all additional languages.
 
 ```{r}
 #| label: setup_book
@@ -37,7 +38,9 @@ parent_dir <- withr::local_tempdir()
 project_dir <- "multilingual_book"
 babelquarto::quarto_multilingual_book(
   parent_dir = parent_dir,
-  project_dir = project_dir
+  project_dir = project_dir,
+  main_language = "en",
+  further_languages = c("es", "fr")
 )
 ```
 
@@ -81,6 +84,7 @@ We end up with three books, that cross-link to each other from the left sidebar.
 ## Starting a multilingual website
 
 To start a multilingual website, use `quarto_multilingual_website()` with the `parent_dir` argument to specify where you want to create the project and the `project_dir` argument to specify the name of the project.
+The argument `main_language` is used to specify the main language of the project and `further_languages` lists all additional languages.
 
 ```{r}
 #| label: setup_website
@@ -89,7 +93,9 @@ parent_dir <- withr::local_tempdir()
 project_dir <- "multilingual_website"
 babelquarto::quarto_multilingual_website(
   parent_dir = parent_dir,
-  project_dir = project_dir
+  project_dir = project_dir,
+  main_language = "en",
+  further_languages = c("es", "fr")
 )
 ```
 
