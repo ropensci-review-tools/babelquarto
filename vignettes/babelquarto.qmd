@@ -26,12 +26,6 @@ Or from [GitHub](https://github.com/) with:
 pak::pak("ropensci-review-tools/babelquarto")
 ```
 
-Load the babelquarto package:
-
-```{r}
-library(babelquarto)
-```
-
 ## Starting a multilingual book
 
 To start with a multilingual book, use `quarto_multilingual_book()` with the `parent_dir` argument to specify where you want to create the project and the `project_dir` argument to specify the name of the project.
@@ -41,7 +35,7 @@ To start with a multilingual book, use `quarto_multilingual_book()` with the `pa
 #| results: 'hide'
 parent_dir <- withr::local_tempdir()
 project_dir <- "multilingual_book"
-quarto_multilingual_book(
+babelquarto::quarto_multilingual_book(
   parent_dir = parent_dir,
   project_dir = project_dir
 )
