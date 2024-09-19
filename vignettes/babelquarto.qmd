@@ -142,4 +142,6 @@ servr::httw("_book")
 
 Take a deeper dive into the configuration options available in {babelquarto} you can have a look at `vignette("configuration")`.
 
+If you want to translate your multilingual project using automatic translation with DeepL, you should have a look at [babeldown](http://docs.ropensci.org/babeldown/articles/quarto.html).
+
 If you want to setup your own CI and deploy your website, have a look at `vignette("render-with-ci")`.
