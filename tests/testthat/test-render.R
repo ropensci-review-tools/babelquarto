@@ -730,6 +730,7 @@ test_that("render_website() works - sidebar in language profile", {
   expect_identical(sidebar_fr_id, "quarto-sidebar")
 })
 
+# https://github.com/ropensci-review-tools/babelquarto/issues/76
 test_that("render_website() works - quarto freeze for languages is working", {
   parent_dir <- withr::local_tempdir()
   project_dir <- "blop"
