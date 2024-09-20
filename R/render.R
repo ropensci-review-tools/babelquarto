@@ -201,11 +201,13 @@ render_quarto_lang <- function(language_code, path, output_dir, type) {
     file.path(temporary_directory, project_name, "_freeze")
   )
 
-  if (freeze_directory_exists) filter_freeze_directory(
-    temporary_directory,
-    project_name,
-    language_code
-  )
+  if (freeze_directory_exists) {
+    filter_freeze_directory(
+      temporary_directory,
+      project_name,
+      language_code
+    )
+  }
 
   config[["lang"]] <- language_code
 
