@@ -292,8 +292,9 @@ render_quarto_lang <- function(language_code, path, output_dir, type) {
 
 #' Filter the freeze directory
 #'
-#' This function filters the freeze directory keeping only the files
-#' that match the language code.
+#' This function removes from freeze directory the files
+#' that do not match the language code to avoid using the
+#' wrong cache values for code computations.
 #'
 #' @param temporary_directory Temporary directory where the project is
 #' @param project_name Name of the project directory
