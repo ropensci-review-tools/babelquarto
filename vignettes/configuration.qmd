@@ -43,7 +43,7 @@ By default, {babelquarto} will have the following options under the `babelquarto
 
 In addition to the `babelquarto` key, you will see language specific keys for `title`, `description` and `author`. These keys allow you to have a specific title, description or author in for each additional language.
 
-### Configure the version text
+### Customizing the language menu labels
 
 If you want the choice to be between, say "English" and "Español" rather than "Version in EN" and "Version in ES", add these fields under the `babelquarto/languagecodes` key, in `_quarto.yml`:
 
