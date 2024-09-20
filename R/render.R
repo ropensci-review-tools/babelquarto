@@ -197,34 +197,15 @@ render_quarto_lang <- function(language_code, path, output_dir, type) {
   config_path <- file.path(temporary_directory, project_name, "_quarto.yml")
   config <- read_yaml(config_path)
 
-  freeze_folder_exists <- fs::dir_exists(
+  freeze_directory_exists <- fs::dir_exists(
     file.path(temporary_directory, project_name, "_freeze")
   )
 
-  if (freeze_folder_exists) {
-    freeze_path <- fs::path(temporary_directory, project_name, "_freeze")
-    freeze_temp <- fs::path(
-      temporary_directory,
-      project_name, paste0("_freeze.", language_code)
-    )
-    freeze_ls <- fs::dir_ls(freeze_path, recurse = TRUE)
-
-    freeze_lang <- purrr::keep(
-      freeze_ls, \(x) grepl(paste0("\\.", language_code, "$"), x)
-    )
-    freeze_dirs <- fs::path_rel(freeze_lang, start = freeze_path)
-    freeze_dirs <- gsub(
-      paste0(".", language_code), "",
-      freeze_dirs, fixed = TRUE
-    )
-
-    fs::dir_copy(freeze_lang, fs::path(freeze_temp, freeze_dirs))
-    fs::dir_copy(fs::path(freeze_path, "site_libs"), freeze_temp)
-
-    fs::dir_delete(freeze_path)
-    fs::dir_copy(freeze_temp, freeze_path)
-    fs::dir_delete(freeze_temp)
-  }
+  if (freeze_directory_exists) filter_freeze_directory(
+    temporary_directory,
+    project_name,
+    language_code
+  )
 
   config[["lang"]] <- language_code
 
@@ -307,6 +288,42 @@ render_quarto_lang <- function(language_code, path, output_dir, type) {
     file.path(path, output_dir, language_code)
   )
 
+}
+
+#' Filter the freeze directory
+#'
+#' This function filters the freeze directory keeping only the files
+#' that match the language code.
+#'
+#' @param temporary_directory Temporary directory where the project is
+#' @param project_name Name of the project directory
+#' @param language_code The Language code for the current rendering
+#' @dev
+filter_freeze_directory <- function(temporary_directory,
+                                    project_name,
+                                    language_code) {
+  freeze_path <- fs::path(temporary_directory, project_name, "_freeze")
+  freeze_temp <- fs::path(
+    temporary_directory,
+    project_name, paste0("_freeze.", language_code)
+  )
+  freeze_ls <- fs::dir_ls(freeze_path, recurse = TRUE)
+
+  freeze_lang <- purrr::keep(
+    freeze_ls, \(x) grepl(paste0("\\.", language_code, "$"), x)
+  )
+  freeze_dirs <- fs::path_rel(freeze_lang, start = freeze_path)
+  freeze_dirs <- gsub(
+    paste0(".", language_code), "",
+    freeze_dirs, fixed = TRUE
+  )
+
+  fs::dir_copy(freeze_lang, fs::path(freeze_temp, freeze_dirs))
+  fs::dir_copy(fs::path(freeze_path, "site_libs"), freeze_temp)
+
+  fs::dir_delete(freeze_path)
+  fs::dir_copy(freeze_temp, freeze_path)
+  fs::dir_delete(freeze_temp)
 }
 
 use_lang_chapter <- function(chapters_list, language_code,
