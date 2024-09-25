@@ -159,3 +159,5 @@ Take a deeper dive into the configuration options available in {babelquarto} you
 If you want to translate your multilingual project using automatic translation with DeepL, you should have a look at [babeldown](http://docs.ropensci.org/babeldown/articles/quarto.html).
 
 If you want to setup your own CI and deploy your website, have a look at `vignette("render-with-ci")`.
+
+If you need to personalize the quarto templates, have a look at `vignette("custom-templates")`.
