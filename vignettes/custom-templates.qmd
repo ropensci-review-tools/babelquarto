@@ -1,0 +1,41 @@
+---
+title: "Custom templates"
+description: >
+  How to have multilingual parts in your custom templates
+vignette: >
+  %\VignetteIndexEntry{Convert an existing project}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+---
+
+The goal of this vignette is to show how you can have multilingual parts in your custom templates.
+
+If you need a more advanced way of customizing you project, you can use [Quarto's custom templates](https://quarto.org/docs/journals/templates.html). This allows you to have a more fine-grained control over the render of your pages.
+
+In order to use the multilingual features of {babelquarto} in your custom templates, we provide a variable for each language rendered in the project. The variable is named `lang-en` for an English render, `lang-fr` for a French render and so on. This allows you to have different content for each language in your custom templates. You can use [pandoc's `$if(lang-en)$` syntax](https://pandoc.org/MANUAL.html#conditionals) to conditionally include content based on the language.
+
+## Example
+
+If you want to have a specific metadata block on your webpage, you might want to use the [`medadata.html` partial from Quarto](https://quarto.org/docs/journals/templates.html#html-partials).
+
+You would configure your `_quarto.yml` file like this:
+
+``` yaml
+format:
+  html:
+    template-partials:
+      - metadata.html
+```
+
+In your `metadata.html` file, you can use the `lang-en` variable to have a specific metadata block for the English render and the `lang-fr` variable for the French render. The end of the metadata.html template would be:
+
+``` html
+<!-- copy content from https://github.com/quarto-dev/quarto-cli/blob/main/src/resources/formats/html/pandoc/metadata.html -->
+$if(lang-en)$
+<meta name="publisher" content="Publisher for the English part">
+$endif$
+$if(lang-fr)$
+<meta name="publisher" content="Publisher for the French part">
+$endif$
+</div>
+```
