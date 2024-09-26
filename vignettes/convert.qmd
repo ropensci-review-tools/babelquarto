@@ -56,11 +56,15 @@ readLines(file.path(parent_dir, project_dir, "_quarto.yml")) |>
 cat("```\n")
 ```
 
+You can now start translating your book into Spanish and French. Each file of you project can be translated by adding a suffix to the file name.
+For example, the Spanish version of `index.md` will be in `index.es.md` and the French version in `index.fr.md`.
+
+You will have to provide the translations yourself.
+If you want to translate your multilingual project using automatic translation with DeepL, you should have a look at [babeldown](http://docs.ropensci.org/babeldown/articles/quarto.html).
+
 ## Next steps
 
 Take a deeper dive into the configuration options available in {babelquarto} you can have a look at `vignette("configuration")`.
-
-If you want to translate your multilingual project using automatic translation with DeepL, you should have a look at [babeldown](http://docs.ropensci.org/babeldown/articles/quarto.html).
 
 If you want to deploy your website on continuous integration, have a look at `vignette("render-with-ci")`.
 
