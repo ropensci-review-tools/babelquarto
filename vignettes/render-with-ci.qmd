@@ -1,95 +1,32 @@
 ---
 title: "Render with continuous integration (CI)"
 description: >
-  How to render with CI
+  How to render with continuous integration
 vignette: >
   %\VignetteIndexEntry{Render with CI}
   %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
 ---
 
-If you want to render and publish your multilingual book or website with CI, you must render your project with `render_book()` or `render_website()`, respectively. Don't use Quarto's own render and publish steps.
+If you want to render and publish your multilingual book or website with CI, you must render your project with `render_book()` or `render_website()`, respectively.
+Don't use Quarto's own render and publish steps.
+You can find more information about publishing with CI in the [Quarto documentation](https://quarto.org/docs/publishing/ci.html).
 
-## Github Actions and Github Pages
+### Site URL
 
-If you want to use GitHub Pages to deploy your website, use the Quarto CLI to setup the branch for you:
+When you render a project in a CI context, you need to set the URL of the publishing website in an environement variable.
+You can do that with the `BABELQUARTO_CI_URL` environment variable.
 
-```bash
-quarto publish gh-pages
-```
+### Steps for rendering
 
-This will create a new branch called `gh-pages` in your repository. **Note: as your project was rendered using `quarto render` it won't be multilingual yet.**
+To render your project with CI, you need to follow these general steps:
 
-You can then setup your GitHub Actions. In your repository in `.github/workflows/` create a file named `publish.yml` with the following content.
-Make sure you set the correct url for the environment variable `BABELQUARTO_CI_URL`. This is used as `site-url` parameter in a CI context.
+* Install the necessary dependencies including Quarto and R dependencies
+* Render you project using {babelquarto}'s `render_book()` or `render_website()` functions
+* Publish the rendered HTML (_site or _book folder) where you deploy your project (a GitHub pages branch, Netlify, etc.)
 
-### Multilingual Book
+## Example
 
-<!-- Awaiting r-lib/pkgdown#2776 -->
-<!-- ```{.yaml filename="publish.yml"} -->
-```yaml
-name: Render Book
-on:
-  push:
-    branches: main
-jobs:
-  render:
-    runs-on: ubuntu-latest
-    env:
-      BABELQUARTO_CI_URL: https://nenuial.github.io/babelbook/
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v2
-      - uses: r-lib/actions/setup-r@v1
-      - uses: r-lib/actions/setup-pandoc@v1
-      - name: Set up R dependencies
-        uses: r-lib/actions/setup-r-dependencies@v2 
-        with: 
-          packages: |
-            github::ropensci-review-tools/babelquarto
-      - name: Render Book with babelquarto
-        run: Rscript -e 'babelquarto::render_book()'
-      - name: Publish
-        uses: quarto-dev/quarto-actions/publish@v2
-        with:
-          target: gh-pages
-          render: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-```
+Here's an example of how you could render a multilingual book with CI using GitHub Actions:
 
-### Multilingual Website
-
-<!-- ```{.yaml filename="publish.yml"} -->
-```yaml
-name: Render Website
-on:
-  push:
-    branches: main
-jobs:
-  render:
-    runs-on: ubuntu-latest
-    env:
-      BABELQUARTO_CI_URL: https://nenuial.github.io/babelbook/
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v2
-      - uses: r-lib/actions/setup-r@v1
-      - uses: r-lib/actions/setup-pandoc@v1
-      - name: Set up R dependencies
-        uses: r-lib/actions/setup-r-dependencies@v2 
-        with: 
-          packages: |
-            github::ropensci-review-tools/babelquarto
-      - name: Render Book with babelquarto
-        run: Rscript -e 'babelquarto::render_website()'
-      - name: Publish
-        uses: quarto-dev/quarto-actions/publish@v2
-        with:
-          target: gh-pages
-          render: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-```
+[Babelbook](https://nenuial.github.io/babelbook/) and [source code](https://github.com/Nenuial/babelbook).
