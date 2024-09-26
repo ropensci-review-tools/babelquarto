@@ -79,7 +79,7 @@ babelquarto::render_book(file.path(parent_dir, project_dir))
 ```
 
 We end up with three books, that cross-link to each other from the left sidebar.
-[Example](https://devdevguide.netlify.app).
+[Example](https://devguide.ropensci.org/).
 
 ## Starting a multilingual website
 
@@ -152,6 +152,8 @@ servr::httw("_site")
 servr::httw("_book")
 ```
 
+This will show an URL that you can open in your IDE or browser to see your project.
+
 ## Next steps
 
 Take a deeper dive into the configuration options available in {babelquarto} you can have a look at `vignette("configuration")`.
@@ -160,4 +162,4 @@ If you want to translate your multilingual project using automatic translation w
 
 If you want to setup your own CI and deploy your website, have a look at `vignette("render-with-ci")`.
 
-If you need to personalize the quarto templates, have a look at `vignette("custom-templates")`.
+If you need to personalize the Quarto templates, have a look at `vignette("custom-templates")`.
