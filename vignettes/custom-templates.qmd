@@ -10,9 +10,13 @@ vignette: >
 
 The goal of this vignette is to show how you can have multilingual parts in your custom templates.
 
-If you need a more advanced way of customizing you project, you can use [Quarto's custom templates](https://quarto.org/docs/journals/templates.html). This allows you to have a more fine-grained control over the render of your pages.
+If you need a more advanced way of customizing you project, you can use [Quarto's custom templates](https://quarto.org/docs/journals/templates.html).
+This allows you to have a more fine-grained control over the render of your pages.
 
-In order to use the multilingual features of {babelquarto} in your custom templates, we provide a variable for each language rendered in the project. The variable is named `lang-en` for an English render, `lang-fr` for a French render and so on. This allows you to have different content for each language in your custom templates. You can use [pandoc's `$if(lang-en)$` syntax](https://pandoc.org/MANUAL.html#conditionals) to conditionally include content based on the language.
+In order to use the multilingual features of {babelquarto} in your custom templates, we provide a variable for each language rendered in the project. 
+The variable is named `lang-en` for an English render, `lang-fr` for a French render and so on. 
+This allows you to have different content for each language in your custom templates. 
+You can use [pandoc's `$if(lang-en)$` syntax](https://pandoc.org/MANUAL.html#conditionals) to conditionally include content based on the language.
 
 ## Example
 
