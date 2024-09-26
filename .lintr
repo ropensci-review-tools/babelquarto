@@ -2,8 +2,5 @@ linters: lintr::linters_with_tags(tags = NULL, indentation_linter = NULL)
 encoding: "UTF-8"
 exclusions: list(
     # excluded from all lints:
-    "tests/testthat.R",
-    "vignettes/babelquarto.qmd" = list(
-      undesirable_function_linter = Inf
-    )
+    "tests/testthat.R"
   )
