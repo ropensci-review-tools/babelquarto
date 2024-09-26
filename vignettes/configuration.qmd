@@ -98,9 +98,12 @@ For each additional language, you can use a `part-xx` key to translate the part 
 
 ## Using profiles for advanced configuration
 
-For more advanced customization, you can use [Quarto project profiles](https://quarto.org/docs/projects/profiles.html). In {babelquarto} we will automatically load a language profile if it exists in the project directory and follows our naming convention. Profile configuration are **merged** with the main `_quarto.yml` file.
+For more advanced customization, you can use [Quarto project profiles](https://quarto.org/docs/projects/profiles.html).
+In {babelquarto} we will automatically load a language profile if it exists in the project directory and follows our naming convention.
+Profile configuration are **merged** with the main `_quarto.yml` file.
 
-For example, if you have a project with English as the main language and French as an additional language. When rendering the main English language, {babelquarto} will load the *en* profile and the *fr* profile when rendering the French version.
+For example, let's say you have a project with English as the main language and French as an additional language.
+When rendering the main English language, {babelquarto} will load the *en* profile and the *fr* profile when rendering the French version.
 
 You could for example have different navigation menus for each language:
 
@@ -128,7 +131,8 @@ website:
         href: "about.qmd"
 ```
 
-Profiles allow for advanced configuration, but a careful read of the [profiles documentation](https://quarto.org/docs/projects/profiles.html) is recommended. The main `_quarto.yml` file will be merged with the profile options and this often needs a careful planning of what keys are put in the different configuration files.
+Profiles allow for advanced configuration, but a careful read of the [profiles documentation](https://quarto.org/docs/projects/profiles.html) is recommended.
+The main `_quarto.yml` file will be merged with the profile options and this often needs a careful planning of what keys are put in the different configuration files.
 
 ### Additional profiles
 
