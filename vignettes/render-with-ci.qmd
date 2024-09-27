@@ -27,6 +27,7 @@ To render your project with CI, you need to follow these general steps:
 
 ## Example
 
-Here's an example of how you could render a multilingual book with CI using GitHub Actions:
+Here are two examplee of how you could render a multilingual book with CI using GitHub Actions:
 
-[Babelbook](https://nenuial.github.io/babelbook/) and [source code](https://github.com/Nenuial/babelbook).
+* A demo [Babelbook](https://nenuial.github.io/babelbook/) with its [workflow file](https://github.com/Nenuial/babelbook/blob/main/.github/workflows/publish.yml)
+* The [rOpenSci Packages: Development, Maintenance, and Peer Review](https://devguide.ropensci.org/index.html) book with its [workflow file](https://github.com/ropensci/dev_guide/blob/main/.github/workflows/scheduled-manual-main.yml)
