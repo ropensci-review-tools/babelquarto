@@ -37,7 +37,7 @@ Each Quarto Markdown file in your project can then be translated into these furt
 
 If you start from scratch, you might want to look at `babelquarto::quarto_multilingual_book()` or `babelquarto::quarto_multilingual_website()` and read `vignette("babelquarto")`.
 
-If you already have and existing Quarto project and want to convert it to a multilingual project, you can use `babelquarto::register_main_language()` and `babelquarto::register_further_languages()` to get started. For more information you can read `vignette("convert)`.
+If you already have and existing Quarto project and want to convert it to a multilingual project, you can use `babelquarto::register_main_language()` and `babelquarto::register_further_languages()` to get started. For more information you can read `vignette("convert")`.
 
 ## Examples
 

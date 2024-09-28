@@ -107,7 +107,8 @@ When rendering the main English language, {babelquarto} will load the *en* profi
 
 You could for example have different navigation menus for each language:
 
-```{.yaml filename="_quarto-en.yml"}
+<!-- ```{.yaml filename="_quarto-en.yml"} -->
+```yaml
 website:
   navbar:
     title: "My Website"
