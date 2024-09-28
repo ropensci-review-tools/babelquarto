@@ -64,7 +64,7 @@ If you want to translate your multilingual project using automatic translation w
 
 ## Next steps
 
-Take a deeper dive into the configuration options available in {babelquarto} you can have a look at `vignette("configuration")`.
+Take a deeper dive into the configuration options available in {babelquarto} and have a look at `vignette("configuration")`.
 
 If you want to deploy your website on continuous integration, have a look at `vignette("render-with-ci")`.
 
