@@ -659,6 +659,34 @@ test_that("render_website() works - all language links are present in navbar", {
 
 })
 
+
+
+test_that("render_website() works - all language links are present in navbar", {
+  # https://github.com/ropensci-review-tools/babelquarto/issues/84
+  parent_dir <- withr::local_tempdir()
+  project_dir <- "blop"
+
+  quarto_multilingual_website(
+    parent_dir = parent_dir,
+    project_dir = project_dir,
+    further_languages = c("es", "fr"),
+    main_language = "en",
+    site_url = "https://ropensci.org"
+  )
+
+  file.create(file.path(parent_dir, project_dir, "practices.qmd"))
+  file.create(file.path(parent_dir, project_dir, "practices.es.qmd"))
+
+  withr::local_envvar(BABELQUARTO_CI_URL = "https://ropensci.org")
+  withr::with_dir(parent_dir, render_website(project_dir))
+
+  expect_file_exists(
+    file.path(parent_dir, project_dir, "_site", "es", "practices.html")
+  )
+
+})
+
+
 test_that("render_website() works - sidebar in language profile", {
   parent_dir <- withr::local_tempdir()
   project_dir <- "blop"
