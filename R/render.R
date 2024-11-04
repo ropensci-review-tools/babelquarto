@@ -255,7 +255,9 @@ render_quarto_lang <- function(language_code, path, output_dir, type) {
       glob = "*.qmd",
       recurse = TRUE
     )
-    language_qmds <- qmds[grepl(sprintf("%s.qmd", language_code), qmds)]
+    language_qmds <- purrr::keep(
+      qmds, \(x) endsWith(x, sprintf(".%s.qmd", language_code))
+    )
     fs::file_delete(qmds[!(qmds %in% language_qmds)])
     for (qmd_path in language_qmds) {
       fs::file_move(
