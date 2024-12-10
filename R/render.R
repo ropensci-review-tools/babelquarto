@@ -57,17 +57,7 @@ render <- function(path = ".",
   config <- file.path(path, "_quarto.yml")
   config_contents <- read_yaml(config)
 
-  if (is.null(site_url)) {
-    if (nzchar(Sys.getenv("BABELQUARTO_TESTS_URL")) || !on_ci()) {
-      site_url <- site_url %||% config_contents[[type]][["site-url"]] %||% ""
-    } else {
-      # no end slash
-      # for deploy previews
-      # either root website (Netlify deploys)
-      # or something else
-      site_url <- Sys.getenv("BABELQUARTO_CI_URL", "")
-    }
-  }
+  site_url <- site_url %||% site_url(config_contents, type)
   site_url <- sub("/$", "", site_url)
 
   output_dir <- config_contents[["project"]][["output-dir"]] %||%
@@ -185,6 +175,16 @@ render <- function(path = ".",
       path_language = other_lang
     )
   }
+
+}
+
+site_url <- function(config_contents, type) {
+
+  if (nzchar(Sys.getenv("BABELQUARTO_CI_URL"))) {
+    return(Sys.getenv("BABELQUARTO_CI_URL"))
+  }
+
+  config_contents[[type]][["site-url"]] %||% ""
 
 }
 
