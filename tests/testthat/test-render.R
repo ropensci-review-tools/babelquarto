@@ -1,6 +1,4 @@
 test_that("render_book() works", {
-  withr::local_envvar(BABELQUARTO_TESTS_URL = "true")
-
   parent_dir <- withr::local_tempdir()
   project_dir <- "blop"
   quarto_multilingual_book(
@@ -23,8 +21,6 @@ test_that("render_book() works", {
 })
 
 test_that("render_book() works - change link", {
-  withr::local_envvar(BABELQUARTO_TESTS_URL = "true")
-
   parent_dir <- withr::local_tempdir()
   project_dir <- "blop"
   quarto_multilingual_book(
@@ -48,8 +44,6 @@ test_that("render_book() works - change link", {
 })
 
 test_that("render_book() works -- chapters in folders", {
-  withr::local_envvar(BABELQUARTO_TESTS_URL = "true")
-
   parent_dir <- withr::local_tempdir()
   project_dir <- "blop"
   quarto_multilingual_book(
@@ -88,8 +82,6 @@ test_that("render_book() works -- chapters in folders", {
 })
 
 test_that("render_website() works", {
-  withr::local_envvar(BABELQUARTO_TESTS_URL = "true")
-
   parent_dir <- withr::local_tempdir()
   project_dir <- "blop"
   quarto_multilingual_website(
@@ -127,14 +119,11 @@ test_that("render_website() works", {
   )
   expect_identical(
     xml2::xml_attr(english_link, "href"),
-    "https://example.com/index.html")
-  expect_identical(xml2::xml_text(english_link), "Version in en"
+    "https://example.com/index.html"
   )
-
+  expect_identical(xml2::xml_text(english_link), "Version in en")
 })
 test_that("render_book() works -- partial template", {
-  withr::local_envvar(BABELQUARTO_TESTS_URL = "true")
-
   parent_dir <- withr::local_tempdir()
   project_dir <- "blop"
   quarto_multilingual_website(
@@ -191,12 +180,9 @@ test_that("render_book() works -- partial template", {
     '//div[@class="alert alert-info alert-dismissible"]'
   )
   expect_match(xml2::xml_text(div), "Salut")
-
 })
 
 test_that("render_book() works - appendices", {
-  withr::local_envvar(BABELQUARTO_TESTS_URL = "true")
-
   parent_dir <- withr::local_tempdir()
   project_dir <- "blop"
   quarto_multilingual_book(
@@ -218,13 +204,9 @@ test_that("render_book() works - appendices", {
 
   withr::with_dir(parent_dir, render_book(project_dir))
   expect_dir_exists(file.path(parent_dir, project_dir, "_book"))
-
-
 })
 
 test_that("render_book() works - chapters", {
-  withr::local_envvar(BABELQUARTO_TESTS_URL = "true")
-
   parent_dir <- withr::local_tempdir()
   project_dir <- "blop"
   quarto_multilingual_book(
@@ -247,13 +229,9 @@ test_that("render_book() works - chapters", {
 
   withr::with_dir(parent_dir, render_book(project_dir))
   expect_dir_exists(file.path(parent_dir, project_dir, "_book"))
-
-
 })
 
 test_that("render_book() works - parts and chapters", {
-  withr::local_envvar(BABELQUARTO_TESTS_URL = "true")
-
   parent_dir <- withr::local_tempdir()
   project_dir <- "blop"
   quarto_multilingual_book(
@@ -290,12 +268,9 @@ test_that("render_book() works - parts and chapters", {
 
   withr::with_dir(parent_dir, render_book(project_dir))
   expect_dir_exists(file.path(parent_dir, project_dir, "_book"))
-
 })
 
 test_that("render_website() works - listing", {
-  withr::local_envvar(BABELQUARTO_TESTS_URL = "true")
-
   parent_dir <- withr::local_tempdir()
   project_dir <- "blop"
   quarto_multilingual_website(
@@ -344,8 +319,6 @@ test_that("render_website() works - listing", {
 })
 
 test_that("render_website() works - clean render for each language", {
-  withr::local_envvar(BABELQUARTO_TESTS_URL = "true")
-
   parent_dir <- withr::local_tempdir()
   project_dir <- "blop"
   quarto_multilingual_website(
@@ -381,8 +354,6 @@ test_that("render_website() works - clean render for each language", {
 
 test_that("render_website() fails when missing sidebar
            and languagelinks is set to sidebar", {
-  withr::local_envvar(BABELQUARTO_TESTS_URL = "true")
-
   parent_dir <- withr::local_tempdir()
   project_dir <- "blop"
   quarto_multilingual_website(
@@ -406,8 +377,6 @@ test_that("render_website() fails when missing sidebar
 
 test_that("render_book() fails when missing navbar
            and languagelinks is set to navbar", {
-  withr::local_envvar(BABELQUARTO_TESTS_URL = "true")
-
   parent_dir <- withr::local_tempdir()
   project_dir <- "blop"
 
@@ -432,8 +401,6 @@ test_that("render_book() fails when missing navbar
 })
 
 test_that("book with navbar placement has languagelinks in the navbar", {
-  withr::local_envvar(BABELQUARTO_TESTS_URL = "true")
-
   parent_dir <- withr::local_tempdir()
   project_dir <- "blop"
 
@@ -461,8 +428,6 @@ test_that("book with navbar placement has languagelinks in the navbar", {
 })
 
 test_that("website with sidebar placement has languagelinks in the sidebar", {
-  withr::local_envvar(BABELQUARTO_TESTS_URL = "true")
-
   parent_dir <- withr::local_tempdir()
   project_dir <- "blop"
 
@@ -490,7 +455,6 @@ test_that("website with sidebar placement has languagelinks in the sidebar", {
 })
 
 test_that("render_book() works - all language links are present in sidebar", {
-
   parent_dir <- withr::local_tempdir()
   project_dir <- "blop"
 
@@ -579,7 +543,6 @@ test_that("render_book() works - all language links are present in sidebar", {
 })
 
 test_that("render_website() works - all language links are present in navbar", {
-
   parent_dir <- withr::local_tempdir()
   project_dir <- "blop"
 
@@ -656,7 +619,6 @@ test_that("render_website() works - all language links are present in navbar", {
     "href"
   )
   expect_identical(index_es_link_fr, "https://ropensci.org/fr/index.html")
-
 })
 
 
@@ -683,7 +645,6 @@ test_that("render_website() works - all language links are present in navbar", {
   expect_file_exists(
     file.path(parent_dir, project_dir, "_site", "es", "practices.html")
   )
-
 })
 
 
