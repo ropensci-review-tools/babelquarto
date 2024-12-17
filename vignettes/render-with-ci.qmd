@@ -14,7 +14,8 @@ You can find more information about publishing with CI in the [Quarto documentat
 
 ### Site URL
 
-When you render a project in a CI context, you need to set the URL of the publishing website in an environement variable.
+When you render a project in a CI context, you can set the URL of the publishing website in an environment variable (if different from the one in the configuration file,
+as a preview for instance).
 You can do that with the `BABELQUARTO_CI_URL` environment variable.
 
 ### Steps for rendering
