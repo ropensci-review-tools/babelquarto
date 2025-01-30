@@ -144,7 +144,7 @@ test_that("render_book() works -- partial template", {
   config <- append(
     config,
     c("    template-partials:", "      - metadata.html"),
-    after = grep("theme: cosmo", config, fixed = TRUE)
+    after = grep("html:", config, fixed = TRUE)
   )
   brio::write_lines(config, config_path)
 
