@@ -481,6 +481,11 @@ add_links <- function(path, main_language, # nolint: cyclocomp_linter
         "//div[contains(@class,'sidebar-menu-container')]"
       )
 
+      # case where the page is just a redirection
+      if (inherits(sidebar_menu, "xml_missing")) {
+        return()
+      }
+
       xml2::xml_add_sibling(
         sidebar_menu,
         "div",
@@ -502,10 +507,17 @@ add_links <- function(path, main_language, # nolint: cyclocomp_linter
       id = "languages-button"
     )
 
+    button <- xml2::xml_find_first(html, "//button[@id='languages-button']")
+
     xml2::xml_add_child(
-      xml2::xml_find_first(html, "//button[@id='languages-button']"),
+      button,
       "i",
-      class = "bi bi-globe2"
+      class = config[["babelquarto"]][["icon"]] %||% "bi bi-globe2"
+    )
+
+    xml2::xml_text(button) <- sprintf(
+      " %s",
+      find_language_name(path_language, config)
     )
 
     xml2::xml_add_child(
@@ -594,4 +606,22 @@ path_rel <- function(path, output_folder, lang, main_language) {
   } else {
     fs::path_rel(path, start = file.path(output_folder, lang))
   }
+}
+
+find_language_name <- function(language_code, config) {
+  codes <- config[["babelquarto"]][["languagecodes"]]
+
+  if (is.null(codes)) {
+    return(toupper(language_code))
+  }
+
+  language_names <- purrr::map_chr(codes, "name")
+  language_texts <- purrr::map_chr(codes, "text")
+
+  if (!language_code %in% language_names) {
+    return(toupper(language_code))
+  }
+
+  language_texts[language_names == language_code][1]
+
 }

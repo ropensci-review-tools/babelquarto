@@ -74,6 +74,17 @@ website:
 
 If you render your multilingual book or website in a CI context, you need will need to set the `BABELQUARTO_CI_URL` environment variable. See `vignette("render-with-ci")` for more information.
 
+## Configure the icon of the language switch button
+
+Any [Bootstrap icon](https://icons.getbootstrap.com/) can be used instead of the globe button.
+For getting a backpack icon you'd use:
+
+```yaml
+babelquarto:
+  icon: "bi bi-backpack"
+
+```
+
 ## Translate parts in multilingual books
 
 In multilingual books, if you use parts to structure your book, you can translate the part titles like so:
