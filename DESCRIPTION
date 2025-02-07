@@ -30,6 +30,8 @@ Imports:
     withr,
     xml2,
     yaml
+Depends:
+   R (>= 4.1.0)
 Suggests: 
     servr,
     testthat (>= 3.0.0)
