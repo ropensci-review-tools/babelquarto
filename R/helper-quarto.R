@@ -75,6 +75,13 @@ quarto_multilingual_project <- function(
   site_url = "https://example.com",
   placement = c("navbar", "sidebar")
 ) {
+  if (fs::dir_exists(fs::path(parent_dir, project_dir))) {
+    cli::cli_abort(c(
+      "{.path {fs::path(parent_dir, project_dir)}} already exists.",
+      i = "See {.help register_main_language} and {.help register_further_languages} to convert an existing project."
+    ))
+  }
+
   placement <- rlang::arg_match(placement)
 
   # Vanilla project from Quarto CLI ----

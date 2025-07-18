@@ -31,3 +31,15 @@ test_that("quarto_multilingual_book() works", {
   expect_identical(config[["babelquarto"]][["mainlanguage"]], "en")
   expect_identical(config[["babelquarto"]][["languages"]], c("es", "fr"))
 })
+
+test_that("quarto_multilingual_project errors if project exists", {
+  parent_dir <- withr::local_tempdir()
+  dir.create(file.path(parent_dir, "blop"))
+  expect_snapshot(
+    error = TRUE,
+    {
+      quarto_multilingual_book(parent_dir, "blop")
+    },
+    transform = \(x) sub(".*blop", "blop", x)
+  )
+})
