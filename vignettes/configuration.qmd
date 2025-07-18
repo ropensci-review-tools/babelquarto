@@ -26,7 +26,7 @@ config_path <- file.path(parent_dir, project_dir, "_quarto.yml")
 config_lines <- brio::read_lines(config_path)
 where_babelquarto <- grep("babelquarto:", config_lines, fixed = TRUE)
 
-cat("```yaml\n")
+cat("```{.yaml filename='_quarto.yml'}\n")
 config_lines[where_babelquarto:length(config_lines)] |>
   cat(sep = "\n")
 cat("```\n")
@@ -47,7 +47,7 @@ In addition to the `babelquarto` key, you will see language specific keys for `t
 
 If you want the choice to be between, say "English" and "Español" rather than "Version in EN" and "Version in ES", add these fields under the `babelquarto/languagecodes` key, in `_quarto.yml`:
 
-```yaml
+```{.yaml filename='_quarto.yml'}
 babelquarto:
   languagecodes:
   - name: es
@@ -62,12 +62,12 @@ Using `register_main_language()` and `register_further_languages()` will create 
 
 If you need to configure a base URL, you can use the [usual Quarto field](https://quarto.org/docs/websites/website-tools.html), or use the `site_url` argument of `render_book()`.
 
-```yaml
+```{.yaml filename='_quarto.yml'}
 book:
   site-url: https://example.com
 ```
 
-```yaml
+```{.yaml filename='_quarto.yml'}
 website:
   site-url: https://example.com
 ```
@@ -79,7 +79,7 @@ If you render your multilingual book or website in a CI context, you need will n
 Any [Bootstrap icon](https://icons.getbootstrap.com/) can be used instead of the globe button.
 For getting a backpack icon you'd use:
 
-```yaml
+```{.yaml filename='_quarto.yml'}
 babelquarto:
   icon: "bi bi-backpack"
 
@@ -90,7 +90,7 @@ babelquarto:
 In multilingual books, if you use parts to structure your book, you can translate the part titles like so:
 
 <!-- ``` {.yaml filename="_quarto.yml"} -->
-```yaml
+```{.yaml filename='_quarto.yml'}
 book:
   chapters:
     - index.qmd
@@ -119,7 +119,7 @@ When rendering the main English language, {babelquarto} will load the *en* profi
 You could for example have different navigation menus for each language:
 
 <!-- ```{.yaml filename="_quarto-en.yml"} -->
-```yaml
+```{.yaml filename='_quarto.yml'}
 website:
   navbar:
     title: "My Website"
@@ -131,7 +131,7 @@ website:
         href: "about.qmd"
 ```
 <!-- ```{.yaml filename="_quarto-fr.yml"} -->
-```yaml
+```{.yaml filename='_quarto.yml'}
 website:
   navbar:
     title: "Mon site web"

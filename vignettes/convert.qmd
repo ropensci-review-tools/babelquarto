@@ -50,7 +50,7 @@ We end up with a multilingual book in English and Spanish. If you look at the `_
 #| echo: false
 #| results: 'asis'
 
-cat("```yaml\n")
+cat("```{.yaml filename='_quarto.yml'}\n")
 readLines(file.path(parent_dir, project_dir, "_quarto.yml")) |>
   cat(sep = "\n")
 cat("```\n")

@@ -52,7 +52,7 @@ To get familiar with the configuration, take a look at the example below:
 #| echo: false
 #| results: 'asis'
 
-cat("```yaml\n")
+cat("```{.yaml filename='_quarto.yml'}\n")
 readLines(file.path(parent_dir, project_dir, "_quarto.yml")) |>
   cat(sep = "\n")
 cat("```\n")
@@ -106,7 +106,7 @@ Look at the `_quarto.yml` file in the project directory. To get familiar with th
 #| echo: false
 #| results: 'asis'
 
-cat("```yaml\n")
+cat("```{.yaml filename='_quarto.yml'}\n")
 readLines(file.path(parent_dir, project_dir, "_quarto.yml")) |>
   cat(sep = "\n")
 cat("```\n")

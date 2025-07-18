@@ -8,3 +8,6 @@
 ^codemeta\.json$
 ^man/filter_freeze_directory\.Rd$
 ^man/read_yaml\.Rd$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
