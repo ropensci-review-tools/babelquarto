@@ -56,7 +56,8 @@ test_that("render_book() works -- chapters in folders", {
   qmds <- qmds[grep("index", fs::path_file(qmds), invert = TRUE, fixed = TRUE)]
   fs::dir_create(file.path(parent_dir, project_dir, "chapters"))
   purrr::walk(
-    qmds, fs::file_move,
+    qmds,
+    fs::file_move,
     new_path = file.path(parent_dir, project_dir, "chapters")
   )
 
@@ -70,11 +71,17 @@ test_that("render_book() works -- chapters in folders", {
   expect_dir_exists(file.path(parent_dir, project_dir, "_book"))
 
   references_path <- file.path(
-    parent_dir, project_dir,
-    "_book", "chapters", "references.html"
+    parent_dir,
+    project_dir,
+    "_book",
+    "chapters",
+    "references.html"
   )
   references <- xml2::read_html(references_path)
-  spanish_link <- xml2::xml_find_first(references, '//a[@id="language-link-es"]') # nolint: line_length_linter
+  spanish_link <- xml2::xml_find_first(
+    references,
+    '//a[@id="language-link-es"]'
+  ) # nolint: line_length_linter
   expect_identical(
     xml2::xml_attr(spanish_link, "href"),
     "https://example.com/es/chapters/references.es.html"
@@ -93,7 +100,9 @@ test_that("render_website() works", {
 
   config_path <- file.path(parent_dir, project_dir, "_quarto.yml")
   config <- brio::read_lines(config_path)
-  config[config == '    text: "Version in es"'] <- '    text: "Version en Español"' # nolint: line_length_linter
+  config[
+    config == '    text: "Version in es"'
+  ] <- '    text: "Version en Español"' # nolint: line_length_linter
   brio::write_lines(config, config_path)
 
   withr::with_dir(parent_dir, render_website(project_dir))
@@ -109,8 +118,11 @@ test_that("render_website() works", {
   expect_identical(xml2::xml_text(spanish_link), "Version en Español")
 
   spanish_index_path <- file.path(
-    parent_dir, project_dir,
-    "_site", "es", "index.html"
+    parent_dir,
+    project_dir,
+    "_site",
+    "es",
+    "index.html"
   )
   spanish_index <- xml2::read_html(spanish_index_path)
   english_link <- xml2::xml_find_first(
@@ -140,7 +152,9 @@ test_that("render_book() works -- partial template", {
 
   config_path <- file.path(parent_dir, project_dir, "_quarto.yml")
   config <- brio::read_lines(config_path)
-  config[config == '    text: "Version in es"'] <- '    text: "Version en Español"' # nolint: line_length_linter
+  config[
+    config == '    text: "Version in es"'
+  ] <- '    text: "Version en Español"' # nolint: line_length_linter
   config <- append(
     config,
     c("    template-partials:", "      - metadata.html"),
@@ -160,8 +174,11 @@ test_that("render_book() works -- partial template", {
   expect_match(xml2::xml_text(div), "Hello")
 
   spanish_index_path <- file.path(
-    parent_dir, project_dir,
-    "_site", "es", "index.html"
+    parent_dir,
+    project_dir,
+    "_site",
+    "es",
+    "index.html"
   )
   spanish_index <- xml2::read_html(spanish_index_path)
   div <- xml2::xml_find_first(
@@ -171,8 +188,11 @@ test_that("render_book() works -- partial template", {
   expect_match(xml2::xml_text(div), "Hola")
 
   french_index_path <- file.path(
-    parent_dir, project_dir, "_site",
-    "fr", "index.html"
+    parent_dir,
+    project_dir,
+    "_site",
+    "fr",
+    "index.html"
   )
   french_index <- xml2::read_html(french_index_path)
   div <- xml2::xml_find_first(
@@ -496,8 +516,11 @@ test_that("render_book() works - all language links are present in sidebar", {
   expect_identical(index_link_es_href, "https://ropensci.org/es/index.es.html")
 
   index_fr_path <- file.path(
-    parent_dir, project_dir,
-    "_book", "fr", "index.fr.html"
+    parent_dir,
+    project_dir,
+    "_book",
+    "fr",
+    "index.fr.html"
   )
   index_fr <- xml2::read_html(index_fr_path)
   index_fr_links <- xml2::xml_find_first(
@@ -519,8 +542,11 @@ test_that("render_book() works - all language links are present in sidebar", {
   expect_identical(index_fr_link_es, "https://ropensci.org/es/index.es.html")
 
   index_es_path <- file.path(
-    parent_dir, project_dir,
-    "_book", "es", "index.es.html"
+    parent_dir,
+    project_dir,
+    "_book",
+    "es",
+    "index.es.html"
   )
   index_es <- xml2::read_html(index_es_path)
   index_es_links <- xml2::xml_find_first(
@@ -583,9 +609,18 @@ test_that("render_website() works - all language links are present in navbar", {
   )
   expect_identical(index_link_es_href, "https://ropensci.org/es/index.html")
 
-  index_fr_path <- file.path(parent_dir, project_dir, "_site", "fr", "index.html") # nolint: line_length_linter
+  index_fr_path <- file.path(
+    parent_dir,
+    project_dir,
+    "_site",
+    "fr",
+    "index.html"
+  ) # nolint: line_length_linter
   index_fr <- xml2::read_html(index_fr_path)
-  index_fr_links <- xml2::xml_find_first(index_fr, '//ul[@id="languages-links"]') # nolint: line_length_linter
+  index_fr_links <- xml2::xml_find_first(
+    index_fr,
+    '//ul[@id="languages-links"]'
+  ) # nolint: line_length_linter
   expect_identical(xml2::xml_length(index_fr_links), 2L)
 
   index_fr_link_en <- xml2::xml_attr(
@@ -601,11 +636,17 @@ test_that("render_website() works - all language links are present in navbar", {
   expect_identical(index_fr_link_es, "https://ropensci.org/es/index.html")
 
   index_es_path <- file.path(
-    parent_dir, project_dir,
-    "_site", "es", "index.html"
+    parent_dir,
+    project_dir,
+    "_site",
+    "es",
+    "index.html"
   )
   index_es <- xml2::read_html(index_es_path)
-  index_es_links <- xml2::xml_find_first(index_es, '//ul[@id="languages-links"]') # nolint: line_length_linter
+  index_es_links <- xml2::xml_find_first(
+    index_es,
+    '//ul[@id="languages-links"]'
+  ) # nolint: line_length_linter
   expect_identical(xml2::xml_length(index_es_links), 2L)
 
   index_es_link_en <- xml2::xml_attr(
@@ -620,7 +661,6 @@ test_that("render_website() works - all language links are present in navbar", {
   )
   expect_identical(index_es_link_fr, "https://ropensci.org/fr/index.html")
 })
-
 
 
 test_that("render_website() works - all language links are present in navbar", {
@@ -687,7 +727,6 @@ test_that("render_website() works - sidebar in language profile", {
     "        href: index.qmd"
   )
   brio::write_lines(sidebar_fr, profile_path_fr)
-
 
   withr::with_dir(parent_dir, render_website(project_dir))
   main <- file.path(parent_dir, project_dir, "_site")
@@ -762,7 +801,8 @@ test_that("render_website() works - quarto freeze for languages is working", {
     "```"
   )
   brio::write_lines(
-    index_fr, file.path(parent_dir, project_dir, "index.fr.qmd")
+    index_fr,
+    file.path(parent_dir, project_dir, "index.fr.qmd")
   )
 
   # Render with quarto to generate the _freeze folder

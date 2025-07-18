@@ -1,5 +1,4 @@
 test_that("register_main_language() works", {
-
   withr::local_envvar(QUARTOBABELDATE = "01/01/2023") # nolint: nonportable_path_linter
   withr::local_envvar(QUARTOBABELAUTHOR = "Firstname Lastname")
 

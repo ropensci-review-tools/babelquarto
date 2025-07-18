@@ -377,7 +377,6 @@ use_lang_chapter <- function(
     # chapters translation
 
     chapters_list[["chapters"]] <- lang_code_chapter_list(
-      # nolint: object_usage_linter
       chapters_list[["chapters"]],
       language_code = language_code
     )
@@ -387,7 +386,6 @@ use_lang_chapter <- function(
       fs::file_move(
         unlist(original_chapters_list[["chapters"]][chapters_not_translated]),
         lang_code_chapter_list(
-          # nolint: object_usage_linter
           original_chapters_list[["chapters"]][chapters_not_translated],
           language_code = language_code
         )
@@ -400,7 +398,6 @@ use_lang_chapter <- function(
     }
   } else {
     chapters_list <- lang_code_chapter_list(
-      # nolint: object_usage_linter
       chapters_list,
       language_code = language_code
     )

@@ -12,13 +12,15 @@
 #' @return The path to the created project.
 #' @export
 #'
-quarto_multilingual_book <- function(parent_dir,
-                                     project_dir,
-                                     main_language = "en",
-                                     further_languages = c("es", "fr"),
-                                     register_languages = TRUE,
-                                     site_url = "https://example.com",
-                                     placement = c("sidebar", "navbar")) {
+quarto_multilingual_book <- function(
+  parent_dir,
+  project_dir,
+  main_language = "en",
+  further_languages = c("es", "fr"),
+  register_languages = TRUE,
+  site_url = "https://example.com",
+  placement = c("sidebar", "navbar")
+) {
   quarto_multilingual_project(
     parent_dir = parent_dir,
     project_dir = project_dir,
@@ -33,13 +35,15 @@ quarto_multilingual_book <- function(parent_dir,
 
 #' @rdname quarto_multilingual_book
 #' @export
-quarto_multilingual_website <- function(parent_dir,
-                                        project_dir,
-                                        main_language = "en",
-                                        further_languages = c("es", "fr"),
-                                        register_languages = TRUE,
-                                        site_url = "https://example.com",
-                                        placement = c("navbar", "sidebar")) {
+quarto_multilingual_website <- function(
+  parent_dir,
+  project_dir,
+  main_language = "en",
+  further_languages = c("es", "fr"),
+  register_languages = TRUE,
+  site_url = "https://example.com",
+  placement = c("navbar", "sidebar")
+) {
   quarto_multilingual_project(
     parent_dir = parent_dir,
     project_dir = project_dir,
@@ -52,19 +56,22 @@ quarto_multilingual_website <- function(parent_dir,
   )
 }
 
-quarto_multilingual_project <- function(parent_dir,
-                                        project_dir,
-                                        type = c("book", "website"),
-                                        main_language = "en",
-                                        further_languages = c("es", "fr"),
-                                        register_languages = TRUE,
-                                        site_url = "https://example.com",
-                                        placement = c("navbar", "sidebar")) {
-
+quarto_multilingual_project <- function(
+  parent_dir,
+  project_dir,
+  type = c("book", "website"),
+  main_language = "en",
+  further_languages = c("es", "fr"),
+  register_languages = TRUE,
+  site_url = "https://example.com",
+  placement = c("navbar", "sidebar")
+) {
   placement <- rlang::arg_match(placement)
 
   # Vanilla project from Quarto CLI ----
-  if (parent_dir != getwd()) withr::local_dir(parent_dir)
+  if (parent_dir != getwd()) {
+    withr::local_dir(parent_dir)
+  }
   quarto_bin <- quarto::quarto_path()
   sys::exec_wait(
     quarto_bin,
@@ -72,9 +79,9 @@ quarto_multilingual_project <- function(parent_dir,
   )
 
   # Duplicated files for the different languages ----
-  qmds <- dir(project_dir, pattern = "\\.qmd", full.names = TRUE) # nolint: object_usage_linter
+  qmds <- dir(project_dir, pattern = "\\.qmd", full.names = TRUE)
 
-  create_new_lang_file <- function(qmd_file, language) { # nolint: object_usage_linter
+  create_new_lang_file <- function(qmd_file, language) {
     new_path <- fs::path_ext_set(qmd_file, sprintf(".%s.qmd", language))
     fs::file_copy(qmd_file, new_path)
   }

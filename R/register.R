@@ -53,13 +53,14 @@ register_main_language <- function(main_language = "en", project_path = ".") {
 #' @export
 #'
 register_further_languages <- function(further_languages, project_path = ".") {
-
   config_path <- file.path(project_path, "_quarto.yml")
 
   config <- read_yaml(config_path)
   languages_config_present <- !is.null(config[["babelquarto"]][["languages"]])
-  if (languages_config_present &&
-        all(further_languages %in% config[["babelquarto"]][["languages"]])) {
+  if (
+    languages_config_present &&
+      all(further_languages %in% config[["babelquarto"]][["languages"]])
+  ) {
     cli::cli_alert_info("All languages already registered.")
     return(invisible())
   }
@@ -88,7 +89,11 @@ register_further_languages <- function(further_languages, project_path = ".") {
     c(
       sprintf("  languages: [%s]", toString(languages)),
       sprintf("title-%s: title in %s", further_languages, further_languages),
-      sprintf("description-%s: description in %s", further_languages, further_languages), # nolint: line_length_linter
+      sprintf(
+        "description-%s: description in %s",
+        further_languages,
+        further_languages
+      ), # nolint: line_length_linter
       sprintf("author-%s: author in %s", further_languages, further_languages)
     ),
     after = which_main
@@ -99,7 +104,7 @@ register_further_languages <- function(further_languages, project_path = ".") {
     config_lines,
     unlist(purrr::map(
       further_languages,
-      ~list(
+      ~ list(
         sprintf("  - name: %s", .x),
         sprintf('    text: "Version in %s"', .x)
       )
