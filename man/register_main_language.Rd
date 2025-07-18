@@ -17,3 +17,19 @@ Nothing
 \description{
 Register main language in Quarto config
 }
+\examples{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
+parent_dir <- withr::local_tempdir()
+quarto_multilingual_book(
+    parent_dir = parent_dir,
+    project_dir = "blop",
+    further_languages = c("es", "fr"),
+    main_language = "en",
+    register_languages = FALSE
+  )
+book_path <- file.path(parent_dir, "blop")
+register_main_language("en", book_path)
+# have a look at the config
+file.edit(file.path(parent_dir, "blop", "_quarto.yml"))
+\dontshow{\}) # examplesIf}
+}

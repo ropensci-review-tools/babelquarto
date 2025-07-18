@@ -4,6 +4,7 @@
 ^\.github$
 ^LICENSE\.md$
 ^\.lintr$
-^man/read_yaml\.Rd$
 .ropensci-staff
 ^codemeta\.json$
+^man/filter_freeze_directory\.Rd$
+^man/read_yaml\.Rd$

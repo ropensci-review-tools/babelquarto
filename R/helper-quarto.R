@@ -10,6 +10,15 @@
 #' @param placement Where to place the language links (sidebar, navbar).
 #'
 #' @return The path to the created project.
+#' @examplesIf interactive()
+#' parent_dir <- withr::local_tempdir()
+#'   quarto_multilingual_book(
+#'     parent_dir = parent_dir,
+#'     project_dir = "blop",
+#'     further_languages = c("es", "fr"),
+#'     main_language = "en"
+#'   )
+#'
 #' @export
 #'
 quarto_multilingual_book <- function(

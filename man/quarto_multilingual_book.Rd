@@ -47,3 +47,14 @@ The path to the created project.
 \description{
 Create a starter/example quarto multilingual book or website
 }
+\examples{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
+parent_dir <- withr::local_tempdir()
+  quarto_multilingual_book(
+    parent_dir = parent_dir,
+    project_dir = "blop",
+    further_languages = c("es", "fr"),
+    main_language = "en"
+  )
+\dontshow{\}) # examplesIf}
+}

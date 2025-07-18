@@ -24,6 +24,7 @@
 #' @param site_url Base URL of the book/website.
 #' @param profile Quarto profile(s) to use.
 #'
+#' @return Nothing, called for its side-effect of rendering a project.
 #' @export
 #'
 #' @examples

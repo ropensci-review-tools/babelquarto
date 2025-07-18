@@ -3,6 +3,19 @@
 #' @param main_language Main language code (character, like `"en"`)
 #' @inheritParams render_book
 #' @return Nothing
+#' @examplesIf interactive()
+#' parent_dir <- withr::local_tempdir()
+#' quarto_multilingual_book(
+#'     parent_dir = parent_dir,
+#'     project_dir = "blop",
+#'     further_languages = c("es", "fr"),
+#'     main_language = "en",
+#'     register_languages = FALSE
+#'   )
+#' book_path <- file.path(parent_dir, "blop")
+#' register_main_language("en", book_path)
+#' # have a look at the config
+#' file.edit(file.path(parent_dir, "blop", "_quarto.yml"))
 #' @export
 register_main_language <- function(main_language = "en", project_path = ".") {
   config_path <- file.path(project_path, "_quarto.yml")
@@ -50,6 +63,17 @@ register_main_language <- function(main_language = "en", project_path = ".") {
 #' @inheritParams render_book
 #'
 #' @return Nothing
+#' @examplesIf interactive()
+#' parent_dir <- withr::local_tempdir()
+#'   quarto_multilingual_book(
+#'     parent_dir = parent_dir,
+#'     project_dir = "blop",
+#'     further_languages = c("es", "fr"),
+#'     main_language = "en"
+#'   )
+#' register_further_languages("pt", project_path = file.path(parent_dir, "blop"))
+#' # have a look at the configuration
+#' file.edit(file.path(parent_dir, "blop", "_quarto.yml"))
 #' @export
 #'
 register_further_languages <- function(further_languages, project_path = ".") {

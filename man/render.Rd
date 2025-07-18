@@ -16,6 +16,9 @@ render_website(project_path = ".", site_url = NULL, profile = NULL)
 
 \item{profile}{Quarto profile(s) to use.}
 }
+\value{
+Nothing, called for its side-effect of rendering a project.
+}
 \description{
 Render a Quarto multilingual project
 }
