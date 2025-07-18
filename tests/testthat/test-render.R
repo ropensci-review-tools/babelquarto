@@ -18,6 +18,19 @@ test_that("render_book() works", {
     xml2::xml_attr(spanish_link, "href"),
     "https://example.com/es/index.es.html"
   )
+
+  expect_snapshot_file(
+    file.path(parent_dir, project_dir, "_book", "sitemap.xml"),
+    transform = \(x) sub("<lastmod>.*", "<lastmod>Just now!</lastmod>", x)
+  )
+
+  expect_false(file.exists(file.path(
+    parent_dir,
+    project_dir,
+    "_book",
+    "es",
+    "sitemap.xml"
+  )))
 })
 
 test_that("render_book() works - change link", {
