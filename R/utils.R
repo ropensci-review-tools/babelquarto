@@ -11,7 +11,7 @@ replace_true_false <- function(list) {
     # so that yaml::write_yaml() will not add quotation marks
     class(list) <- "verbatim"
   }
-  return(list)
+  list
 }
 
 lang_code_chapter_list <- function(chapters_list, language_code) {
