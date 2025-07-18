@@ -62,8 +62,7 @@ render <- function(
   config <- file.path(path, "_quarto.yml")
   config_contents <- read_yaml(config)
 
-  site_url <- site_url %||% site_url(config_contents, type)
-  site_url <- sub("/$", "", site_url)
+  site_url <- site_url(config_contents = config_contents, type = type)
 
   output_dir <- config_contents[["project"]][["output-dir"]] %||%
     switch(
@@ -114,9 +113,30 @@ render <- function(
     render_quarto_lang,
     path = path,
     output_dir = output_dir,
-    type = type
+    type = type,
+    site_url = site_url
   )
 
+  ## sitemap fixing ---
+  locs <- purrr::map(
+    language_codes,
+    \(x) {
+      sitemap_path <- file.path(path, output_dir, x, "sitemap.xml")
+      lines <- brio::read_lines(sitemap_path)
+      fs::file_delete(sitemap_path)
+      lines[3:(length(lines) - 1)]
+    }
+  ) |>
+    unlist()
+
+  sitemap_path <- file.path(
+    path,
+    output_dir,
+    "sitemap.xml"
+  )
+  current_sitemap <- brio::read_lines(sitemap_path)
+  current_sitemap <- append(current_sitemap, locs, after = 2)
+  brio::write_lines(current_sitemap, sitemap_path)
   # Add the language switching link to the sidebar ----
   ## For the main language ----
 
@@ -195,13 +215,21 @@ render <- function(
 
 site_url <- function(config_contents, type) {
   if (nzchar(Sys.getenv("BABELQUARTO_CI_URL"))) {
-    return(Sys.getenv("BABELQUARTO_CI_URL"))
+    site_url <- Sys.getenv("BABELQUARTO_CI_URL")
+  } else {
+    site_url <- config_contents[[type]][["site-url"]] %||% ""
   }
 
-  config_contents[[type]][["site-url"]] %||% ""
+  sub("/$", "", site_url)
 }
 
-render_quarto_lang <- function(language_code, path, output_dir, type) {
+render_quarto_lang <- function(
+  language_code,
+  path,
+  output_dir,
+  type,
+  site_url
+) {
   temporary_directory <- withr::local_tempdir()
   fs::dir_copy(path, temporary_directory)
   project_name <- fs::path_file(path)
@@ -222,6 +250,12 @@ render_quarto_lang <- function(language_code, path, output_dir, type) {
   }
 
   config[["lang"]] <- language_code
+
+  config[[type]][["site-url"]] <- if (endsWith(site_url, "/")) {
+    sprintf("%s%s", site_url, language_code)
+  } else {
+    sprintf("%s/%s", site_url, language_code)
+  }
 
   config[[type]][["title"]] <- config[[sprintf("title-%s", language_code)]] %||% # nolint: line_length_linter
     config[[type]][["title"]]
@@ -299,6 +333,7 @@ render_quarto_lang <- function(language_code, path, output_dir, type) {
   # Render language book
   metadata <- list("yes")
   names(metadata) <- sprintf("lang-%s", language_code)
+
   withr::with_dir(file.path(temporary_directory, project_name), {
     quarto::quarto_render(
       as_job = FALSE,

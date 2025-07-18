@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://example.com/es/index.es.html</loc>
+    <lastmod>Just now!</lastmod>
+  </url>
+  <url>
+    <loc>https://example.com/es/intro.es.html</loc>
+    <lastmod>Just now!</lastmod>
+  </url>
+  <url>
+    <loc>https://example.com/es/summary.es.html</loc>
+    <lastmod>Just now!</lastmod>
+  </url>
+  <url>
+    <loc>https://example.com/es/references.es.html</loc>
+    <lastmod>Just now!</lastmod>
+  </url>
+  <url>
+    <loc>https://example.com/fr/index.fr.html</loc>
+    <lastmod>Just now!</lastmod>
+  </url>
+  <url>
+    <loc>https://example.com/fr/intro.fr.html</loc>
+    <lastmod>Just now!</lastmod>
+  </url>
+  <url>
+    <loc>https://example.com/fr/summary.fr.html</loc>
+    <lastmod>Just now!</lastmod>
+  </url>
+  <url>
+    <loc>https://example.com/fr/references.fr.html</loc>
+    <lastmod>Just now!</lastmod>
+  </url>
+  <url>
+    <loc>https://example.com/index.html</loc>
+    <lastmod>Just now!</lastmod>
+  </url>
+  <url>
+    <loc>https://example.com/intro.html</loc>
+    <lastmod>Just now!</lastmod>
+  </url>
+  <url>
+    <loc>https://example.com/summary.html</loc>
+    <lastmod>Just now!</lastmod>
+  </url>
+  <url>
+    <loc>https://example.com/references.html</loc>
+    <lastmod>Just now!</lastmod>
+  </url>
+</urlset>
