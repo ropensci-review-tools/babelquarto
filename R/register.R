@@ -71,7 +71,10 @@ register_main_language <- function(main_language = "en", project_path = ".") {
 #'     further_languages = c("es", "fr"),
 #'     main_language = "en"
 #'   )
-#' register_further_languages("pt", project_path = file.path(parent_dir, "blop"))
+#' register_further_languages(
+#'   "pt",
+#'   project_path = file.path(parent_dir, "blop")
+#' )
 #' # have a look at the configuration
 #' file.edit(file.path(parent_dir, "blop", "_quarto.yml"))
 #' @export
