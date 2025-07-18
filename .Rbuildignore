@@ -6,3 +6,4 @@
 ^\.lintr$
 ^man/read_yaml\.Rd$
 .ropensci-staff
+^codemeta\.json$
