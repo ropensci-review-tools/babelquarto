@@ -39,6 +39,10 @@ If you start from scratch, you might want to look at `babelquarto::quarto_multil
 
 If you already have and existing Quarto project and want to convert it to a multilingual project, you can use `babelquarto::register_main_language()` and `babelquarto::register_further_languages()` to get started. For more information you can read `vignette("convert")`.
 
+## Linking
+
+If you use cross-references in your Quarto book, make sure they use explicit anchors, not the section title, as that title will be different between languages.
+
 ## Examples
 
 To get a feel of what a multilingual book can look like, you can have a look at this book: [*rOpenSci Packages: Development, Maintenance, and Peer Review*](https://devguide.ropensci.org/).
