@@ -21,7 +21,8 @@ test_that("render_book() works", {
 
   expect_snapshot_file(
     file.path(parent_dir, project_dir, "_book", "sitemap.xml"),
-    transform = \(x) sub("<lastmod>.*", "<lastmod>Just now!</lastmod>", x)
+    transform = \(x) sub("<lastmod>.*", "<lastmod>Just now!</lastmod>", x),
+    compate = compare_file_text
   )
 
   expect_false(file.exists(file.path(

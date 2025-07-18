@@ -135,7 +135,7 @@ render <- function(
     "sitemap.xml"
   )
   current_sitemap <- brio::read_lines(sitemap_path)
-  current_sitemap <- append(current_sitemap, locs, after = 3)
+  current_sitemap <- append(current_sitemap, locs, after = 2)
   brio::write_lines(current_sitemap, sitemap_path)
   # Add the language switching link to the sidebar ----
   ## For the main language ----
