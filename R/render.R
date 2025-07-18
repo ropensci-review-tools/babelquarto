@@ -37,22 +37,26 @@
 #' }
 #'
 #' @rdname render
-render_book <- function(project_path = ".",
-                        site_url = NULL, profile = NULL) {
+render_book <- function(project_path = ".", site_url = NULL, profile = NULL) {
   render(project_path, site_url = site_url, type = "book", profile = profile)
 }
 
 #' @export
 #' @rdname render
-render_website <- function(project_path = ".",
-                           site_url = NULL, profile = NULL) {
+render_website <- function(
+  project_path = ".",
+  site_url = NULL,
+  profile = NULL
+) {
   render(project_path, site_url = site_url, type = "website", profile = profile)
 }
 
-render <- function(path = ".",
-                   site_url = NULL,
-                   type = c("book", "website"),
-                   profile = NULL) {
+render <- function(
+  path = ".",
+  site_url = NULL,
+  type = c("book", "website"),
+  profile = NULL
+) {
   # configuration ----
   config <- file.path(path, "_quarto.yml")
   config_contents <- read_yaml(config)
@@ -69,15 +73,21 @@ render <- function(path = ".",
 
   language_codes <- config_contents[["babelquarto"]][["languages"]]
   if (is.null(language_codes)) {
-    cli::cli_abort("Can't find {.field babelquarto.languages} in {.field _quarto.yml}") # nolint: line_length_linter
+    cli::cli_abort(
+      "Can't find {.field babelquarto.languages} in {.field _quarto.yml}"
+    ) # nolint: line_length_linter
   }
   main_language <- config_contents[["babelquarto"]][["mainlanguage"]]
   if (is.null(main_language)) {
-    cli::cli_abort("Can't find {.field babelquarto.mainlanguage} in {.field _quarto.yml}") # nolint: line_length_linter
+    cli::cli_abort(
+      "Can't find {.field babelquarto.mainlanguage} in {.field _quarto.yml}"
+    ) # nolint: line_length_linter
   }
 
   output_folder <- file.path(path, output_dir)
-  if (fs::dir_exists(output_folder)) fs::dir_delete(output_folder)
+  if (fs::dir_exists(output_folder)) {
+    fs::dir_delete(output_folder)
+  }
 
   # render project ----
   temporary_directory <- withr::local_tempdir()
@@ -114,7 +124,11 @@ render <- function(path = ".",
   other_language_docs <- unlist(
     purrr::map(
       language_codes,
-      ~fs::dir_ls(file.path(output_folder, .x), glob = "*.html", recurse = TRUE)
+      ~ fs::dir_ls(
+        file.path(output_folder, .x),
+        glob = "*.html",
+        recurse = TRUE
+      )
     )
   )
   main_language_docs <- setdiff(all_docs, other_language_docs)
@@ -147,7 +161,8 @@ render <- function(path = ".",
   for (other_lang in language_codes) {
     other_lang_docs <- fs::dir_ls(
       file.path(output_folder, other_lang),
-      glob = "*.html", recurse = TRUE
+      glob = "*.html",
+      recurse = TRUE
     )
     languages_to_add <- c(main_language, setdiff(language_codes, other_lang))
     purrr::walk(
@@ -175,21 +190,17 @@ render <- function(path = ".",
       path_language = other_lang
     )
   }
-
 }
 
 site_url <- function(config_contents, type) {
-
   if (nzchar(Sys.getenv("BABELQUARTO_CI_URL"))) {
     return(Sys.getenv("BABELQUARTO_CI_URL"))
   }
 
   config_contents[[type]][["site-url"]] %||% ""
-
 }
 
 render_quarto_lang <- function(language_code, path, output_dir, type) {
-
   temporary_directory <- withr::local_tempdir()
   fs::dir_copy(path, temporary_directory)
   project_name <- fs::path_file(path)
@@ -214,14 +225,23 @@ render_quarto_lang <- function(language_code, path, output_dir, type) {
   config[[type]][["title"]] <- config[[sprintf("title-%s", language_code)]] %||% # nolint: line_length_linter
     config[[type]][["title"]]
 
-  config[[type]][["subtitle"]] <- config[[sprintf("subtitle-%s", language_code)]] %||% # nolint: line_length_linter
+  config[[type]][["subtitle"]] <- config[[sprintf(
+    "subtitle-%s",
+    language_code
+  )]] %||% # nolint: line_length_linter
     config[[type]][["subtitle"]]
 
-  config[[type]][["description"]] <- config[[sprintf("description-%s", language_code)]] %||% # nolint: line_length_linter
+  config[[type]][["description"]] <- config[[sprintf(
+    "description-%s",
+    language_code
+  )]] %||% # nolint: line_length_linter
     config[[type]][["description"]]
 
   if (type == "book") {
-    config[[type]][["author"]] <- config[[sprintf("author-%s", language_code)]] %||% # nolint: line_length_linter
+    config[[type]][["author"]] <- config[[sprintf(
+      "author-%s",
+      language_code
+    )]] %||% # nolint: line_length_linter
       config[[type]][["author"]]
 
     config[["book"]][["chapters"]] <- purrr::map(
@@ -248,7 +268,6 @@ render_quarto_lang <- function(language_code, path, output_dir, type) {
   }
 
   if (type == "website") {
-
     # only keep what's needed
     qmds <- fs::dir_ls(
       file.path(temporary_directory, fs::path_file(path)),
@@ -256,7 +275,8 @@ render_quarto_lang <- function(language_code, path, output_dir, type) {
       recurse = TRUE
     )
     language_qmds <- purrr::keep(
-      qmds, \(x) endsWith(x, sprintf(".%s.qmd", language_code))
+      qmds,
+      \(x) endsWith(x, sprintf(".%s.qmd", language_code))
     )
     fs::file_delete(qmds[!(qmds %in% language_qmds)])
     for (qmd_path in language_qmds) {
@@ -291,7 +311,6 @@ render_quarto_lang <- function(language_code, path, output_dir, type) {
     file.path(temporary_directory, project_name, output_dir),
     file.path(path, output_dir, language_code)
   )
-
 }
 
 #' Filter the freeze directory
@@ -304,23 +323,29 @@ render_quarto_lang <- function(language_code, path, output_dir, type) {
 #' @param project_name Name of the project directory
 #' @param language_code The Language code for the current rendering
 #' @dev
-filter_freeze_directory <- function(temporary_directory,
-                                    project_name,
-                                    language_code) {
+filter_freeze_directory <- function(
+  temporary_directory,
+  project_name,
+  language_code
+) {
   freeze_path <- fs::path(temporary_directory, project_name, "_freeze")
   freeze_temp <- fs::path(
     temporary_directory,
-    project_name, paste0("_freeze.", language_code)
+    project_name,
+    paste0("_freeze.", language_code)
   )
   freeze_ls <- fs::dir_ls(freeze_path, recurse = TRUE)
 
   freeze_lang <- purrr::keep(
-    freeze_ls, \(x) grepl(paste0("\\.", language_code, "$"), x)
+    freeze_ls,
+    \(x) grepl(paste0("\\.", language_code, "$"), x)
   )
   freeze_dirs <- fs::path_rel(freeze_lang, start = freeze_path)
   freeze_dirs <- gsub(
-    paste0(".", language_code), "",
-    freeze_dirs, fixed = TRUE
+    paste0(".", language_code),
+    "",
+    freeze_dirs,
+    fixed = TRUE
   )
 
   fs::dir_copy(freeze_lang, fs::path(freeze_temp, freeze_dirs))
@@ -331,20 +356,28 @@ filter_freeze_directory <- function(temporary_directory,
   fs::dir_delete(freeze_temp)
 }
 
-use_lang_chapter <- function(chapters_list, language_code,
-                             book_name, directory) {
+use_lang_chapter <- function(
+  chapters_list,
+  language_code,
+  book_name,
+  directory
+) {
   withr::local_dir(file.path(directory, book_name))
 
   original_chapters_list <- chapters_list
 
   if (is.list(chapters_list)) {
     # part translation
-    chapters_list[["part"]] <- chapters_list[[sprintf("part-%s", language_code)]] %||% # nolint: line_length_linter
+    chapters_list[["part"]] <- chapters_list[[sprintf(
+      "part-%s",
+      language_code
+    )]] %||% # nolint: line_length_linter
       chapters_list[["part"]]
 
     # chapters translation
 
-    chapters_list[["chapters"]] <- lang_code_chapter_list( # nolint: object_usage_linter
+    chapters_list[["chapters"]] <- lang_code_chapter_list(
+      # nolint: object_usage_linter
       chapters_list[["chapters"]],
       language_code = language_code
     )
@@ -353,7 +386,8 @@ use_lang_chapter <- function(chapters_list, language_code,
       chapters_not_translated <- !fs::file_exists(chapters_list[["chapters"]])
       fs::file_move(
         unlist(original_chapters_list[["chapters"]][chapters_not_translated]),
-        lang_code_chapter_list( # nolint: object_usage_linter
+        lang_code_chapter_list(
+          # nolint: object_usage_linter
           original_chapters_list[["chapters"]][chapters_not_translated],
           language_code = language_code
         )
@@ -365,7 +399,8 @@ use_lang_chapter <- function(chapters_list, language_code,
       chapters_list[["chapters"]] <- as.list(chapters_list[["chapters"]])
     }
   } else {
-    chapters_list <- lang_code_chapter_list( # nolint: object_usage_linter
+    chapters_list <- lang_code_chapter_list(
+      # nolint: object_usage_linter
       chapters_list,
       language_code = language_code
     )
@@ -380,15 +415,24 @@ use_lang_chapter <- function(chapters_list, language_code,
   chapters_list
 }
 
-add_links <- function(path, main_language, # nolint: cyclocomp_linter
-                      language_code, site_url, type, config, output_folder,
-                      path_language, project_dir) {
+add_links <- function(
+  path,
+  main_language, # nolint: cyclocomp_linter
+  language_code,
+  site_url,
+  type,
+  config,
+  output_folder,
+  path_language,
+  project_dir
+) {
   html <- xml2::read_html(path)
 
   document_path <- path
 
   lang_profile <- fs::path(
-    project_dir, paste0("_quarto-", language_code),
+    project_dir,
+    paste0("_quarto-", language_code),
     ext = "yml"
   )
   if (fs::file_exists(lang_profile)) {
@@ -397,7 +441,7 @@ add_links <- function(path, main_language, # nolint: cyclocomp_linter
   }
 
   codes <- config[["babelquarto"]][["languagecodes"]]
-  current_lang <- purrr::keep(codes, ~.x[["name"]] == language_code)
+  current_lang <- purrr::keep(codes, ~ .x[["name"]] == language_code)
 
   placement <- config[["babelquarto"]][["languagelinks"]] %||%
     switch(type, website = "navbar", book = "sidebar")
@@ -428,18 +472,23 @@ add_links <- function(path, main_language, # nolint: cyclocomp_linter
   if (language_code == main_language) {
     new_path <- if (type == "book") {
       sub(
-        "\\...\\.html", ".html",
+        "\\...\\.html",
+        ".html",
         path_rel(path, output_folder, path_language, main_language)
       )
     } else {
       path_rel(path, output_folder, path_language, main_language)
     }
     href <- sprintf("%s/%s", site_url, new_path) # nolint: nonportable_path_linter
-    no_translated_version <- !fs::file_exists(file.path(output_folder, new_path)) # nolint: line_length_linter
+    no_translated_version <- !fs::file_exists(file.path(
+      output_folder,
+      new_path
+    )) # nolint: line_length_linter
     if (no_translated_version) return()
   } else {
     base_path <- sub(
-      "\\...\\.html", ".html",
+      "\\...\\.html",
+      ".html",
       path_rel(path, output_folder, path_language, main_language)
     )
     new_path <- if (type == "book") {
@@ -459,7 +508,10 @@ add_links <- function(path, main_language, # nolint: cyclocomp_linter
 
   if (!languages_links_div_exists) {
     if (placement == "navbar") {
-      navbar <- xml2::xml_find_first(html, "//ul[contains(@class, 'navbar-nav')]") # nolint: line_length_linter
+      navbar <- xml2::xml_find_first(
+        html,
+        "//ul[contains(@class, 'navbar-nav')]"
+      ) # nolint: line_length_linter
 
       navbar_li <- xml2::xml_add_child(
         navbar,
@@ -550,14 +602,20 @@ add_links <- function(path, main_language, # nolint: cyclocomp_linter
   xml2::write_html(html, document_path)
 }
 
-add_cross_links <- function(path,
-                            path_language, main_language,
-                            config, site_url, output_folder) {
+add_cross_links <- function(
+  path,
+  path_language,
+  main_language,
+  config,
+  site_url,
+  output_folder
+) {
   main_language_href <- if (path_language == main_language) {
     sprintf("%s/%s", site_url, fs::path_rel(path, start = output_folder)) # nolint: nonportable_path_linter
   } else {
     sub(
-      sprintf("%s\\.html", path_language), "html", # nolint: nonportable_path_linter
+      sprintf("%s\\.html", path_language),
+      "html", # nolint: nonportable_path_linter
       sprintf(
         "%s/%s", # nolint: nonportable_path_linter
         site_url,
@@ -572,8 +630,16 @@ add_cross_links <- function(path,
   )
 
   create_other_language_link <- function(lang, main_language_href, site_url) {
-    other_language_href <- sub(site_url, paste0(site_url, "/", lang), main_language_href) # nolint: nonportable_path_linter, line_length_linter
-    other_language_href <- sub(".html", paste0(".", lang, ".html"), other_language_href) # nolint: line_length_linter
+    other_language_href <- sub(
+      site_url,
+      paste0(site_url, "/", lang),
+      main_language_href
+    ) # nolint: nonportable_path_linter, line_length_linter
+    other_language_href <- sub(
+      ".html",
+      paste0(".", lang, ".html"),
+      other_language_href
+    ) # nolint: line_length_linter
     sprintf(
       '<link rel="alternate" hreflang="%s" href="%s" />',
       lang,
@@ -622,6 +688,5 @@ find_language_name <- function(language_code, config) {
     return(toupper(language_code))
   }
 
-  language_texts[language_names == language_code][1]
-
+  language_texts[language_names == language_code][1L]
 }
