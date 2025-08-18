@@ -118,25 +118,29 @@ render <- function(
   )
 
   ## sitemap fixing ---
-  locs <- purrr::map(
-    language_codes,
-    \(x) {
-      sitemap_path <- file.path(path, output_dir, x, "sitemap.xml")
-      lines <- brio::read_lines(sitemap_path)
-      fs::file_delete(sitemap_path)
-      lines[3:(length(lines) - 1)]
-    }
-  ) |>
-    unlist()
 
   sitemap_path <- file.path(
     path,
     output_dir,
     "sitemap.xml"
   )
-  current_sitemap <- brio::read_lines(sitemap_path)
-  current_sitemap <- append(current_sitemap, locs, after = 2)
-  brio::write_lines(current_sitemap, sitemap_path)
+
+  if (fs::file_exists(sitemap_path)) {
+    locs <- purrr::map(
+      language_codes,
+      \(x) {
+        sitemap_path <- file.path(path, output_dir, x, "sitemap.xml")
+        lines <- brio::read_lines(sitemap_path)
+        fs::file_delete(sitemap_path)
+        lines[3:(length(lines) - 1)]
+      }
+    ) |>
+      unlist()
+    current_sitemap <- brio::read_lines(sitemap_path)
+    current_sitemap <- append(current_sitemap, locs, after = 2)
+    brio::write_lines(current_sitemap, sitemap_path)
+  }
+
   # Add the language switching link to the sidebar ----
   ## For the main language ----
 
