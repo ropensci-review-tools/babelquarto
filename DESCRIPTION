@@ -1,6 +1,6 @@
 Package: babelquarto
 Title: Renders a Multilingual Quarto Book
-Version: 0.0.0.9000
+Version: 0.0.1
 Authors@R: c(
     person("Maëlle", "Salmon", , "msmaellesalmon@gmail.com", role = c("cre", "aut"),
            comment = c(ORCID = "0000-0002-2815-0399")),
