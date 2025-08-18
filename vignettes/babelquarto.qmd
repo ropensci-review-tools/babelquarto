@@ -134,6 +134,8 @@ babelquarto::render_website(file.path(parent_dir, project_dir))
 
 We end up with a multilingual website. [Example](https://maelle.github.io/babelsite), [source](https://github.com/maelle/babelsite)
 
+Note that the `_quarto.yml` file created in this process has an example entry set for `site-url:`. Depending on how your multilingual project is being deployed, you may need to either remove or update this entry or alternatively, set the url during rendering by using the `site_url` argument in the render functions (e.g., `babelquarto::render_website(site_url = "https://your.blog.net/your-multilingual-book/")`).
+
 ## Previewing your multilingual project
 
 Once you have rendered your project, you will have a `_site` or `_book` folder in your project.
@@ -153,6 +155,8 @@ servr::httw("_book")
 ```
 
 This will show an URL that you can open in your IDE or browser to see your project.
+
+If the publishing source for your multilingual project is a 'docs' folder in your repository, you can preview the output with `servr::httw("docs")`.
 
 ## Next steps
 
