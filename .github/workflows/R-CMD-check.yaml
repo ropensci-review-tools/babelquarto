@@ -43,8 +43,13 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::rcmdcheck
+          extra-packages: |
+            any::rcmdcheck
+            any::devtools
           needs: check
+
+      - run: devtools::install(build_vignettes = FALSE)
+        shell: Rscript {0}
 
       - uses: r-lib/actions/check-r-package@v2
         with:
