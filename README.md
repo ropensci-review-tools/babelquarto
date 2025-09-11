@@ -5,6 +5,7 @@
 
 [![R-CMD-check](https://github.com/ropensci-review-tools/quartobabel/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ropensci-review-tools/quartobabel/actions/workflows/R-CMD-check.yaml)
 [![Codecov test coverage](https://codecov.io/gh/ropensci-review-tools/babelquarto/graph/badge.svg)](https://app.codecov.io/gh/ropensci-review-tools/babelquarto)
+[![Status at rOpenSci Software Peer Review](https://badges.ropensci.org/720_status.svg)](https://github.com/ropensci/software-review/issues/720)
 <!-- badges: end -->
 
 The goal of {babelquarto} is to render a Quarto multilingual project, book
