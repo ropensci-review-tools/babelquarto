@@ -3,7 +3,7 @@ title: "Custom templates"
 description: >
   How to have multilingual parts in your custom templates
 vignette: >
-  %\VignetteIndexEntry{Convert an existing project}
+  %\VignetteIndexEntry{Custom templates}
   %\VignetteEngine{quarto::html}
   %\VignetteEncoding{UTF-8}
 ---
