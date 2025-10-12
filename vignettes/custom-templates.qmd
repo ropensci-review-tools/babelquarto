@@ -41,5 +41,4 @@ $endif$
 $if(lang-fr)$
 <meta name="publisher" content="Publisher for the French part">
 $endif$
-</div>
 ```
