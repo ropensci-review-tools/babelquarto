@@ -45,7 +45,7 @@ In addition to the `babelquarto` key, you will see language specific keys for `t
 
 ### Customizing the language menu labels
 
-If you want the choice to be between, say "English" and "Español" rather than "Version in EN" and "Version in ES", add these fields under the `babelquarto/languagecodes` key, in `_quarto.yml`:
+If you want the choice to be between, say "English" and "Español" rather than "Version in en" and "Version in es", add these fields under the `babelquarto/languagecodes` key, in `_quarto.yml`:
 
 ```{.yaml filename='_quarto.yml'}
 babelquarto:
