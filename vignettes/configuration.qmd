@@ -41,11 +41,11 @@ By default, {babelquarto} will have the following options under the `babelquarto
 | `mainlanguage` | The main language of the project. |
 | `languages` | An array of the additional languages (not including the main language). |
 
-In addition to the `babelquarto` key, you will see language specific keys for `title`, `description` and `author`. These keys allow you to have a specific title, description or author in for each additional language.
+In addition to the `babelquarto` key, you will see language specific keys for `title`, `description` and `author`. These keys allow you to have a specific title, description or author for each additional language.
 
 ### Customizing the language menu labels
 
-If you want the choice to be between, say "English" and "Español" rather than "Version in EN" and "Version in ES", add these fields under the `babelquarto/languagecodes` key, in `_quarto.yml`:
+If you want the choice to be between, say "English" and "Español" rather than "Version in en" and "Version in es", add these fields under the `babelquarto/languagecodes` key, in `_quarto.yml`:
 
 ```{.yaml filename='_quarto.yml'}
 babelquarto:
