@@ -1,4 +1,5 @@
 test_that("register_main_language() works", {
+  withr::local_options(babelquarto.quiet = FALSE)
   withr::local_envvar(QUARTOBABELDATE = "01/01/2023") # nolint: nonportable_path_linter
   withr::local_envvar(QUARTOBABELAUTHOR = "Firstname Lastname")
 
@@ -20,6 +21,7 @@ test_that("register_main_language() works", {
 })
 
 test_that("register_further_languages() works", {
+  withr::local_options(babelquarto.quiet = FALSE)
   withr::local_envvar(QUARTOBABELDATE = "01/01/2023") # nolint: nonportable_path_linter
   withr::local_envvar(QUARTOBABELAUTHOR = "Firstname Lastname")
   parent_dir <- withr::local_tempdir()
@@ -36,9 +38,9 @@ test_that("register_further_languages() works", {
     error = TRUE
   )
 
-  register_main_language("en", book_path)
-  register_further_languages(c("es", "fr"), book_path)
-  register_further_languages(c("it"), book_path)
+  expect_snapshot(register_main_language("en", book_path))
+  expect_snapshot(register_further_languages(c("es", "fr"), book_path))
+  expect_snapshot(register_further_languages(c("it"), book_path))
   file.copy(
     file.path(book_path, "_quarto.yml"),
     file.path(book_path, "_quarto2.yml")

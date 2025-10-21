@@ -36,7 +36,7 @@ register_main_language <- function(main_language = "en", project_path = ".") {
   config_lines <- brio::read_lines(config_path)
 
   # avoid more than one empty lines at the end
-  if (!nzchar(tail(config_lines, n = 1))) {
+  if (!nzchar(utils::tail(config_lines, n = 1))) {
     reps <- rle(config_lines)[["lengths"]]
     how_many_empty <- reps[length(reps)]
     if (how_many_empty > 1) {
@@ -69,6 +69,12 @@ register_main_language <- function(main_language = "en", project_path = ".") {
     config_lines <- c(config_lines, mainlang_config)
   }
   brio::write_lines(config_lines, path = config_path)
+
+  cli_alert_success(
+    "Added configuration for {main_language} to {.path config_path}."
+  )
+
+  invisible(config_path)
 }
 
 #' Register further languages in Quarto config
@@ -110,7 +116,7 @@ register_further_languages <- function(further_languages, project_path = ".") {
     languages_config_present &&
       all(further_languages %in% config[["babelquarto"]][["languages"]])
   ) {
-    cli::cli_alert_info("All languages already registered.")
+    cli_alert_info("All languages already registered.")
     return(invisible())
   }
 
@@ -152,4 +158,10 @@ register_further_languages <- function(further_languages, project_path = ".") {
   )
 
   brio::write_lines(config_lines, path = config_path)
+
+  cli_alert_success(
+    "Added configuration for use{toString(further_languages)} to {.path config_path}."
+  )
+
+  invisible(config_path)
 }

@@ -4,6 +4,7 @@
 
 - In interactive sessions, the `render_` functions now override `site-url` to be `""` so that previewing with `servr::httw()` works.
 - For easier styling, the language button now has the class `"babelquarto-languages-button"`.
+- Add verbosity to `register_` functions, that one can turn off through an option.
 
 ## Documentation improvements
 

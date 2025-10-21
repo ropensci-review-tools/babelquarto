@@ -26,6 +26,27 @@
 ---
 
     Code
+      register_main_language("en", book_path)
+    Message
+      v Added configuration for en to 'config_path'.
+
+---
+
+    Code
+      register_further_languages(c("es", "fr"), book_path)
+    Message
+      v Added configuration for usees, fr to 'config_path'.
+
+---
+
+    Code
+      register_further_languages(c("it"), book_path)
+    Message
+      v Added configuration for useit to 'config_path'.
+
+---
+
+    Code
       register_further_languages(c("es", "fr"), book_path)
     Message
       i All languages already registered.

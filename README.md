@@ -31,6 +31,12 @@ Or from [GitHub](https://github.com/) with:
 pak::pak("ropensci-review-tools/babelquarto")
 ```
 
+If you want to avoid reading messages from babelquarto such as "Edited `_quarto.yml`", 
+set the `"babelquarto.quiet"` option to `TRUE`.
+```r
+options("babelquarto.quiet" = TRUE)
+```
+
 ## Getting Started
 
 The {babelquarto} package allows you to create and render a multilingual Quarto project, book or website.
