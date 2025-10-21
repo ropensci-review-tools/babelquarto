@@ -87,6 +87,14 @@ babelquarto:
 
 ```
 
+For getting no icon you'd use:
+
+```{.yaml filename='_quarto.yml'}
+babelquarto:
+  icon: ""
+
+```
+
 If you want to style the button with CSS, note it has the id `"language-buttons"` and the class `"babelquarto-languages-button"`.
 
 ## Translate parts in multilingual books
