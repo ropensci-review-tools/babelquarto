@@ -2,7 +2,7 @@
 #'
 #' @param main_language Main language code (character, like `"en"`)
 #' @inheritParams render_book
-#' @return Nothing
+#' @return Nothing, called for its side-effect of editing the Quarto configuration file.
 #' @examplesIf interactive()
 #' parent_dir <- withr::local_tempdir()
 #' quarto_multilingual_book(
@@ -82,7 +82,7 @@ register_main_language <- function(main_language = "en", project_path = ".") {
 #' @param further_languages Languages to be registered (character vector)
 #' @inheritParams render_book
 #'
-#' @return Nothing
+#' @return Nothing, called for its side-effect of editing the Quarto configuration file.
 #' @examplesIf interactive()
 #' parent_dir <- withr::local_tempdir()
 #'   quarto_multilingual_book(

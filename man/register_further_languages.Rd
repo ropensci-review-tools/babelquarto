@@ -12,7 +12,7 @@ register_further_languages(further_languages, project_path = ".")
 \item{project_path}{Path where the book/website source is located}
 }
 \value{
-Nothing
+Nothing, called for its side-effect of editing the Quarto configuration file.
 }
 \description{
 Register further languages in Quarto config

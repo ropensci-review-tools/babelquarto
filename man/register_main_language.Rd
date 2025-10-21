@@ -12,7 +12,7 @@ register_main_language(main_language = "en", project_path = ".")
 \item{project_path}{Path where the book/website source is located}
 }
 \value{
-Nothing
+Nothing, called for its side-effect of editing the Quarto configuration file.
 }
 \description{
 Register main language in Quarto config
