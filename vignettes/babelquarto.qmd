@@ -140,6 +140,7 @@ babelquarto::render_website(file.path(parent_dir, project_dir))
 We end up with a multilingual website. [Example](https://maelle.github.io/babelsite), [source](https://github.com/maelle/babelsite)
 
 Note that the `_quarto.yml` file created in this process has an example entry set for `site-url:`. Depending on how your multilingual project is being deployed, you may need to either remove or update this entry or alternatively, set the url during rendering by using the `site_url` argument in the render functions (e.g., `babelquarto::render_website(site_url = "https://your.blog.net/your-multilingual-book/")`).
+You can set the `site-url` field to your project's URL directly by using the `site_url` parameter of `quarto_multilingual_website()`/`quarto_multilingual_book()`.
 
 ## Previewing your multilingual project {#preview}
 
