@@ -70,12 +70,15 @@ These files aren't automatically translated and are just copies of the original 
 You will have to provide the translations yourself, or look at {[babeldown](https://docs.ropensci.org/babeldown/)} for automatic translation.
 If you look at the `index.qmd` file, you'll see that the French file is called `index.fr.qmd` and the Spanish file is called `index.es.qmd`.
 
-When you're ready to render your book, use `render_book()`:
+When you're ready to render your book, use `render_book()`.
+From within a directory, you don't need to specify the `project_path` argument as it defaults to `.`.
 
 ```{r}
 #| label: render_book
 #| eval: false
-babelquarto::render_book(file.path(parent_dir, project_dir))
+withr::with_dir(file.path(parent_dir, project_dir), {
+  babelquarto::render_book()
+})
 ```
 
 We end up with three books, that cross-link to each other from the left sidebar.
