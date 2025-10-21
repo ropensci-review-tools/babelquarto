@@ -84,6 +84,8 @@ withr::with_dir(file.path(parent_dir, project_dir), {
 We end up with three books, that cross-link to each other from the left sidebar.
 [Example](https://devguide.ropensci.org/).
 
+You can preview the book with `servr::httw("_book")`. See the [Previewing your multilingual project section](#preview) for further details.
+
 ## Starting a multilingual website
 
 To start a multilingual website, use `quarto_multilingual_website()` with the `parent_dir` argument to specify where you want to create the project and the `project_dir` argument to specify the name of the project.
@@ -139,7 +141,7 @@ We end up with a multilingual website. [Example](https://maelle.github.io/babels
 
 Note that the `_quarto.yml` file created in this process has an example entry set for `site-url:`. Depending on how your multilingual project is being deployed, you may need to either remove or update this entry or alternatively, set the url during rendering by using the `site_url` argument in the render functions (e.g., `babelquarto::render_website(site_url = "https://your.blog.net/your-multilingual-book/")`).
 
-## Previewing your multilingual project
+## Previewing your multilingual project {#preview}
 
 Once you have rendered your project, you will have a `_site` or `_book` folder in your project.
 In Quarto you would use `quarto preview` to be able to get a look at what you project looks like.
