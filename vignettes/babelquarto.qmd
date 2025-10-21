@@ -164,6 +164,12 @@ This will show an URL that you can open in your IDE or browser to see your proje
 
 If the publishing source for your multilingual project is a 'docs' folder in your repository, you can preview the output with `servr::httw("docs")`.
 
+## Publishing your project
+
+Your Quarto multilingual website or book is a static website.
+To publish it, you need to deploy the output folder, i.e. `_site` or `_book`.
+That content can be served on any service, for instance GitHub Pages or Netlify.
+
 ## Next steps
 
 Take a deeper dive into the configuration options available in {babelquarto} and have a look at `vignette("configuration")`.
