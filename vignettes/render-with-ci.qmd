@@ -33,6 +33,12 @@ To render your project with CI, you need to follow these general steps:
 * Render you project using {babelquarto}'s `render_book()` or `render_website()` functions
 * Publish the rendered HTML (`_site` or `_book` folder) where you deploy your project (a GitHub pages branch, Netlify, etc.)
 
+## Publishing your project
+
+Your Quarto multilingual website or book is a static website.
+To publish it, you need to deploy the output folder, i.e. `_site` or `_book`.
+That content can be served on any service, for instance GitHub Pages or Netlify.
+
 ## Examples
 
 Here are two examples of how you could render a multilingual book with CI using GitHub Actions:
