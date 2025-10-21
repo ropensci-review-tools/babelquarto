@@ -622,7 +622,7 @@ add_links <- function(
       parent,
       "button",
       "",
-      class = "btn btn-primary dropdown-toggle",
+      class = "btn btn-primary dropdown-toggle babelquarto-languages-button",
       type = "button",
       `data-bs-toggle` = "dropdown",
       `aria-expanded` = "false",

@@ -85,6 +85,8 @@ babelquarto:
 
 ```
 
+If you want to style the button with CSS, note it has the id `"language-buttons"` and the class `"babelquarto-languages-button"`.
+
 ## Translate parts in multilingual books
 
 In multilingual books, if you use parts to structure your book, you can translate the part titles like so:
