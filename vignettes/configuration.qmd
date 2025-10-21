@@ -60,7 +60,7 @@ Using `register_main_language()` and `register_further_languages()` will create 
 
 ## Configure the base URL
 
-If you need to configure a base URL, you can use the [usual Quarto field](https://quarto.org/docs/websites/website-tools.html), or use the `site_url` argument of `render_book()`.
+If you need to configure a base URL, you can use the [usual Quarto field](https://quarto.org/docs/websites/website-tools.html), or use the `site_url` argument of `render_book()` to temporarily override the `site-url` from the configuration file.
 
 ```{.yaml filename='_quarto.yml'}
 book:
@@ -71,6 +71,8 @@ book:
 website:
   site-url: https://example.com
 ```
+
+In interactive sessions, the `render_book()` and `render_website()` functions will automatically set the `site-url` to `""` to allow previewing with `servr::httw()` on a localhost.
 
 If you render your multilingual book or website in a CI context, you need will need to set the `BABELQUARTO_CI_URL` environment variable. See `vignette("render-with-ci")` for more information.
 

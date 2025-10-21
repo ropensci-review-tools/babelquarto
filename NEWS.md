@@ -12,6 +12,7 @@
 - mention `site-url` param of `quarto_multilingual_` functions.
 - new section in the Get started vignette, "publishing your project".
 - clarify `languagecodes` in configuration vignette.
+- clarify `site-url` in configuration vignette.
 
 ## Bug fixes
 
