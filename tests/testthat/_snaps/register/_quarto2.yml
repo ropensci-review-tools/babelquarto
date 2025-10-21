@@ -23,6 +23,8 @@ format:
 babelquarto:
   languagelinks: sidebar
   languagecodes:
+  - name: it
+    text: "Version in it"
   - name: es
     text: "Version in es"
   - name: fr
@@ -30,7 +32,10 @@ babelquarto:
   - name: en
     text: "Version in en"
   mainlanguage: 'en'
-  languages: ['es', 'fr']
+  languages: ['es', 'fr', 'it']
+title-it: title in it
+description-it: description in it
+author-it: author in it
 title-es: title in es
 title-fr: title in fr
 description-es: description in es
