@@ -29,7 +29,7 @@ previewing the whole project with \code{servr::httw()}.}
 \item{profile}{Quarto profile(s) to use.}
 
 \item{preview}{Logical indicating whether to preview the project using
-\code{servr::httw()}.`}
+\code{servr::httw()}.}
 }
 \value{
 Nothing, called for its side-effect of rendering a project.

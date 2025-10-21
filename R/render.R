@@ -26,7 +26,7 @@
 #' previewing the whole project with `servr::httw()`.
 #' @param profile Quarto profile(s) to use.
 #' @param preview Logical indicating whether to preview the project using
-#' `servr::httw()`.`
+#' `servr::httw()`.
 #'
 #' @return Nothing, called for its side-effect of rendering a project.
 #' @export
