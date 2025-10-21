@@ -11,6 +11,7 @@
 - strengthen the case for the package in the README.
 - mention `site-url` param of `quarto_multilingual_` functions.
 - new section in the Get started vignette, "publishing your project".
+- clarify `languagecodes` in configuration vignette.
 
 ## Bug fixes
 
