@@ -34,6 +34,20 @@ register_main_language <- function(main_language = "en", project_path = ".") {
   }
 
   config_lines <- brio::read_lines(config_path)
+
+  # avoid more than one empty lines at the end
+  if (!nzchar(tail(config_lines, n = 1))) {
+    reps <- rle(config_lines)[["lengths"]]
+    how_many_empty <- reps[length(reps)]
+    if (how_many_empty > 1) {
+      config_lines <- config_lines[
+        1:(length(config_lines) - how_many_empty + 1)
+      ]
+    }
+  } else {
+    config_lines <- c(config_lines, "")
+  }
+
   mainlang_config <- c(
     "  languagecodes:",
     sprintf("  - name: %s", main_language),
@@ -52,7 +66,7 @@ register_main_language <- function(main_language = "en", project_path = ".") {
     config_lines <- append(config_lines, mainlang_config, after = where_langs)
   } else {
     mainlang_config <- c("babelquarto:", mainlang_config)
-    config_lines <- c(config_lines, "", mainlang_config)
+    config_lines <- c(config_lines, mainlang_config)
   }
   brio::write_lines(config_lines, path = config_path)
 }

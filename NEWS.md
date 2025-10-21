@@ -20,6 +20,7 @@
 
 - make it possible to `register_further_languages()` for more languages in a second step.
 - The `render_` functions now correctly use `site_url` when provided.
+- avoid unnecessary empty lines in Quarto config when using `register_main_language()`.
 
 # babelquarto 0.0.1
 
