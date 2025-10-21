@@ -12,7 +12,9 @@ Authors@R: c(
     person("rOpenSci", role = "fnd",
            comment = c(ROR = "019jywm96")),
     person("Ella", "Kaye", role = "rev",
-           comment = c("Ella reviewed the package (v. 0.0.1) for rOpenSci, see <https://github.com/ropensci/software-review/issues/720>.", ORCID = "0000-0002-7300-3718"))
+           comment = c("Ella reviewed the package (v. 0.0.1) for rOpenSci, see <https://github.com/ropensci/software-review/issues/720>.", ORCID = "0000-0002-7300-3718")),
+    person("João", "Granja-Correia", role = "rev",
+           comment = c("João reviewed the package (v. 0.0.1) for rOpenSci, see <https://github.com/ropensci/software-review/issues/720>.", ORCID = "0009-0003-8982-278X"))
   )
 Description: Automate rendering and cross-linking of Quarto books following a 
     prescribed structure.
