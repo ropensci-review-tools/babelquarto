@@ -122,7 +122,7 @@ For each additional language, you can use a `part-xx` key to translate the part 
 ## Using profiles for advanced configuration
 
 For more advanced customization, you can use [Quarto project profiles](https://quarto.org/docs/projects/profiles.html).
-In {babelquarto} we will automatically load a language profile if it exists in the project directory and follows our naming convention.
+In {babelquarto} we will automatically load a language profile if it exists in the project directory and follows our naming convention: `_quarto-<languagecode>.yml`.
 Profile configuration are **merged** with the main `_quarto.yml` file.
 
 For example, let's say you have a project with English as the main language and French as an additional language.
@@ -143,7 +143,7 @@ website:
         href: "about.qmd"
 ```
 <!-- ```{.yaml filename="_quarto-fr.yml"} -->
-```{.yaml filename='_quarto.yml'}
+```{.yaml filename='_quarto-fr.yml'}
 website:
   navbar:
     title: "Mon site web"
