@@ -84,7 +84,9 @@ withr::with_dir(file.path(parent_dir, project_dir), {
 We end up with three books, that cross-link to each other from the left sidebar.
 [Example](https://devguide.ropensci.org/).
 
-You can preview the book with `servr::httw("_book")`. See the [Previewing your multilingual project section](#preview) for further details.
+By default, in interactive sessions a preview of the project will be opened, 
+using the servr package. 
+See the [Previewing your multilingual project section](#preview) for further details.
 
 ## Starting a multilingual website
 
