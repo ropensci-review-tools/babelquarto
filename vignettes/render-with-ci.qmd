@@ -39,3 +39,4 @@ Here are two examples of how you could render a multilingual book with CI using 
 
 * A demo [Babelbook](https://nenuial.github.io/babelbook/) with its [workflow file](https://github.com/Nenuial/babelbook/blob/main/.github/workflows/publish.yml)
 * The [rOpenSci Packages: Development, Maintenance, and Peer Review](https://devguide.ropensci.org/index.html) book with its [workflow file](https://github.com/ropensci/dev_guide/blob/main/.github/workflows/scheduled-manual-main.yml)
+* The [training materials for rOpenSci mentors](https://ropensci-training.github.io/ropensci-mentors/), a website with its [workflow file](https://github.com/ropensci-training/ropensci-mentors/blob/main/.github/workflows/publish.yml).
