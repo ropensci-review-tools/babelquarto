@@ -59,10 +59,5 @@ and \code{\link[=register_further_languages]{register_further_languages()}}:
 directory <- withr::local_tempdir()
 quarto_multilingual_book(parent_dir = directory, project_dir = "blop")
 render_book(file.path(directory, "blop"))
-\dontrun{
-if (require("servr") && rlang::is_interactive()) {
-  servr::httw(file.path(directory, "blop", "_book"))
-}
-}
 
 }
