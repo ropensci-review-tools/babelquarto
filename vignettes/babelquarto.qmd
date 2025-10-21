@@ -119,6 +119,8 @@ readLines(file.path(parent_dir, project_dir, "_quarto.yml")) |>
 cat("```\n")
 ```
 
+Note that the fields like `title-es`, `description-es`, `author-es` are not indented so you could choose to cut and paste them below the default language's `title`, `description`, `author` to more easily remember to update them if needed.
+
 The file structure of the project looks like this:
 
 ```{r}
