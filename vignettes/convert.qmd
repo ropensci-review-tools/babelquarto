@@ -29,20 +29,21 @@ First you'll need to register the main language in the Quarto configuration:
 
 ```{r}
 project_path <- file.path(parent_dir, project_dir)
-babelquarto::register_main_language(
-  main_language = "en",
-  project_path = project_path
-)
+withr::with_dir(project_path, {
+  babelquarto::register_main_language(main_language = "en")
+})
 ```
+
 
 Then you can add further languages, say Spanish and French:
 
 ```{r}
-babelquarto::register_further_languages(
-  further_languages = c("es", "fr"),
-  project_path = project_path
-)
+withr::with_dir(project_path, {
+  babelquarto::register_further_languages(further_languages = c("es", "fr"))
+})
 ```
+
+The `project_path` of `register_main_language()` and `register_further_languages()` defaults to `.` so from within that project path, there's no need to specify it.
 
 We end up with a multilingual book in English and Spanish. If you look at the `_quarto.yml` file in the project directory, you'll see that the `main_language` key is `en` and the `languages` key contains `es` and `fr`.
 

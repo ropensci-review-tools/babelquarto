@@ -9,6 +9,7 @@
 ## Documentation improvements
 
 - clarify the default value of `project_path` in `render_book()`, in the "Get started" vignette.
+- clarify the default value of `project_path` in `register_` functions, in the "Converting an existing project" vignette.
 - strengthen the case for the package in the README.
 - mention `site-url` param of `quarto_multilingual_` functions.
 - new section in the Get started vignette, "publishing your project".
