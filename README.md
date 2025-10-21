@@ -10,6 +10,7 @@
 
 The goal of {babelquarto} is to render a Quarto multilingual project, book
 or website.
+When using babelquarto, through a single function call you can render multilingual content (`index.qmd`, `index.es.qmd`, `index.pt.qmd`, etc.) to a fully functional Quarto book or website featuring a button to switch languages.
 
 Note that babelquarto does not *translate* the content! Translation
 tooling lives in {[babeldown](https://docs.ropensci.org/babeldown)}.
