@@ -5,16 +5,31 @@
 \alias{render_website}
 \title{Render a Quarto multilingual project}
 \usage{
-render_book(project_path = ".", site_url = NULL, profile = NULL)
+render_book(
+  project_path = ".",
+  site_url = NULL,
+  profile = NULL,
+  preview = rlang::is_interactive()
+)
 
-render_website(project_path = ".", site_url = NULL, profile = NULL)
+render_website(
+  project_path = ".",
+  site_url = NULL,
+  profile = NULL,
+  preview = rlang::is_interactive()
+)
 }
 \arguments{
 \item{project_path}{Path where the book/website source is located}
 
-\item{site_url}{Base URL of the book/website.}
+\item{site_url}{Override the base URL of the book/website.
+If \code{NULL}, in interactive sessions it will be set to "" to allow
+previewing the whole project with \code{servr::httw()}.}
 
 \item{profile}{Quarto profile(s) to use.}
+
+\item{preview}{Logical indicating whether to preview the project using
+\code{servr::httw()}.`}
 }
 \value{
 Nothing, called for its side-effect of rendering a project.

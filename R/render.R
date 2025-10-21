@@ -21,8 +21,12 @@
 #' @importFrom rlang `%||%`
 #'
 #' @param project_path Path where the book/website source is located
-#' @param site_url Base URL of the book/website.
+#' @param site_url Override the base URL of the book/website.
+#' If `NULL`, in interactive sessions it will be set to "" to allow
+#' previewing the whole project with `servr::httw()`.
 #' @param profile Quarto profile(s) to use.
+#' @param preview Logical indicating whether to preview the project using
+#' `servr::httw()`.`
 #'
 #' @return Nothing, called for its side-effect of rendering a project.
 #' @export
@@ -38,8 +42,19 @@
 #' }
 #'
 #' @rdname render
-render_book <- function(project_path = ".", site_url = NULL, profile = NULL) {
-  render(project_path, site_url = site_url, type = "book", profile = profile)
+render_book <- function(
+  project_path = ".",
+  site_url = NULL,
+  profile = NULL,
+  preview = rlang::is_interactive()
+) {
+  render(
+    project_path,
+    site_url = site_url,
+    type = "book",
+    profile = profile,
+    preview = preview
+  )
 }
 
 #' @export
@@ -47,22 +62,34 @@ render_book <- function(project_path = ".", site_url = NULL, profile = NULL) {
 render_website <- function(
   project_path = ".",
   site_url = NULL,
-  profile = NULL
+  profile = NULL,
+  preview = rlang::is_interactive()
 ) {
-  render(project_path, site_url = site_url, type = "website", profile = profile)
+  render(
+    project_path,
+    site_url = site_url,
+    type = "website",
+    profile = profile,
+    preview = preview
+  )
 }
 
 render <- function(
   path = ".",
   site_url = NULL,
   type = c("book", "website"),
-  profile = NULL
+  profile = NULL,
+  preview
 ) {
   # configuration ----
   config <- file.path(path, "_quarto.yml")
   config_contents <- read_yaml(config)
 
-  site_url <- site_url(config_contents = config_contents, type = type)
+  if (is.null(site_url) && rlang::is_interactive()) {
+    site_url <- ""
+  }
+  site_url <- site_url %||%
+    site_url(config_contents = config_contents, type = type)
 
   output_dir <- config_contents[["project"]][["output-dir"]] %||%
     switch(
@@ -214,6 +241,12 @@ render <- function(
       output_folder = output_folder,
       path_language = other_lang
     )
+  }
+
+  if (preview) {
+    # we don't want it to be a hard dependency on CI!
+    rlang::check_installed("servr")
+    servr::httw(output_folder)
   }
 }
 
