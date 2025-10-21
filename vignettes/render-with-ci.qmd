@@ -18,6 +18,13 @@ When you render a project in a CI context, you can set the URL of the publishing
 as a preview for instance).
 You can do that with the `BABELQUARTO_CI_URL` environment variable.
 
+For instance, for GitHub Actions, the workflow would contain these lines:
+
+```yaml
+    env:
+      BABELQUARTO_CI_URL: <the-url>
+```
+
 ### Steps for rendering
 
 To render your project with CI, you need to follow these general steps:

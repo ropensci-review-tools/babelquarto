@@ -17,6 +17,7 @@
 - clarify `site-url` in configuration vignette.
 - document how to get no icon, in configuration vignette.
 - clarify profile naming convention, in configuration vignette.
+- clarify `BABELQUARTO_CI_URL`, in render-with-ci vignette.
 
 ## Bug fixes
 
