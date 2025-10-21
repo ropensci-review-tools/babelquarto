@@ -38,6 +38,7 @@ test_that("register_further_languages() works", {
 
   register_main_language("en", book_path)
   register_further_languages(c("es", "fr"), book_path)
+  register_further_languages(c("it"), book_path)
   file.copy(
     file.path(book_path, "_quarto.yml"),
     file.path(book_path, "_quarto2.yml")

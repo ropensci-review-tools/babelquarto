@@ -81,16 +81,7 @@ register_main_language <- function(main_language = "en", project_path = ".") {
 #'
 register_further_languages <- function(further_languages, project_path = ".") {
   config_path <- file.path(project_path, "_quarto.yml")
-
   config <- read_yaml(config_path)
-  languages_config_present <- !is.null(config[["babelquarto"]][["languages"]])
-  if (
-    languages_config_present &&
-      all(further_languages %in% config[["babelquarto"]][["languages"]])
-  ) {
-    cli::cli_alert_info("All languages already registered.")
-    return(invisible())
-  }
 
   if (is.null(config[["babelquarto"]][["mainlanguage"]])) {
     cli::cli_abort(
@@ -100,12 +91,19 @@ register_further_languages <- function(further_languages, project_path = ".") {
       )
     )
   }
+  languages_config_present <- !is.null(config[["babelquarto"]][["languages"]])
+  if (
+    languages_config_present &&
+      all(further_languages %in% config[["babelquarto"]][["languages"]])
+  ) {
+    cli::cli_alert_info("All languages already registered.")
+    return(invisible())
+  }
 
   config_lines <- brio::read_lines(config_path)
-  where_langs <- grep("languages\\:", config_lines, invert = TRUE, fixed = TRUE)
+  where_langs <- grep("languages:", config_lines, invert = TRUE, fixed = TRUE)
   config_lines <- config_lines[where_langs]
   which_main <- grep("mainlanguage\\:", trimws(config_lines)) # nolint: fixed_regex_linter
-
   languages <- sprintf(
     "'%s'",
     union(config[["babelquarto"]][["languages"]], further_languages)
