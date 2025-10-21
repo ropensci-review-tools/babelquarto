@@ -4,6 +4,8 @@
 
 - clarify the default value of `project_path` in `render_book()`, in the "Get started" vignette.
 - strengthen the case for the package in the README.
+- mention `site-url` param of `quarto_multilingual_` functions.
+- new section in the Get started vignette, "publishing your project".
 
 ## Bug fixes
 
