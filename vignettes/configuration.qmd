@@ -36,7 +36,7 @@ By default, {babelquarto} will have the following options under the `babelquarto
 
 |  |  |
 |------------------------------------|------------------------------------|
-| `languagelinks` | Where the menu with the links to other languages will be placed. Can be either `sidebar` or `navbar`. |
+| `languagelinks` | Where the menu with the links to other languages will be placed. Can be either `sidebar` (default for books) or `navbar` (default for websites). |
 | `languagecodes` | A list with each language defined. Each entry has a `name` with the language abbreviation (for example *en* or *es*. The `text` key changes the text used for the links to this language. |
 | `mainlanguage` | The main language of the project. |
 | `languages` | An array of the additional languages (not including the main language). |
