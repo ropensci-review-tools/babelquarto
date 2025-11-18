@@ -177,6 +177,11 @@ Your Quarto multilingual website or book is a static website.
 To publish it, you need to deploy the output folder, i.e. `_site` or `_book`.
 That content can be served on any service, for instance GitHub Pages or Netlify.
 
+You cannot rely on usual tooling by Quarto because that would only publish the main language.
+
+You need to publish the entire output folder, including the language folders.
+[Example workflow using GitHub Pages by committing the output folder to a gh-pages branch](https://github.com/ropensci/dev_guide/blob/6f9d066d0207e83588a4d9c8dabd93e015083e13/.github/workflows/dev.yml#L58).
+
 ## Next steps
 
 Take a deeper dive into the configuration options available in {babelquarto} and have a look at `vignette("configuration")`.
