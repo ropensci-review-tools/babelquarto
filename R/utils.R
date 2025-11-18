@@ -31,7 +31,7 @@ lang_code_chapter_list <- function(chapters_list, language_code) {
 trim_end <- function(config_lines) {
   # avoid more than one empty lines at the end
 
-  if (!nzchar(tail(config_lines, n = 1))) {
+  if (!nzchar(utils::tail(config_lines, n = 1))) {
     reps <- rle(config_lines)[["lengths"]]
 
     how_many_empty <- reps[length(reps)]
