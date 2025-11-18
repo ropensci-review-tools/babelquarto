@@ -95,7 +95,7 @@ babelquarto:
 
 ```
 
-If you want to style the button with CSS, note it has the id `"language-buttons"` and the class `"babelquarto-languages-button"`.
+If you want to style the button with CSS, note it has the id `"languages-button"` and the class `"babelquarto-languages-button"`.
 
 ## Translate parts in multilingual books
 
