@@ -27,3 +27,23 @@ lang_code_chapter_list <- function(chapters_list, language_code) {
     chapters_list
   )
 }
+
+trim_end <- function(config_lines) {
+  # avoid more than one empty lines at the end
+
+  if (!nzchar(tail(config_lines, n = 1))) {
+    reps <- rle(config_lines)[["lengths"]]
+
+    how_many_empty <- reps[length(reps)]
+
+    if (how_many_empty > 1) {
+      config_lines <- config_lines[
+        1:(length(config_lines) - how_many_empty + 1)
+      ]
+    }
+  } else {
+    config_lines <- c(config_lines, "")
+  }
+
+  return(config_lines)
+}

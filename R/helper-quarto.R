@@ -112,6 +112,7 @@ quarto_multilingual_project <- function(
   # Config edits ----
   config_path <- file.path(project_dir, "_quarto.yml")
   config_lines <- brio::read_lines(config_path)
+  config_lines <- trim_end(config_lines)
 
   where_project <- grep(sprintf("%s:", type), config_lines)
   config_lines <- append(
@@ -144,8 +145,7 @@ quarto_multilingual_project <- function(
 
   ## Add language link placement ----
   config_lines <- c(
-    config_lines,
-    "",
+    trim_end(config_lines),
     "babelquarto:",
     sprintf("  languagelinks: %s", placement)
   )
@@ -169,7 +169,6 @@ quarto_multilingual_project <- function(
     )
     config_lines <- append(config_lines, book_navbar, after = where_book)
   }
-
   brio::write_lines(config_lines, path = config_path)
 
   ## "Register" languages ----

@@ -35,14 +35,14 @@
     Code
       register_further_languages(c("es", "fr"), book_path)
     Message
-      v Added configuration for usees, fr to 'config_path'.
+      v Added configuration for es, fr to 'config_path'.
 
 ---
 
     Code
       register_further_languages(c("it"), book_path)
     Message
-      v Added configuration for useit to 'config_path'.
+      v Added configuration for it to 'config_path'.
 
 ---
 
