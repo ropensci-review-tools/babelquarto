@@ -160,7 +160,7 @@ register_further_languages <- function(further_languages, project_path = ".") {
   brio::write_lines(config_lines, path = config_path)
 
   cli_alert_success(
-    "Added configuration for use{toString(further_languages)} to {.path config_path}."
+    "Added configuration for {toString(further_languages)} to {.path config_path}."
   )
 
   invisible(config_path)
