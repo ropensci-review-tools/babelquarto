@@ -1,4 +1,4 @@
-# babelquarto (development version)
+# babelquarto 0.1.0
 
 ## Features
 
