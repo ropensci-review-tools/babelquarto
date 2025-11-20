@@ -6,8 +6,9 @@
 ^\.lintr$
 .ropensci-staff
 ^codemeta\.json$
-^man/filter_freeze_directory\.Rd$
-^man/read_yaml\.Rd$
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+^man/filter_freeze_directory\.Rd$
+^man/read_yaml\.Rd$
+^CITATION\.cff$

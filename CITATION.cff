@@ -1,0 +1,263 @@
+# --------------------------------------------
+# CITATION file created with {cffr} R package
+# See also: https://docs.ropensci.org/cffr/
+# --------------------------------------------
+ 
+cff-version: 1.2.0
+message: 'To cite package "babelquarto" in publications use:'
+type: software
+license: MIT
+title: 'babelquarto: Renders a Multilingual Quarto Book'
+version: 0.1.0.9000
+abstract: Automate rendering and cross-linking of Quarto books following a prescribed
+  structure.
+authors:
+- family-names: Salmon
+  given-names: Maëlle
+  email: msmaellesalmon@gmail.com
+  orcid: https://orcid.org/0000-0002-2815-0399
+- family-names: Burkhard
+  given-names: Pascal
+  email: pascal.burkhard@gmail.com
+  orcid: https://orcid.org/0009-0001-5504-5084
+repository-code: https://github.com/ropensci-review-tools/babelquarto
+url: https://docs.ropensci.org/babelquarto/
+contact:
+- family-names: Salmon
+  given-names: Maëlle
+  email: msmaellesalmon@gmail.com
+  orcid: https://orcid.org/0000-0002-2815-0399
+references:
+- type: software
+  title: brio
+  abstract: 'brio: Basic R Input Output'
+  notes: Imports
+  url: https://brio.r-lib.org
+  repository: https://CRAN.R-project.org/package=brio
+  authors:
+  - family-names: Hester
+    given-names: Jim
+    orcid: https://orcid.org/0000-0002-2739-7082
+  - family-names: Csárdi
+    given-names: Gábor
+    email: csardi.gabor@gmail.com
+  year: '2025'
+  doi: 10.32614/CRAN.package.brio
+- type: software
+  title: cli
+  abstract: 'cli: Helpers for Developing Command Line Interfaces'
+  notes: Imports
+  url: https://cli.r-lib.org
+  repository: https://CRAN.R-project.org/package=cli
+  authors:
+  - family-names: Csárdi
+    given-names: Gábor
+    email: gabor@posit.co
+  year: '2025'
+  doi: 10.32614/CRAN.package.cli
+- type: software
+  title: fs
+  abstract: 'fs: Cross-Platform File System Operations Based on ''libuv'''
+  notes: Imports
+  url: https://fs.r-lib.org
+  repository: https://CRAN.R-project.org/package=fs
+  authors:
+  - family-names: Hester
+    given-names: Jim
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@posit.co
+  - family-names: Csárdi
+    given-names: Gábor
+    email: csardi.gabor@gmail.com
+  year: '2025'
+  doi: 10.32614/CRAN.package.fs
+- type: software
+  title: purrr
+  abstract: 'purrr: Functional Programming Tools'
+  notes: Imports
+  url: https://purrr.tidyverse.org/
+  repository: https://CRAN.R-project.org/package=purrr
+  authors:
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@posit.co
+    orcid: https://orcid.org/0000-0003-4757-117X
+  - family-names: Henry
+    given-names: Lionel
+    email: lionel@posit.co
+  year: '2025'
+  doi: 10.32614/CRAN.package.purrr
+- type: software
+  title: quarto
+  abstract: 'quarto: R Interface to ''Quarto'' Markdown Publishing System'
+  notes: Imports
+  url: https://quarto-dev.github.io/quarto-r/
+  repository: https://CRAN.R-project.org/package=quarto
+  authors:
+  - family-names: Allaire
+    given-names: JJ
+    email: jj@posit.co
+    orcid: https://orcid.org/0000-0003-0174-9868
+  - family-names: Dervieux
+    given-names: Christophe
+    email: cderv@posit.co
+    orcid: https://orcid.org/0000-0003-4474-2498
+  year: '2025'
+  doi: 10.32614/CRAN.package.quarto
+- type: software
+  title: rlang
+  abstract: 'rlang: Functions for Base Types and Core R and ''Tidyverse'' Features'
+  notes: Imports
+  url: https://rlang.r-lib.org
+  repository: https://CRAN.R-project.org/package=rlang
+  authors:
+  - family-names: Henry
+    given-names: Lionel
+    email: lionel@posit.co
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@posit.co
+  year: '2025'
+  doi: 10.32614/CRAN.package.rlang
+- type: software
+  title: sys
+  abstract: 'sys: Powerful and Reliable Tools for Running System Commands in R'
+  notes: Imports
+  url: https://jeroen.r-universe.dev/sys
+  repository: https://CRAN.R-project.org/package=sys
+  authors:
+  - family-names: Ooms
+    given-names: Jeroen
+    email: jeroenooms@gmail.com
+    orcid: https://orcid.org/0000-0002-4035-0289
+  year: '2025'
+  doi: 10.32614/CRAN.package.sys
+- type: software
+  title: whoami
+  abstract: 'whoami: Username, Full Name, Email Address, ''GitHub'' Username of the
+    Current User'
+  notes: Imports
+  url: https://github.com/r-lib/whoami#readme
+  repository: https://CRAN.R-project.org/package=whoami
+  authors:
+  - family-names: Csárdi
+    given-names: Gábor
+    email: csardi.gabor@gmail.com
+  year: '2025'
+  doi: 10.32614/CRAN.package.whoami
+- type: software
+  title: withr
+  abstract: 'withr: Run Code ''With'' Temporarily Modified Global State'
+  notes: Imports
+  url: https://withr.r-lib.org
+  repository: https://CRAN.R-project.org/package=withr
+  authors:
+  - family-names: Hester
+    given-names: Jim
+  - family-names: Henry
+    given-names: Lionel
+    email: lionel@posit.co
+  - family-names: Müller
+    given-names: Kirill
+    email: krlmlr+r@mailbox.org
+  - family-names: Ushey
+    given-names: Kevin
+    email: kevinushey@gmail.com
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@posit.co
+  - family-names: Chang
+    given-names: Winston
+  year: '2025'
+  doi: 10.32614/CRAN.package.withr
+- type: software
+  title: xml2
+  abstract: 'xml2: Parse XML'
+  notes: Imports
+  url: https://xml2.r-lib.org
+  repository: https://CRAN.R-project.org/package=xml2
+  authors:
+  - family-names: Wickham
+    given-names: Hadley
+  - family-names: Hester
+    given-names: Jim
+  - family-names: Ooms
+    given-names: Jeroen
+    email: jeroenooms@gmail.com
+  year: '2025'
+  doi: 10.32614/CRAN.package.xml2
+- type: software
+  title: yaml
+  abstract: 'yaml: Methods to Convert R Data to YAML and Back'
+  notes: Imports
+  url: https://github.com/vubiostat/r-yaml/
+  repository: https://CRAN.R-project.org/package=yaml
+  authors:
+  - family-names: Garbett
+    given-names: Shawn P
+  - family-names: Stephens
+    given-names: Jeremy
+  - family-names: Simonov
+    given-names: Kirill
+  - family-names: Xie
+    given-names: Yihui
+  - family-names: Dong
+    given-names: Zhuoer
+  - family-names: Wickham
+    given-names: Hadley
+  - family-names: Horner
+    given-names: Jeffrey
+  - name: reikoch
+  - family-names: Beasley
+    given-names: Will
+  - family-names: O'Connor
+    given-names: Brendan
+  - family-names: Warnes
+    given-names: Gregory R.
+  - family-names: Quinn
+    given-names: Michael
+  - family-names: Kamvar
+    given-names: Zhian N.
+  - family-names: Gao
+    given-names: Charlie
+  year: '2025'
+  doi: 10.32614/CRAN.package.yaml
+- type: software
+  title: 'R: A Language and Environment for Statistical Computing'
+  notes: Depends
+  url: https://www.R-project.org/
+  authors:
+  - name: R Core Team
+  institution:
+    name: R Foundation for Statistical Computing
+    address: Vienna, Austria
+  year: '2025'
+  version: '>= 4.1.0'
+- type: software
+  title: servr
+  abstract: 'servr: A Simple HTTP Server to Serve Static Files or Dynamic Documents'
+  notes: Suggests
+  url: https://github.com/yihui/servr
+  repository: https://CRAN.R-project.org/package=servr
+  authors:
+  - family-names: Xie
+    given-names: Yihui
+    email: xie@yihui.name
+    orcid: https://orcid.org/0000-0003-0645-5666
+  year: '2025'
+  doi: 10.32614/CRAN.package.servr
+- type: software
+  title: testthat
+  abstract: 'testthat: Unit Testing for R'
+  notes: Suggests
+  url: https://testthat.r-lib.org
+  repository: https://CRAN.R-project.org/package=testthat
+  authors:
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@posit.co
+  year: '2025'
+  doi: 10.32614/CRAN.package.testthat
+  version: '>= 3.0.0'
+

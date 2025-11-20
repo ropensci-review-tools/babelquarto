@@ -4,10 +4,11 @@
   "identifier": "babelquarto",
   "description": "Automate rendering and cross-linking of Quarto books following a prescribed structure.",
   "name": "babelquarto: Renders a Multilingual Quarto Book",
+  "relatedLink": ["https://docs.ropensci.org/babelquarto/", "https://github.com/ropensci-review-tools/babelquarto"],
   "codeRepository": "https://github.com/ropensci-review-tools/babelquarto",
   "issueTracker": "https://github.com/ropensci-review-tools/babelquarto/issues",
   "license": "https://spdx.org/licenses/MIT",
-  "version": "0.0.0.9000",
+  "version": "0.1.0.9000",
   "programmingLanguage": {
     "@type": "ComputerLanguage",
     "name": "R",
@@ -227,7 +228,13 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "118.841KB",
+  "fileSize": "135.79KB",
+  "releaseNotes": "https://github.com/ropensci-review-tools/babelquarto/blob/master/NEWS.md",
   "readme": "https://github.com/ropensci-review-tools/babelquarto/blob/main/README.md",
-  "contIntegration": "https://github.com/ropensci-review-tools/quartobabel/actions/workflows/R-CMD-check.yaml"
+  "contIntegration": ["https://github.com/ropensci-review-tools/quartobabel/actions/workflows/R-CMD-check.yaml", "https://app.codecov.io/gh/ropensci-review-tools/babelquarto"],
+  "review": {
+    "@type": "Review",
+    "url": "https://github.com/ropensci/software-review/issues/720",
+    "provider": "https://ropensci.org"
+  }
 }
