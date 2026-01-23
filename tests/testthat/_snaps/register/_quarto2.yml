@@ -35,11 +35,14 @@ babelquarto:
   languages: ['es', 'fr', 'it']
 title-it: title in it
 description-it: description in it
+abstract-it: abstract in it
 author-it: author in it
 title-es: title in es
 title-fr: title in fr
 description-es: description in es
 description-fr: description in fr
+abstract-es: abstract in es
+abstract-fr: abstract in fr
 author-es: author in es
 author-fr: author in fr
 lang: en
