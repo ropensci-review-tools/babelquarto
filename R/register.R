@@ -129,6 +129,13 @@ register_further_languages <- function(further_languages, project_path = ".") {
         further_languages,
         further_languages
       ), # nolint: line_length_linter
+      if (config[["project"]][["type"]] == "book") {
+        sprintf(
+          "abstract-%s: abstract in %s",
+          further_languages,
+          further_languages
+        )
+      },
       sprintf("author-%s: author in %s", further_languages, further_languages)
     ),
     after = which_main

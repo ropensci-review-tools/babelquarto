@@ -304,6 +304,12 @@ render_quarto_lang <- function(
   )]] %||% # nolint: line_length_linter
     config[[type]][["description"]]
 
+  config[[type]][["abstract"]] <- config[[sprintf(
+    "abstract-%s",
+    language_code
+  )]] %||% # nolint: line_length_linter
+    config[[type]][["abstract"]]
+
   if (type == "book") {
     config[[type]][["author"]] <- config[[sprintf(
       "author-%s",

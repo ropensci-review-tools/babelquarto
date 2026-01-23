@@ -25,6 +25,20 @@ test_that("render_book() works", {
     compare = compare_file_text
   )
 
+  expect_match(
+    paste(
+      readLines(file.path(
+        parent_dir,
+        project_dir,
+        "_book",
+        "es",
+        "index.es.html"
+      )),
+      collapse = ""
+    ),
+    "abstract in es"
+  )
+
   expect_false(file.exists(file.path(
     parent_dir,
     project_dir,

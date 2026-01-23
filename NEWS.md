@@ -1,5 +1,7 @@
 # babelquarto (development version)
 
+- Add support for language-specific abstract in books
+
 # babelquarto 0.1.0
 
 ## Features
