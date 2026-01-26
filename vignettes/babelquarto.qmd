@@ -182,6 +182,56 @@ You cannot rely on usual tooling by Quarto because that would only publish the m
 You need to publish the entire output folder, including the language folders.
 [Example workflow using GitHub Pages by committing the output folder to a gh-pages branch](https://github.com/ropensci/dev_guide/blob/6f9d066d0207e83588a4d9c8dabd93e015083e13/.github/workflows/dev.yml#L58).
 
+## Publishing to GitHub Pages project sites
+
+GitHub Pages supports two common types of sites:
+
+- **User sites**, published at  
+  `https://username.github.io/`
+- **Project sites**, published at  
+  `https://username.github.io/repository-name/`
+
+GitHub Pages **project sites** are a very common way to publish Quarto books and websites. However, they require one extra step when working with multilingual projects.
+
+### Rendering locally vs. final website URLs
+
+When you render a multilingual project **locally** (for example, by running `babelquarto::render_book()` or `babelquarto::render_website()` in RStudio), `{babelquarto}` temporarily removes the site URL. This makes local previewing easier, because the site does not yet live at a real web address.
+
+Because of this, links between languages may be written in a form that works locally but does **not** work once the site is published as a GitHub Pages **project site**.
+
+As a result, a multilingual site can look correct during local preview but have broken language links after deployment.
+
+### How to avoid broken language links on project sites
+
+If you are publishing to a GitHub Pages **project site**, you must make sure that `{babelquarto}` knows the final website address *when the site is rendered*. You can do this in one of two ways.
+
+#### Option 1: Render the site using GitHub Actions (CI)
+
+You can let GitHub build the site automatically. In this case, you provide the final website address using the `BABELQUARTO_CI_URL` environment variable.
+
+This approach is recommended for users who are comfortable setting up GitHub Actions. See `vignette("render-with-ci")` for details.
+
+#### Option 2: Specify the site URL when rendering locally
+
+If you prefer to build the site on your own computer, you can pass the site’s URL directly when rendering, even if it is already listed in `_quarto.yml`:
+
+```r
+babelquarto::render_book(
+  site_url = "https://username.github.io/repository-name/"
+)
+```
+
+This ensures that absolute URLs including the repository subpath are generated, and that multilingual navigation works correctly after deployment.
+
+### Summary
+
+- Local renders are designed for previewing and may not include the final website URL.
+- GitHub Pages project sites require the final site URL to be known at render time.
+- To publish a multilingual project correctly to a project site, you must either:
+  - render the site using GitHub Actions, or
+  - provide the site URL when rendering locally..
+- Without one of these steps, multilingual navigation may break after deployment.
+
 ## Next steps
 
 Take a deeper dive into the configuration options available in {babelquarto} and have a look at `vignette("configuration")`.
