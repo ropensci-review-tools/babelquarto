@@ -4,7 +4,6 @@
 ^\.github$
 ^LICENSE\.md$
 ^\.lintr$
-.ropensci-staff
 ^codemeta\.json$
 ^_pkgdown\.yml$
 ^docs$
