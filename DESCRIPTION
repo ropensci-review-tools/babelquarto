@@ -42,5 +42,6 @@ Suggests:
 URL: https://docs.ropensci.org/babelquarto/, https://github.com/ropensci-review-tools/babelquarto
 BugReports: https://github.com/ropensci-review-tools/babelquarto/issues
 Config/testthat/edition: 3
+Config/ropensci/maintainer: staff
 VignetteBuilder:
     quarto
