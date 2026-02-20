@@ -1,5 +1,11 @@
 ---
 title: "Local rendering and publishing to subpath-based sites"
+description: >
+  How to render projects locally
+vignette: >
+  %\VignetteIndexEntry{Render locally}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ## Publishing to project sites and other subpath-based hosting
