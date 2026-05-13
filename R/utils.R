@@ -21,9 +21,15 @@ lang_code_chapter_list <- function(chapters_list, language_code) {
     chapters_list
   )
 
-  gsub(
+  chapters_list <- gsub(
     "\\.qmd", # nolint: fixed_regex_linter
     sprintf(".%s.qmd", language_code),
+    chapters_list
+  )
+
+  gsub(
+    "\\.ipynb", # nolint: fixed_regex_linter
+    sprintf(".%s.ipynb", language_code),
     chapters_list
   )
 }

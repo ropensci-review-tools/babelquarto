@@ -116,7 +116,7 @@ render <- function(
   profile <- profile %||% Sys.getenv("QUARTO_PROFILE")
   fs::dir_copy(path, temporary_directory)
   withr::with_dir(file.path(temporary_directory, fs::path_file(path)), {
-    fs::file_delete(fs::dir_ls(regexp = "\\...\\.qmd", recurse = TRUE))
+    fs::file_delete(fs::dir_ls(regexp = "\\...\\.qmd|\\...\\.ipynb", recurse = TRUE))
     metadata <- list("true")
     names(metadata) <- sprintf("lang-%s", main_language)
     quarto::quarto_render(
@@ -341,22 +341,33 @@ render_quarto_lang <- function(
   }
 
   if (type == "website") {
-    # only keep what's needed
+    # only keep what's needed, includes .qmd & .ipynb files
     qmds <- fs::dir_ls(
       file.path(temporary_directory, fs::path_file(path)),
-      glob = "*.qmd",
+      glob = "*.qmd|*.ipynb",
       recurse = TRUE
     )
     language_qmds <- purrr::keep(
       qmds,
-      \(x) endsWith(x, sprintf(".%s.qmd", language_code))
+      \(x) any(
+        # both qmd & ipynb files are accepted
+        endsWith(x, sprintf(".%s.qmd", language_code)),
+        endsWith(x, sprintf(".%s.ipynb", language_code))
+      )
     )
     fs::file_delete(qmds[!(qmds %in% language_qmds)])
     for (qmd_path in language_qmds) {
+      # ensure that files are moved correctl, depending on ending
+      if (endsWith(qmd_path, ".qmd")){
       fs::file_move(
         qmd_path,
         sub(sprintf("%s.qmd", language_code), "qmd", qmd_path)
-      )
+      )}
+      else {
+      fs::file_move(
+        qmd_path,
+        sub(sprintf("%s.ipynb", language_code), "ipynb", qmd_path)
+      )}
     }
     # Replace TRUE and FALSE with 'true' and 'false'
     # to avoid converting to "yes" and "no"
