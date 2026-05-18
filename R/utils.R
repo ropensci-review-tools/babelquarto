@@ -27,11 +27,13 @@ lang_code_chapter_list <- function(chapters_list, language_code) {
     chapters_list
   )
 
-  gsub(
+  chapters_list <- gsub(
     "\\.ipynb", # nolint: fixed_regex_linter
     sprintf(".%s.ipynb", language_code),
     chapters_list
   )
+
+  return(chapters_list)
 }
 
 trim_end <- function(config_lines) {

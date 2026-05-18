@@ -385,16 +385,37 @@ test_that("render_website() works - clean render for each language", {
     file.path(parent_dir, project_dir, "about.fr.qmd"),
     file.path(parent_dir, project_dir, "subdir", "about.fr.qmd")
   )
+  fs::file_copy(
+    test_path("test_files/jupyter-notebook.ipynb"),
+    file.path(parent_dir, project_dir, "subdir")
+  )
+  fs::file_copy(
+    test_path("test_files/jupyter-notebook.fr.ipynb"),
+    file.path(parent_dir, project_dir, "subdir")
+  )
+  fs::file_copy(
+    test_path("test_files/rmarkdown.Rmd"),
+    file.path(parent_dir, project_dir, "subdir")
+  )
+  fs::file_copy(
+    test_path("test_files/rmarkdown.fr.Rmd"),
+    file.path(parent_dir, project_dir, "subdir")
+  )
 
   withr::with_dir(parent_dir, render_website(project_dir))
   main_subdir <- file.path(parent_dir, project_dir, "_site", "subdir")
   expect_dir_exists(main_subdir)
-  expect_length(fs::dir_ls(main_subdir), 1L)
+  expect_length(fs::dir_ls(main_subdir), 3L)
+  expect_file_exists(file.path(main_subdir, "jupyter-notebook.html"))
+  expect_file_exists(file.path(main_subdir, "rmarkdown.html"))
+
 
   french_subdir <- file.path(parent_dir, project_dir, "_site", "fr", "subdir")
   expect_dir_exists(french_subdir)
-  expect_length(fs::dir_ls(french_subdir), 1L)
+  expect_length(fs::dir_ls(french_subdir), 3L)
   expect_file_exists(file.path(french_subdir, "about.html"))
+  expect_file_exists(file.path(french_subdir, "jupyter-notebook.html"))
+  expect_file_exists(file.path(french_subdir, "rmarkdown.html"))
 
   spanish_subdir <- file.path(parent_dir, project_dir, "_site", "es", "subdir")
   expect_dir_absent(spanish_subdir)
