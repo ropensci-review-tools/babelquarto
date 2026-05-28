@@ -732,11 +732,6 @@ add_cross_links <- function(
   brio::write_lines(html_lines, path)
 }
 
-# as in testthat
-on_ci <- function() {
-  isTRUE(as.logical(Sys.getenv("CI", "false")))
-}
-
 path_rel <- function(path, output_folder, lang, main_language) {
   if (lang == main_language) {
     fs::path_rel(path, start = output_folder)
