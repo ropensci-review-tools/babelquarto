@@ -932,12 +932,13 @@ add_reveal_language_button <- function(
 
   version_text <- find_language_name(language_code, config)
 
+  head_node <- xml2::xml_find_first(html, "//head")
+
   style_exists <- length(xml2::xml_find_all(
     html,
     "//style[@id='babelquarto-reveal-style']"
   )) > 0L
   if (!style_exists) {
-    head_node <- xml2::xml_find_first(html, "//head")
     xml2::xml_add_child(
       head_node,
       "style",
@@ -953,6 +954,37 @@ add_reveal_language_button <- function(
         "backdrop-filter:blur(4px);}"
       ),
       id = "babelquarto-reveal-style"
+    )
+  }
+
+  script_exists <- length(xml2::xml_find_all(
+    html,
+    "//script[@id='babelquarto-reveal-script']"
+  )) > 0L
+  if (!script_exists) {
+    xml2::xml_add_child(
+      head_node,
+      "script",
+      paste0(
+        "(function(){",
+        "function u(){",
+        "var i=Reveal.getIndices();",
+        "var h='#/'+i.h+(i.v?'/'+i.v:'');",
+        "document.querySelectorAll('.babelquarto-languages-button')",
+        ".forEach(function(a){",
+        "try{var r=new URL(a.href);r.hash=h;a.href=r.href;}catch(e){}",
+        "});",
+        "}",
+        "function a(){",
+        "if(typeof Reveal==='undefined')return;",
+        "if(Reveal.isReady()){u();Reveal.on('slidechanged',u);}",
+        "else{Reveal.on('ready',function(){u();Reveal.on('slidechanged',u);});}",
+        "}",
+        "if(document.readyState==='complete'){a();}",
+        "else{window.addEventListener('load',a);}",
+        "})()"
+      ),
+      id = "babelquarto-reveal-script"
     )
   }
 
