@@ -121,10 +121,11 @@ quarto_multilingual_project <- function(
   site_url = "https://example.com",
   placement = c("navbar", "sidebar")
 ) {
-  if (fs::dir_exists(fs::path(parent_dir, project_dir))) {
+  project_path_full <- fs::path_abs(project_dir, start = parent_dir)
+  if (fs::dir_exists(project_path_full)) {
     cli::cli_abort(c(
-      "{.path {fs::path(parent_dir, project_dir)}} already exists.",
-      i = "See {.help register_main_language} and 
+      "{.path {project_path_full}} already exists.",
+      i = "See {.help register_main_language} and
       {.help register_further_languages}
        to convert an existing project."
     ))
@@ -137,10 +138,13 @@ quarto_multilingual_project <- function(
     withr::local_dir(parent_dir)
   }
   quarto_bin <- quarto::quarto_path()
-  sys::exec_wait(
+  exit_code <- sys::exec_wait(
     quarto_bin,
     args = c("create-project", project_dir, "--type", type)
   )
+  if (exit_code != 0L) {
+    cli::cli_abort("Quarto failed to create project {.path {project_path_full}} (exit code {exit_code}).")
+  }
 
   # Duplicated files for the different languages ----
   qmds <- dir(project_dir, pattern = "\\.qmd", full.names = TRUE)
@@ -160,7 +164,7 @@ quarto_multilingual_project <- function(
   config_lines <- brio::read_lines(config_path)
   config_lines <- trim_end(config_lines)
 
-  where_project <- grep(sprintf("%s:", type), config_lines)
+  where_project <- grep(sprintf("^%s:", type), config_lines)
   config_lines <- append(
     config_lines,
     sprintf("  site-url: %s", site_url),

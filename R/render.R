@@ -92,6 +92,7 @@ render_presentation <- function(
     project_path,
     site_url = site_url,
     type = "website",
+    is_presentation = TRUE,
     profile = profile,
     preview = preview
   )
@@ -101,6 +102,7 @@ render <- function(
   path = ".",
   site_url = NULL,
   type = c("book", "website"),
+  is_presentation = FALSE,
   profile = NULL,
   preview
 ) {
@@ -225,7 +227,7 @@ render <- function(
             path_language = main_language,
             project_dir = path
           )
-        } else {
+        } else if (!is_presentation) {
           add_links(
             doc_path,
             main_language = main_language,
@@ -275,7 +277,7 @@ render <- function(
               path_language = other_lang,
               project_dir = path
             )
-          } else {
+          } else if (!is_presentation) {
             add_links(
               doc_path,
               main_language = main_language,
@@ -630,12 +632,13 @@ add_links <- function(
     } else {
       path_rel(path, output_folder, path_language, main_language)
     }
-    href <- sprintf("%s/%s", site_url, new_path) # nolint: nonportable_path_linter
-    no_translated_version <- !fs::file_exists(file.path(
-      output_folder,
-      new_path
-    )) # nolint: line_length_linter
-    if (no_translated_version) return()
+    target_abs <- file.path(output_folder, new_path)
+    if (!fs::file_exists(target_abs)) return()
+    href <- if (nzchar(site_url)) {
+      sprintf("%s/%s", site_url, new_path) # nolint: nonportable_path_linter
+    } else {
+      fs::path_rel(target_abs, start = dirname(path))
+    }
   } else {
     base_path <- sub(
       "\\...\\.html",
@@ -647,11 +650,13 @@ add_links <- function(
     } else {
       base_path
     }
-    href <- sprintf("%s/%s/%s", site_url, language_code, new_path) # nolint: nonportable_path_linter
-    no_translated_version <- !fs::file_exists(
-      file.path(output_folder, language_code, new_path)
-    )
-    if (no_translated_version) return()
+    target_abs <- file.path(output_folder, language_code, new_path)
+    if (!fs::file_exists(target_abs)) return()
+    href <- if (nzchar(site_url)) {
+      sprintf("%s/%s/%s", site_url, language_code, new_path) # nolint: nonportable_path_linter
+    } else {
+      fs::path_rel(target_abs, start = dirname(path))
+    }
   }
 
   languages_links <- xml2::xml_find_first(html, "//ul[@id='languages-links']")
@@ -864,8 +869,13 @@ language_href <- function(
     } else {
       path_rel(path, output_folder, path_language, main_language)
     }
-    href <- sprintf("%s/%s", site_url, new_path) # nolint: nonportable_path_linter
-    if (!fs::file_exists(file.path(output_folder, new_path))) return(NULL)
+    target_abs <- file.path(output_folder, new_path)
+    if (!fs::file_exists(target_abs)) return(NULL)
+    href <- if (nzchar(site_url)) {
+      sprintf("%s/%s", site_url, new_path) # nolint: nonportable_path_linter
+    } else {
+      fs::path_rel(target_abs, start = dirname(path))
+    }
   } else {
     base_path <- sub(
       "\\...\\.html",
@@ -877,10 +887,13 @@ language_href <- function(
     } else {
       base_path
     }
-    href <- sprintf("%s/%s/%s", site_url, language_code, new_path) # nolint: nonportable_path_linter
-    if (!fs::file_exists(
-      file.path(output_folder, language_code, new_path)
-    )) return(NULL)
+    target_abs <- file.path(output_folder, language_code, new_path)
+    if (!fs::file_exists(target_abs)) return(NULL)
+    href <- if (nzchar(site_url)) {
+      sprintf("%s/%s/%s", site_url, language_code, new_path) # nolint: nonportable_path_linter
+    } else {
+      fs::path_rel(target_abs, start = dirname(path))
+    }
   }
   list(href = href)
 }
