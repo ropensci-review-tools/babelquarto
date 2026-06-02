@@ -23,7 +23,6 @@ Description: Automate rendering and cross-linking of Quarto books following a
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE, roclets = c("collate", "rd", "namespace", "devtag::dev_roclet"))
-RoxygenNote: 7.3.3.9000
 Imports: 
     brio,
     cli,
@@ -47,3 +46,4 @@ Config/testthat/edition: 3
 Config/ropensci/maintainer: staff
 VignetteBuilder:
     quarto
+Config/roxygen2/version: 8.0.0

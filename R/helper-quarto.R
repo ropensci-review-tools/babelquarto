@@ -1,13 +1,16 @@
-#' Create a starter/example quarto multilingual book or website
+#' Create a starter/example quarto multilingual project
 #'
 #' @param parent_dir Folder where to create the project folder.
-#' @param project_dir Project (book, website) folder name.
+#' @param project_dir Project (book, website, or presentation) folder name.
 #' @param further_languages Codes for not main languages.
 #' @param main_language Code for main languages.
 #' @param register_languages Whether to register languages (logical).
 #' @param site_url Site URL for the book/site-url
 #' or website/site-url part of the Quarto configuration.
 #' @param placement Where to place the language links (sidebar, navbar).
+#'   For presentations this setting is written to the configuration file but
+#'   has no effect: language switching is handled by the in-slide pill injected
+#'   by [babelquarto::render_presentation()].
 #'
 #' @return The path to the created project.
 #' @examplesIf interactive()
@@ -63,6 +66,49 @@ quarto_multilingual_website <- function(
     site_url = site_url,
     placement = placement
   )
+}
+
+#' @rdname quarto_multilingual_book
+#' @export
+#' @examplesIf interactive()
+#' parent_dir <- withr::local_tempdir()
+#'   quarto_multilingual_presentation(
+#'     parent_dir = parent_dir,
+#'     project_dir = "blop",
+#'     further_languages = c("es", "fr"),
+#'     main_language = "en"
+#'   )
+quarto_multilingual_presentation <- function(
+  parent_dir,
+  project_dir,
+  main_language = "en",
+  further_languages = c("es", "fr"),
+  register_languages = TRUE,
+  site_url = "https://example.com",
+  placement = c("navbar", "sidebar")
+) {
+  project_path <- quarto_multilingual_project(
+    parent_dir = parent_dir,
+    project_dir = project_dir,
+    type = "website",
+    main_language = main_language,
+    further_languages = further_languages,
+    register_languages = register_languages,
+    site_url = site_url,
+    placement = placement
+  )
+
+  all_qmds <- fs::dir_ls(project_path, glob = "*.qmd")
+  for (qmd_path in all_qmds) {
+    lines <- brio::read_lines(qmd_path)
+    end_yaml <- which(lines == "---")
+    if (length(end_yaml) >= 2L) {
+      lines <- append(lines, "format: revealjs", after = end_yaml[2L] - 1L)
+      brio::write_lines(lines, qmd_path)
+    }
+  }
+
+  return(project_path)
 }
 
 quarto_multilingual_project <- function(

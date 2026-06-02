@@ -8,6 +8,10 @@
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
-^man/filter_freeze_directory\.Rd$
-^man/read_yaml\.Rd$
 ^CITATION\.cff$
+^dev$
+^man/filter_freeze_directory\.Rd$
+^man/is_revealjs\.Rd$
+^man/language_href\.Rd$
+^man/add_reveal_language_button\.Rd$
+^man/read_yaml\.Rd$

@@ -18,4 +18,3 @@ This function removes from freeze directory the files
 that do not match the language code to avoid using the
 wrong cache values for code computations.
 }
-\keyword{internal}

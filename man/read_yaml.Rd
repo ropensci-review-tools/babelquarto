@@ -20,4 +20,3 @@ Alias for yaml::read_yaml with a custom handler
 read_yaml(path)
 }
 }
-\keyword{internal}

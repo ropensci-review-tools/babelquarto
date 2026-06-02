@@ -3,6 +3,7 @@
 \name{render_book}
 \alias{render_book}
 \alias{render_website}
+\alias{render_presentation}
 \title{Render a Quarto multilingual project}
 \usage{
 render_book(
@@ -18,11 +19,19 @@ render_website(
   profile = NULL,
   preview = rlang::is_interactive()
 )
+
+render_presentation(
+  project_path = ".",
+  site_url = NULL,
+  profile = NULL,
+  preview = rlang::is_interactive()
+)
 }
 \arguments{
-\item{project_path}{Path where the book/website source is located}
+\item{project_path}{Path where the book/website/presentation source is
+located.}
 
-\item{site_url}{Override the base URL of the book/website.
+\item{site_url}{Override the base URL of the project.
 If \code{NULL}, in interactive sessions it will be set to "" to allow
 previewing the whole project with \code{servr::httw()}.}
 
@@ -38,8 +47,8 @@ Nothing, called for its side-effect of rendering a project.
 Render a Quarto multilingual project
 }
 \details{
-babelquarto expects a book/website folder with
-each qmd/Rmd present in as many languages as needed,
+babelquarto expects a book, website, or revealjs presentation folder
+with each qmd/Rmd present in as many languages as needed,
 with the same basename but,
 \itemize{
 \item once with only \code{.qmd} as extension for the main language,
@@ -54,10 +63,19 @@ and \code{\link[=register_further_languages]{register_further_languages()}}:
   mainlanguage: 'en'
   languages: ['es', 'fr']
 }\if{html}{\out{</div>}}
+
+For revealjs presentations (\code{render_presentation()}), each \code{.qmd} file must
+declare \code{format: revealjs} in its YAML front-matter.  After rendering, a
+fixed language-switch pill is injected into the top-right corner of every
+slide.  Use \code{\link[=quarto_multilingual_presentation]{quarto_multilingual_presentation()}} to scaffold a
+new presentation project with the correct structure.
 }
 \examples{
 directory <- withr::local_tempdir()
 quarto_multilingual_book(parent_dir = directory, project_dir = "blop")
 render_book(file.path(directory, "blop"))
 
+directory <- withr::local_tempdir()
+quarto_multilingual_presentation(parent_dir = directory, project_dir = "blop")
+render_presentation(file.path(directory, "blop"))
 }

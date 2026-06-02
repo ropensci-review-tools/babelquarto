@@ -9,7 +9,8 @@ register_further_languages(further_languages, project_path = ".")
 \arguments{
 \item{further_languages}{Languages to be registered (character vector)}
 
-\item{project_path}{Path where the book/website source is located}
+\item{project_path}{Path where the book/website/presentation source is
+located.}
 }
 \value{
 Nothing, called for its side-effect of editing the Quarto configuration file.
