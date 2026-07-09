@@ -7,9 +7,12 @@ test_that("render_book() works", {
     further_languages = c("es", "fr"),
     main_language = "en"
   )
+  file.create(file.path(parent_dir, project_dir, "CNAME"))
 
   withr::with_dir(parent_dir, render_book(project_dir))
   expect_dir_exists(file.path(parent_dir, project_dir, "_book"))
+  expect_file_exists(file.path(parent_dir, project_dir, "_book", "CNAME"))
+  expect_file_absent(file.path(parent_dir, project_dir, "_book", "es", "CNAME"))
 
   index_path <- file.path(parent_dir, project_dir, "_book", "index.html")
   index <- xml2::read_html(index_path)
@@ -408,7 +411,6 @@ test_that("render_website() works - clean render for each language", {
   expect_length(fs::dir_ls(main_subdir), 3L)
   expect_file_exists(file.path(main_subdir, "jupyter-notebook.html"))
   expect_file_exists(file.path(main_subdir, "rmarkdown.html"))
-
 
   french_subdir <- file.path(parent_dir, project_dir, "_site", "fr", "subdir")
   expect_dir_exists(french_subdir)

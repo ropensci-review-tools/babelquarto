@@ -9,3 +9,7 @@ expect_file_exists <- function(path) {
 expect_dir_absent <- function(path) {
   testthat::expect_false(fs::dir_exists(path))
 }
+
+expect_file_absent <- function(path) {
+  testthat::expect_false(fs::file_exists(path))
+}

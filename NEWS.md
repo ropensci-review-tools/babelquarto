@@ -1,6 +1,7 @@
 # babelquarto (development version)
 
 - Add support for language-specific abstract in books
+- Fix and document behavior for `CNAME` files (#120, @luisDVA)
 
 # babelquarto 0.1.0
 

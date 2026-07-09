@@ -116,7 +116,10 @@ render <- function(
   profile <- profile %||% Sys.getenv("QUARTO_PROFILE")
   fs::dir_copy(path, temporary_directory)
   withr::with_dir(file.path(temporary_directory, fs::path_file(path)), {
-    fs::file_delete(fs::dir_ls(regexp = "\\...\\.qmd|\\...\\.Rmd|\\...\\.ipynb", recurse = TRUE))
+    fs::file_delete(fs::dir_ls(
+      regexp = "\\...\\.qmd|\\...\\.Rmd|\\...\\.ipynb",
+      recurse = TRUE
+    ))
     metadata <- list("true")
     names(metadata) <- sprintf("lang-%s", main_language)
     quarto::quarto_render(
@@ -349,30 +352,33 @@ render_quarto_lang <- function(
     )
     language_files <- purrr::keep(
       qmds,
-      \(x) any(
-        endsWith(x, sprintf(".%s.qmd", language_code)),
-        endsWith(x, sprintf(".%s.Rmd", language_code)),
-        endsWith(x, sprintf(".%s.ipynb", language_code))
-      )
+      \(x) {
+        any(
+          endsWith(x, sprintf(".%s.qmd", language_code)),
+          endsWith(x, sprintf(".%s.Rmd", language_code)),
+          endsWith(x, sprintf(".%s.ipynb", language_code))
+        )
+      }
     )
     fs::file_delete(qmds[!(qmds %in% language_files)])
     for (file_path in language_files) {
       # ensure that files are moved correctl, depending on ending
-      if (endsWith(file_path, ".qmd")){
-      fs::file_move(
-        file_path,
-        sub(sprintf("%s.qmd", language_code), "qmd", file_path)
-      )}
-      else if (endsWith(file_path, ".Rmd")){
+      if (endsWith(file_path, ".qmd")) {
+        fs::file_move(
+          file_path,
+          sub(sprintf("%s.qmd", language_code), "qmd", file_path)
+        )
+      } else if (endsWith(file_path, ".Rmd")) {
         fs::file_move(
           file_path,
           sub(sprintf("%s.Rmd", language_code), "Rmd", file_path)
-        )}
-      else {
-      fs::file_move(
-        file_path,
-        sub(sprintf("%s.ipynb", language_code), "ipynb", file_path)
-      )}
+        )
+      } else {
+        fs::file_move(
+          file_path,
+          sub(sprintf("%s.ipynb", language_code), "ipynb", file_path)
+        )
+      }
     }
     # Replace TRUE and FALSE with 'true' and 'false'
     # to avoid converting to "yes" and "no"
@@ -394,6 +400,12 @@ render_quarto_lang <- function(
       metadata = metadata,
       profile = language_code
     )
+    # remove CNAME is present
+    # it should only be there for the main language
+    cname_path <- file.path(output_dir, "CNAME")
+    if (file.exists(cname_path)) {
+      file.remove(cname_path)
+    }
   })
 
   # Copy it to local not temporary _book/<language-code>

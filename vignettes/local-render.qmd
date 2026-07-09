@@ -52,6 +52,11 @@ babelquarto::render_book(
 
 This ensures that absolute URLs including the repository subpath are generated, and that multilingual navigation works correctly after deployment.
 
+### CNAME
+
+If you place a `CNAME` file at the root of your project, Quarto will put it in the output folder.
+babelquarto will ensure it is not present as well in the subdirectories corresponding to different languages.
+
 ### Summary
 
 - Local renders are designed for previewing and may not include the final website URL.
