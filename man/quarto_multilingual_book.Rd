@@ -32,8 +32,7 @@ quarto_multilingual_presentation(
   main_language = "en",
   further_languages = c("es", "fr"),
   register_languages = TRUE,
-  site_url = "https://example.com",
-  placement = c("navbar", "sidebar")
+  site_url = "https://example.com"
 )
 }
 \arguments{
@@ -51,9 +50,8 @@ quarto_multilingual_presentation(
 or website/site-url part of the Quarto configuration.}
 
 \item{placement}{Where to place the language links (sidebar, navbar).
-For presentations this setting is written to the configuration file but
-has no effect: language switching is handled by the in-slide pill injected
-by \code{\link[=render_presentation]{render_presentation()}}.}
+Not applicable to presentations, where language switching is handled by
+the in-slide button injected by \code{\link[=render_presentation]{render_presentation()}}.}
 }
 \value{
 The path to the created project.

@@ -8,9 +8,8 @@
 #' @param site_url Site URL for the book/site-url
 #' or website/site-url part of the Quarto configuration.
 #' @param placement Where to place the language links (sidebar, navbar).
-#'   For presentations this setting is written to the configuration file but
-#'   has no effect: language switching is handled by the in-slide pill injected
-#'   by [babelquarto::render_presentation()].
+#'   Not applicable to presentations, where language switching is handled by
+#'   the in-slide button injected by [babelquarto::render_presentation()].
 #'
 #' @return The path to the created project.
 #' @examplesIf interactive()
@@ -84,18 +83,16 @@ quarto_multilingual_presentation <- function(
   main_language = "en",
   further_languages = c("es", "fr"),
   register_languages = TRUE,
-  site_url = "https://example.com",
-  placement = c("navbar", "sidebar")
+  site_url = "https://example.com"
 ) {
   project_path <- quarto_multilingual_project(
     parent_dir = parent_dir,
     project_dir = project_dir,
-    type = "website",
+    type = "presentation",
     main_language = main_language,
     further_languages = further_languages,
     register_languages = register_languages,
-    site_url = site_url,
-    placement = placement
+    site_url = site_url
   )
 
   all_qmds <- fs::dir_ls(project_path, glob = "*.qmd")
@@ -114,13 +111,16 @@ quarto_multilingual_presentation <- function(
 quarto_multilingual_project <- function(
   parent_dir,
   project_dir,
-  type = c("book", "website"),
+  type = c("book", "website", "presentation"),
   main_language = "en",
   further_languages = c("es", "fr"),
   register_languages = TRUE,
   site_url = "https://example.com",
   placement = c("navbar", "sidebar")
 ) {
+  # A presentation project is a Quarto website project under the hood.
+  quarto_type <- if (type == "presentation") "website" else type
+
   project_path_full <- fs::path_abs(project_dir, start = parent_dir)
   if (fs::dir_exists(project_path_full)) {
     cli::cli_abort(c(
@@ -140,7 +140,7 @@ quarto_multilingual_project <- function(
   quarto_bin <- quarto::quarto_path()
   exit_code <- sys::exec_wait(
     quarto_bin,
-    args = c("create-project", project_dir, "--type", type)
+    args = c("create-project", project_dir, "--type", quarto_type)
   )
   if (exit_code != 0L) {
     cli::cli_abort("Quarto failed to create project {.path {project_path_full}} (exit code {exit_code}).")
@@ -164,7 +164,7 @@ quarto_multilingual_project <- function(
   config_lines <- brio::read_lines(config_path)
   config_lines <- trim_end(config_lines)
 
-  where_project <- grep(sprintf("^%s:", type), config_lines)
+  where_project <- grep(sprintf("^%s:", quarto_type), config_lines)
   config_lines <- append(
     config_lines,
     sprintf("  site-url: %s", site_url),
@@ -194,11 +194,15 @@ quarto_multilingual_project <- function(
   }
 
   ## Add language link placement ----
-  config_lines <- c(
-    trim_end(config_lines),
-    "babelquarto:",
-    sprintf("  languagelinks: %s", placement)
-  )
+  # Not for presentations: language switching there uses the in-slide button
+  # injected by render_presentation(), so `languagelinks` would have no effect.
+  if (type != "presentation") {
+    config_lines <- c(
+      trim_end(config_lines),
+      "babelquarto:",
+      sprintf("  languagelinks: %s", placement)
+    )
+  }
 
   if (type == "website" && placement == "sidebar") {
     where_website <- grep("website:", config_lines, fixed = TRUE)

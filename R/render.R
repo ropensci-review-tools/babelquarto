@@ -91,8 +91,7 @@ render_presentation <- function(
   render(
     project_path,
     site_url = site_url,
-    type = "website",
-    is_presentation = TRUE,
+    type = "presentation",
     profile = profile,
     preview = preview
   )
@@ -101,11 +100,14 @@ render_presentation <- function(
 render <- function(
   path = ".",
   site_url = NULL,
-  type = c("book", "website"),
-  is_presentation = FALSE,
+  type = c("book", "website", "presentation"),
   profile = NULL,
   preview
 ) {
+  # A presentation project is a Quarto website project under the hood:
+  # configuration keys and output directory follow website conventions.
+  config_type <- if (type == "presentation") "website" else type
+
   # configuration ----
   config <- file.path(path, "_quarto.yml")
   config_contents <- read_yaml(config)
@@ -114,11 +116,11 @@ render <- function(
     site_url <- ""
   }
   site_url <- site_url %||%
-    site_url(config_contents = config_contents, type = type)
+    site_url(config_contents = config_contents, type = config_type)
 
   output_dir <- config_contents[["project"]][["output-dir"]] %||%
     switch(
-      type,
+      config_type,
       book = "_book",
       website = "_site"
     )
@@ -165,7 +167,7 @@ render <- function(
     render_quarto_lang,
     path = path,
     output_dir = output_dir,
-    type = type,
+    type = config_type,
     site_url = site_url
   )
 
@@ -215,19 +217,23 @@ render <- function(
     \(lang_code) purrr::walk(
       main_language_docs,
       \(doc_path) {
-        if (is_revealjs(doc_path)) {
-          add_reveal_language_button(
-            doc_path,
-            main_language = main_language,
-            language_code = lang_code,
-            site_url = site_url,
-            type = type,
-            config = config_contents,
-            output_folder = output_folder,
-            path_language = main_language,
-            project_dir = path
-          )
-        } else if (!is_presentation) {
+        if (type == "presentation") {
+          # revealjs decks have no navbar/sidebar, they get an in-slide
+          # button instead; skip any non-revealjs page in the project.
+          if (is_revealjs(doc_path)) {
+            add_reveal_language_button(
+              doc_path,
+              main_language = main_language,
+              language_code = lang_code,
+              site_url = site_url,
+              type = config_type,
+              config = config_contents,
+              output_folder = output_folder,
+              path_language = main_language,
+              project_dir = path
+            )
+          }
+        } else {
           add_links(
             doc_path,
             main_language = main_language,
@@ -265,19 +271,21 @@ render <- function(
       \(lang_code) purrr::walk(
         other_lang_docs,
         \(doc_path) {
-          if (is_revealjs(doc_path)) {
-            add_reveal_language_button(
-              doc_path,
-              main_language = main_language,
-              language_code = lang_code,
-              site_url = site_url,
-              type = type,
-              config = config_contents,
-              output_folder = output_folder,
-              path_language = other_lang,
-              project_dir = path
-            )
-          } else if (!is_presentation) {
+          if (type == "presentation") {
+            if (is_revealjs(doc_path)) {
+              add_reveal_language_button(
+                doc_path,
+                main_language = main_language,
+                language_code = lang_code,
+                site_url = site_url,
+                type = config_type,
+                config = config_contents,
+                output_folder = output_folder,
+                path_language = other_lang,
+                project_dir = path
+              )
+            }
+          } else {
             add_links(
               doc_path,
               main_language = main_language,
