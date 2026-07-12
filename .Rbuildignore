@@ -9,7 +9,6 @@
 ^docs$
 ^pkgdown$
 ^CITATION\.cff$
-^dev$
 ^man/filter_freeze_directory\.Rd$
 ^man/is_revealjs\.Rd$
 ^man/language_href\.Rd$
