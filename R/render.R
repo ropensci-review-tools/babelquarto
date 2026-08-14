@@ -117,10 +117,21 @@ render <- function(
   profile <- profile %||% Sys.getenv("QUARTO_PROFILE") # ensures default profile = "",  not NULL
   fs::dir_copy(path, temporary_directory)
   withr::with_dir(file.path(temporary_directory, fs::path_file(path)), {
-    fs::file_delete(fs::dir_ls(
+    suffix_main_language_files <- fs::dir_ls(
+      regexp = sprintf(
+        "\\.%s\\.qmd|\\.%s\\.Rmd|\\.%s\\.ipynb",
+        main_language,
+        main_language,
+        main_language
+      ),
+      recurse = TRUE
+    )
+    all_suffix_files <- fs::dir_ls(
       regexp = "\\...\\.qmd|\\...\\.Rmd|\\...\\.ipynb",
       recurse = TRUE
-    ))
+    )
+    other_suffix_files <- setdiff(all_suffix_files, suffix_main_language_files)
+    fs::file_delete(other_suffix_files)
     metadata <- list("true")
     names(metadata) <- sprintf("lang-%s", main_language)
     quarto::quarto_render(
