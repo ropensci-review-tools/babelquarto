@@ -74,6 +74,19 @@ babelquarto:
     text: "English"
 ```
 
+These labels can also be overridden per language through a Quarto profile.
+If a `_quarto-es.yml` profile file is present, any `languagecodes` entry it
+defines takes precedence over `_quarto.yml` for the Spanish button:
+
+```yaml
+babelquarto:
+  languagecodes:
+  - name: es
+    text: "Español (versión completa)"
+```
+
+See `vignette("configuration")` for more on profiles.
+
 ## Rendering your presentation
 
 When you're ready to render your presentation, use `render_presentation()`:
