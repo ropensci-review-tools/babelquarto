@@ -1,0 +1,118 @@
+---
+title: "Multilingual presentations"
+vignette: >
+  %\VignetteIndexEntry{Multilingual presentations}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+---
+
+The goal of this vignette is to show how you can create and render a multilingual [revealjs](https://quarto.org/docs/presentations/revealjs/) presentation using {babelquarto}.
+
+Multilingual presentations follow the same convention as books and websites (see `vignette("babelquarto")`): each Quarto file exists once per language, with the same basename,
+
+- once with only `.qmd` as extension for the main language (`index.qmd`),
+- once with the language code in the extension for each further language (`index.es.qmd`, `index.fr.qmd`).
+
+The difference is that every file declares `format: revealjs`, and that after rendering, each slide deck gets a small fixed button in the top-right corner to switch to the same slide in another language.
+
+## Starting a multilingual presentation
+
+To start a multilingual presentation, use `quarto_multilingual_presentation()` with the `parent_dir` argument to specify where you want to create the project and the `project_dir` argument to specify the name of the project.
+The argument `main_language` is used to specify the main language of the project and `further_languages` lists all additional languages.
+
+```{r}
+#| label: setup_presentation
+#| results: 'hide'
+parent_dir <- withr::local_tempdir()
+project_dir <- "multilingual_slides"
+babelquarto::quarto_multilingual_presentation(
+  parent_dir = parent_dir,
+  project_dir = project_dir,
+  main_language = "en",
+  further_languages = c("es", "fr")
+)
+```
+
+Look at the `_quarto.yml` file in the project directory.
+To get familiar with the configuration, take a look at the example below:
+
+```{r}
+#| label: display_presentation_config
+#| echo: false
+#| results: 'asis'
+
+cat("```{.yaml filename='_quarto.yml'}\n")
+readLines(file.path(parent_dir, project_dir, "_quarto.yml")) |>
+  cat(sep = "\n")
+cat("```\n")
+```
+
+The file structure of the project looks like this:
+
+```{r}
+#| label: presentation_dir_structure
+fs::dir_tree(file.path(parent_dir, project_dir))
+```
+
+Each Quarto file has a Spanish and a French version.
+These files aren't automatically translated and are just copies of the original English version.
+You will have to provide the translations yourself, or look at {[babeldown](https://docs.ropensci.org/babeldown/)} for automatic translation.
+
+## Customizing the language button labels
+
+By default the language switch button of each deck is labelled "Version in es", "Version in fr", and so on.
+You can change these labels through the `text` field of `languagecodes` in `_quarto.yml`:
+
+```yaml
+babelquarto:
+  languagecodes:
+  - name: es
+    text: "Español"
+  - name: fr
+    text: "Français"
+  - name: en
+    text: "English"
+```
+
+These labels can also be overridden per language through a Quarto profile.
+If a `_quarto-es.yml` profile file is present, any `languagecodes` entry it
+defines takes precedence over `_quarto.yml` for the Spanish button:
+
+```yaml
+babelquarto:
+  languagecodes:
+  - name: es
+    text: "Español (versión completa)"
+```
+
+See `vignette("configuration")` for more on profiles.
+
+## Rendering your presentation
+
+When you're ready to render your presentation, use `render_presentation()`:
+
+```{r}
+#| label: render_presentation
+#| eval: false
+babelquarto::render_presentation(file.path(parent_dir, project_dir))
+```
+
+We end up with one deck per language in the `_site` folder: the main language at the root, and each further language in its own subfolder (`_site/es`, `_site/fr`).
+Every deck contains a button per other language in the top-right corner of the slides.
+Clicking a button opens the same slide in the other language.
+
+## Previewing your presentation
+
+Like for books and websites, you can preview the rendered project with the [{servr} package](https://cran.r-project.org/package=servr):
+
+```{r}
+#| label: preview_presentation
+#| eval: false
+servr::httw(file.path(parent_dir, project_dir, "_site"))
+```
+
+Note that in interactive sessions, if you do not provide the `site_url` argument, the `render_` functions use relative links, so the language buttons work when the project is served locally by servr.
+
+## Publishing your presentation
+
+A rendered multilingual presentation is a static website: deploy the entire `_site` folder, including the language subfolders, like you would deploy a multilingual website (see `vignette("babelquarto")`).

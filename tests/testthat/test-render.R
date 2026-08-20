@@ -884,3 +884,52 @@ test_that("render_website() works - quarto freeze for languages is working", {
   ))
   expect_true(bonjour_monde_present)
 })
+
+test_that("render_presentation() works", {
+  parent_dir <- withr::local_tempdir()
+  project_dir <- "blop"
+  quarto_multilingual_presentation(
+    parent_dir = parent_dir,
+    project_dir = project_dir,
+    further_languages = c("es", "fr"),
+    main_language = "en"
+  )
+
+  withr::with_dir(parent_dir, render_presentation(project_dir))
+  expect_dir_exists(file.path(parent_dir, project_dir, "_site"))
+
+  index_path <- file.path(parent_dir, project_dir, "_site", "index.html")
+  index <- xml2::read_html(index_path)
+
+  # confirm it is a revealjs deck
+  reveal_div <- xml2::xml_find_first(
+    index,
+    "//div[contains(@class,'reveal')]"
+  )
+  expect_false(inherits(reveal_div, "xml_missing"))
+
+  # language switch button to Spanish is injected with correct href
+  spanish_link <- xml2::xml_find_first(index, '//a[@id="language-link-es"]')
+  expect_identical(
+    xml2::xml_attr(spanish_link, "href"),
+    "https://example.com/es/index.html"
+  )
+  expect_true(
+    "babelquarto-languages-button" %in%
+      strsplit(xml2::xml_attr(spanish_link, "class"), " ")[[1L]]
+  )
+
+  # Spanish deck has back-link to English
+  spanish_index_path <- file.path(
+    parent_dir, project_dir, "_site", "es", "index.html"
+  )
+  spanish_index <- xml2::read_html(spanish_index_path)
+  english_link <- xml2::xml_find_first(
+    spanish_index,
+    '//a[@id="language-link-en"]'
+  )
+  expect_identical(
+    xml2::xml_attr(english_link, "href"),
+    "https://example.com/index.html"
+  )
+})

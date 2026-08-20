@@ -3,7 +3,8 @@
 \name{quarto_multilingual_book}
 \alias{quarto_multilingual_book}
 \alias{quarto_multilingual_website}
-\title{Create a starter/example quarto multilingual book or website}
+\alias{quarto_multilingual_presentation}
+\title{Create a starter/example quarto multilingual project}
 \usage{
 quarto_multilingual_book(
   parent_dir,
@@ -24,11 +25,20 @@ quarto_multilingual_website(
   site_url = "https://example.com",
   placement = c("navbar", "sidebar")
 )
+
+quarto_multilingual_presentation(
+  parent_dir,
+  project_dir,
+  main_language = "en",
+  further_languages = c("es", "fr"),
+  register_languages = TRUE,
+  site_url = "https://example.com"
+)
 }
 \arguments{
 \item{parent_dir}{Folder where to create the project folder.}
 
-\item{project_dir}{Project (book, website) folder name.}
+\item{project_dir}{Project (book, website, or presentation) folder name.}
 
 \item{main_language}{Code for main languages.}
 
@@ -39,18 +49,29 @@ quarto_multilingual_website(
 \item{site_url}{Site URL for the book/site-url
 or website/site-url part of the Quarto configuration.}
 
-\item{placement}{Where to place the language links (sidebar, navbar).}
+\item{placement}{Where to place the language links (sidebar, navbar).
+Not applicable to presentations, where language switching is handled by
+the in-slide button injected by \code{\link[=render_presentation]{render_presentation()}}.}
 }
 \value{
 The path to the created project.
 }
 \description{
-Create a starter/example quarto multilingual book or website
+Create a starter/example quarto multilingual project
 }
 \examples{
 \dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 parent_dir <- withr::local_tempdir()
   quarto_multilingual_book(
+    parent_dir = parent_dir,
+    project_dir = "blop",
+    further_languages = c("es", "fr"),
+    main_language = "en"
+  )
+\dontshow{\}) # examplesIf}
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
+parent_dir <- withr::local_tempdir()
+  quarto_multilingual_presentation(
     parent_dir = parent_dir,
     project_dir = "blop",
     further_languages = c("es", "fr"),

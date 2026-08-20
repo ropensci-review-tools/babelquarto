@@ -2,8 +2,8 @@
 #'
 #' @importFrom rlang `%||%`
 #'
-#' @details babelquarto expects a book/website folder with
-#' each qmd/Rmd present in as many languages as needed,
+#' @details babelquarto expects a book, website, or revealjs presentation folder
+#' with each qmd/Rmd present in as many languages as needed,
 #' with the same basename but,
 #' - once with only `.qmd` as extension for the main language,
 #' - once with `.es.qmd` (using the language code) for each other language.
@@ -18,10 +18,17 @@
 #'   languages: ['es', 'fr']
 #' ```
 #'
+#' For revealjs presentations (`render_presentation()`), each `.qmd` file must
+#' declare `format: revealjs` in its YAML front-matter.  After rendering, a
+#' fixed language-switch pill is injected into the top-right corner of every
+#' slide.  Use [babelquarto::quarto_multilingual_presentation()] to scaffold a
+#' new presentation project with the correct structure.
+#'
 #' @importFrom rlang `%||%`
 #'
-#' @param project_path Path where the book/website source is located
-#' @param site_url Override the base URL of the book/website.
+#' @param project_path Path where the book/website/presentation source is
+#'   located.
+#' @param site_url Override the base URL of the project.
 #' If `NULL`, in interactive sessions it will be set to "" to allow
 #' previewing the whole project with `servr::httw()`.
 #' @param profile Quarto profile(s) to use.
@@ -69,13 +76,38 @@ render_website <- function(
   )
 }
 
+#' @export
+#' @rdname render
+#' @examples
+#' directory <- withr::local_tempdir()
+#' quarto_multilingual_presentation(parent_dir = directory, project_dir = "blop")
+#' render_presentation(file.path(directory, "blop"))
+render_presentation <- function(
+  project_path = ".",
+  site_url = NULL,
+  profile = NULL,
+  preview = rlang::is_interactive()
+) {
+  render(
+    project_path,
+    site_url = site_url,
+    type = "presentation",
+    profile = profile,
+    preview = preview
+  )
+}
+
 render <- function(
   path = ".",
   site_url = NULL,
-  type = c("book", "website"),
+  type = c("book", "website", "presentation"),
   profile = NULL,
   preview
 ) {
+  # A presentation project is a Quarto website project under the hood:
+  # configuration keys and output directory follow website conventions.
+  config_type <- if (type == "presentation") "website" else type
+
   # configuration ----
   q_inspect <- quarto::quarto_inspect(input = path, profile = profile)
   proj_config <- q_inspect$config
@@ -84,11 +116,11 @@ render <- function(
     site_url <- ""
   }
   site_url <- site_url %||%
-    site_url(proj_config = proj_config, type = type)
+    site_url(proj_config = proj_config, type = config_type)
 
   output_dir <- proj_config[["project"]][["output-dir"]] %||%
     switch(
-      type,
+      config_type,
       book = "_book",
       website = "_site"
     )
@@ -139,7 +171,7 @@ render <- function(
     render_quarto_lang,
     path = path,
     output_dir = output_dir,
-    type = type,
+    type = config_type,
     site_url = site_url,
     profile = profile
   )
@@ -186,18 +218,40 @@ render <- function(
 
   purrr::walk(
     language_codes,
-    ~ purrr::walk(
+    \(lang_code) purrr::walk(
       main_language_docs,
-      add_links,
-      main_language = main_language,
-      language_code = .x,
-      site_url = site_url,
-      type = type,
-      config = proj_config,
-      output_folder = output_folder,
-      path_language = main_language,
-      project_dir = path,
-      profile = profile
+      \(doc_path) {
+        if (type == "presentation") {
+          # revealjs decks have no navbar/sidebar, they get an in-slide
+          # button instead; skip any non-revealjs page in the project.
+          if (is_revealjs(doc_path)) {
+            add_reveal_language_button(
+              doc_path,
+              main_language = main_language,
+              language_code = lang_code,
+              site_url = site_url,
+              type = config_type,
+              config = proj_config,
+              output_folder = output_folder,
+              path_language = main_language,
+              project_dir = path
+            )
+          }
+        } else {
+          add_links(
+            doc_path,
+            main_language = main_language,
+            language_code = lang_code,
+            site_url = site_url,
+            type = type,
+            config = proj_config,
+            output_folder = output_folder,
+            path_language = main_language,
+            project_dir = path,
+            profile = profile
+          )
+        }
+      }
     )
   )
   purrr::walk(
@@ -219,18 +273,38 @@ render <- function(
     languages_to_add <- c(main_language, setdiff(language_codes, other_lang))
     purrr::walk(
       languages_to_add,
-      ~ purrr::walk(
+      \(lang_code) purrr::walk(
         other_lang_docs,
-        add_links,
-        main_language = main_language,
-        language_code = .x,
-        site_url = site_url,
-        type = type,
-        config = proj_config,
-        output_folder = output_folder,
-        path_language = other_lang,
-        project_dir = path,
-        profile = profile
+        \(doc_path) {
+          if (type == "presentation") {
+            if (is_revealjs(doc_path)) {
+              add_reveal_language_button(
+                doc_path,
+                main_language = main_language,
+                language_code = lang_code,
+                site_url = site_url,
+                type = config_type,
+                config = proj_config,
+                output_folder = output_folder,
+                path_language = other_lang,
+                project_dir = path
+              )
+            }
+          } else {
+            add_links(
+              doc_path,
+              main_language = main_language,
+              language_code = lang_code,
+              site_url = site_url,
+              type = type,
+              config = proj_config,
+              output_folder = output_folder,
+              path_language = other_lang,
+              project_dir = path,
+              profile = profile
+            )
+          }
+        }
       )
     )
     purrr::walk(
@@ -582,12 +656,13 @@ add_links <- function(
     } else {
       path_rel(path, output_folder, path_language, main_language)
     }
-    href <- sprintf("%s/%s", site_url, new_path) # nolint: nonportable_path_linter
-    no_translated_version <- !fs::file_exists(file.path(
-      output_folder,
-      new_path
-    )) # nolint: line_length_linter
-    if (no_translated_version) return()
+    target_abs <- file.path(output_folder, new_path)
+    if (!fs::file_exists(target_abs)) return()
+    href <- if (nzchar(site_url)) {
+      sprintf("%s/%s", site_url, new_path) # nolint: nonportable_path_linter
+    } else {
+      fs::path_rel(target_abs, start = dirname(path))
+    }
   } else {
     base_path <- sub(
       "\\...\\.html",
@@ -599,11 +674,13 @@ add_links <- function(
     } else {
       base_path
     }
-    href <- sprintf("%s/%s/%s", site_url, language_code, new_path) # nolint: nonportable_path_linter
-    no_translated_version <- !fs::file_exists(
-      file.path(output_folder, language_code, new_path)
-    )
-    if (no_translated_version) return()
+    target_abs <- file.path(output_folder, language_code, new_path)
+    if (!fs::file_exists(target_abs)) return()
+    href <- if (nzchar(site_url)) {
+      sprintf("%s/%s/%s", site_url, language_code, new_path) # nolint: nonportable_path_linter
+    } else {
+      fs::path_rel(target_abs, start = dirname(path))
+    }
   }
 
   languages_links <- xml2::xml_find_first(html, "//ul[@id='languages-links']")
@@ -788,4 +865,182 @@ find_language_name <- function(language_code, config) {
   }
 
   language_texts[language_names == language_code][1L]
+}
+
+#' @dev
+is_revealjs <- function(path) {
+  # "reveal-viewport" is added by JS at runtime; the static marker is the
+  # <div class="reveal"> container that Quarto always emits for revealjs output.
+  any(grepl('<div class="reveal">', brio::read_lines(path), fixed = TRUE))
+}
+
+#' @dev
+language_href <- function(
+  path,
+  main_language,
+  language_code,
+  site_url,
+  type,
+  output_folder,
+  path_language
+) {
+  if (language_code == main_language) {
+    new_path <- if (type == "book") {
+      sub(
+        "\\...\\.html",
+        ".html",
+        path_rel(path, output_folder, path_language, main_language)
+      )
+    } else {
+      path_rel(path, output_folder, path_language, main_language)
+    }
+    target_abs <- file.path(output_folder, new_path)
+    if (!fs::file_exists(target_abs)) return(NULL)
+    href <- if (nzchar(site_url)) {
+      sprintf("%s/%s", site_url, new_path) # nolint: nonportable_path_linter
+    } else {
+      fs::path_rel(target_abs, start = dirname(path))
+    }
+  } else {
+    base_path <- sub(
+      "\\...\\.html",
+      ".html",
+      path_rel(path, output_folder, path_language, main_language)
+    )
+    new_path <- if (type == "book") {
+      fs::path_ext_set(base_path, sprintf(".%s.html", language_code))
+    } else {
+      base_path
+    }
+    target_abs <- file.path(output_folder, language_code, new_path)
+    if (!fs::file_exists(target_abs)) return(NULL)
+    href <- if (nzchar(site_url)) {
+      sprintf("%s/%s/%s", site_url, language_code, new_path) # nolint: nonportable_path_linter
+    } else {
+      fs::path_rel(target_abs, start = dirname(path))
+    }
+  }
+  list(href = href)
+}
+
+#' @dev
+add_reveal_language_button <- function(
+  path,
+  main_language,
+  language_code,
+  site_url,
+  type,
+  config,
+  output_folder,
+  path_language,
+  project_dir
+) {
+  html <- xml2::read_html(path)
+
+  reveal_div <- xml2::xml_find_first(
+    html,
+    "//div[contains(@class,'reveal')]"
+  )
+  if (inherits(reveal_div, "xml_missing")) return(invisible())
+
+  href_info <- language_href(
+    path = path,
+    main_language = main_language,
+    language_code = language_code,
+    site_url = site_url,
+    type = type,
+    output_folder = output_folder,
+    path_language = path_language
+  )
+  if (is.null(href_info)) return(invisible())
+  href <- href_info[["href"]]
+
+  version_text <- find_language_name(language_code, config)
+
+  head_node <- xml2::xml_find_first(html, "//head")
+
+  style_exists <- length(xml2::xml_find_all(
+    html,
+    "//style[@id='babelquarto-reveal-style']"
+  )) > 0L
+  if (!style_exists) {
+    xml2::xml_add_child(
+      head_node,
+      "style",
+      paste0(
+        ".babelquarto-reveal-languages{",
+        "position:fixed;top:12px;right:12px;z-index:9999;",
+        "display:flex;flex-direction:column;gap:6px;}",
+        ".babelquarto-languages-button{",
+        "padding:4px 12px;border-radius:999px;",
+        "background:rgba(0,0,0,.45);color:#fff;",
+        "text-decoration:none;font-size:.75rem;",
+        "font-family:sans-serif;white-space:nowrap;",
+        "backdrop-filter:blur(4px);}"
+      ),
+      id = "babelquarto-reveal-style"
+    )
+  }
+
+  script_exists <- length(xml2::xml_find_all(
+    html,
+    "//script[@id='babelquarto-reveal-script']"
+  )) > 0L
+  if (!script_exists) {
+    xml2::xml_add_child(
+      head_node,
+      "script",
+      paste0(
+        "(function(){",
+        "function u(){",
+        "var i=Reveal.getIndices();",
+        "var h='#/'+i.h+(i.v?'/'+i.v:'');",
+        "document.querySelectorAll('.babelquarto-languages-button')",
+        ".forEach(function(a){",
+        "try{var r=new URL(a.href);r.hash=h;a.href=r.href;}catch(e){}",
+        "});",
+        "}",
+        "function a(){",
+        "if(typeof Reveal==='undefined')return;",
+        "if(Reveal.isReady()){u();Reveal.on('slidechanged',u);}",
+        "else{Reveal.on('ready',function(){u();Reveal.on('slidechanged',u);});}",
+        "}",
+        "if(document.readyState==='complete'){a();}",
+        "else{window.addEventListener('load',a);}",
+        "})()"
+      ),
+      id = "babelquarto-reveal-script"
+    )
+  }
+
+  container <- xml2::xml_find_first(
+    html,
+    "//div[contains(@class,'babelquarto-reveal-languages')]"
+  )
+  if (inherits(container, "xml_missing")) {
+    # Attach to <body>, NOT inside .reveal: reveal.js applies CSS transforms
+    # to .reveal for slide scaling, which breaks position:fixed on children.
+    body_node <- xml2::xml_find_first(html, "//body")
+    xml2::xml_add_child(
+      body_node,
+      "div",
+      class = "babelquarto-reveal-languages"
+    )
+    container <- xml2::xml_find_first(
+      html,
+      "//div[contains(@class,'babelquarto-reveal-languages')]"
+    )
+  }
+
+  xml2::xml_add_child(
+    container,
+    "a",
+    version_text,
+    class = "babelquarto-languages-button",
+    href = href,
+    id = sprintf("language-link-%s", language_code),
+    hreflang = language_code
+  )
+
+  xml2::write_html(html, path)
 }
