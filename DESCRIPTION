@@ -16,13 +16,16 @@ Authors@R: c(
     person("João", "Granja-Correia", role = "rev",
            comment = c("João reviewed the package (v. 0.0.1) for rOpenSci, see <https://github.com/ropensci/software-review/issues/720>.", ORCID = "0009-0003-8982-278X")),
     person("Adam", "Mazel", role = "ctb",
-            comment = c(ORCID = "0000-0001-7241-0891"))
+            comment = c(ORCID = "0000-0001-7241-0891")),
+    person("Egor", "Katkov", , "egor.katkov@gmail.com", role = "ctb",
+           comment = c(ORCID = "0000-0002-6362-7367"))
   )
 Description: Automate rendering and cross-linking of Quarto books following a 
     prescribed structure.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE, roclets = c("collate", "rd", "namespace", "devtag::dev_roclet"))
+RoxygenNote: 7.3.3.9000
 Imports: 
     brio,
     cli,
@@ -46,4 +49,3 @@ Config/testthat/edition: 3
 Config/ropensci/maintainer: staff
 VignetteBuilder:
     quarto
-Config/roxygen2/version: 8.0.0

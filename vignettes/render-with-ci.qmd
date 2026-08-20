@@ -25,6 +25,9 @@ For instance, for GitHub Actions, the workflow would contain these lines:
       BABELQUARTO_CI_URL: <the-url>
 ```
 
+If you place a `CNAME` file at the root of your project, Quarto will put it in the output folder.
+babelquarto will ensure it is not present as well in the subdirectories corresponding to different languages.
+
 ### Steps for rendering
 
 To render your project with CI, you need to follow these general steps:

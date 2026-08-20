@@ -1,7 +1,9 @@
 # babelquarto (development version)
 
-- Add `render_presentation()` and `quarto_multilingual_presentation()` to render revealjs decks in multiple languages with a fixed top-right in-slide language switch button. (@blenback)
-- Add support for language-specific abstract in books
+- Add support for language-specific abstract in books.
+- Improve support and documentation for quarto profiles (now using `quarto::quarto_inspect()` to obtain correct profile-specific configuration).
+- Fix and document behavior for `CNAME` files (#120, @luisDVA)
+- Add `render_presentation()` and `quarto_multilingual_presentation()` to render revealjs decks in multiple languages with a fixed top-right in-slide language switch button (#128, @blenback)
 
 # babelquarto 0.1.0
 

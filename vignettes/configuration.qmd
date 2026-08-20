@@ -121,12 +121,15 @@ For each additional language, you can use a `part-xx` key to translate the part 
 
 ## Using profiles for advanced configuration
 
-For more advanced customization, you can use [Quarto project profiles](https://quarto.org/docs/projects/profiles.html).
-In {babelquarto} we will automatically load a language profile if it exists in the project directory and follows our naming convention: `_quarto-<languagecode>.yml`.
-Profile configuration are **merged** with the main `_quarto.yml` file.
+You can leverage [Quarto project profiles](https://quarto.org/docs/projects/profiles.html) to have both language-specific and general configuration profiles in the same project.
+
+### Language-specific profiles
+
+{babelquarto} automatically loads a language profile if it exists in the project directory and follows our naming convention: `_quarto-<languagecode>.yml`.
+Settings specified in the language-specific profile always take precedence over other profiles for files in that language (see details on [metadata merging in Quarto documentation](https://quarto.org/docs/projects/quarto-projects.html#metadata-merging))
 
 For example, let's say you have a project with English as the main language and French as an additional language.
-When rendering the main English language, {babelquarto} will load the *en* profile and the *fr* profile when rendering the French version.
+{babelquarto} will load the *en* profile when rendering the English version of the project, and then the *fr* profile when rendering the French version.
 
 You could for example have different navigation menus for each language:
 
@@ -155,9 +158,10 @@ website:
         href: "about.qmd"
 ```
 
-Profiles allow for advanced configuration, but a careful read of the [profiles documentation](https://quarto.org/docs/projects/profiles.html) is recommended.
-The main `_quarto.yml` file will be merged with the profile options and this often needs a careful planning of what keys are put in the different configuration files.
+Note that `output-dir` and `bablquarto` YAML options cannot be specified in the language-specific profile.
 
 ### Additional profiles
 
-For complex project, you might want to use additional profiles. When you render a project, you can pass a `profile` argument to `render_book()` and `render_website()` to use additional profiles. The profile will be merged with the main `_quarto.yml` and the language profile.
+For complex projects, you might also want to use different profiles. 
+When you render a project, you can pass a `profile` argument to `render_book()` and `render_website()` to use [Quarto project profiles](https://quarto.org/docs/projects/profiles.html). 
+This feature allows {babelquarto} options (described in this vignette) to be specified in a file other than `_quarto.yml`.
