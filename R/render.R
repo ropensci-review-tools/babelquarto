@@ -570,7 +570,20 @@ add_links <- function(
     profile = c(language_code, profile)
   )
   lang_config <- q_inspect$config
-  config <- utils::modifyList(config, lang_config)
+
+  safe_modify_list <- function(x, val) {
+    for (name in names(val)) {
+      if (is.list(x[[name]]) && is.list(val[[name]]) && 
+          !is.data.frame(x[[name]]) && !is.data.frame(val[[name]])) {
+        x[[name]] <- safe_modify_list(x[[name]], val[[name]])
+      } else {
+        x[[name]] <- val[[name]]
+      }
+    }
+    x
+  }
+
+  config <- safe_modify_list(config, lang_config)
 
   codes <- read_lang_codes(config)
   current_lang <- purrr::keep(codes, ~ .x[["name"]] == language_code)
