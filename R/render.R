@@ -569,8 +569,18 @@ add_links <- function(
     input = project_dir,
     profile = c(language_code, profile)
   )
+
   lang_config <- q_inspect$config
-  config <- utils::modifyList(config, lang_config)
+
+# Helper to recursively convert nested data.frames back to lists
+  df_to_list <- function(x) {
+    if (is.data.frame(x)) x <- as.list(x)
+    if (is.list(x)) x <- lapply(x, df_to_list)
+    x
+  }
+
+  config <- utils::modifyList(df_to_list(config), df_to_list(lang_config))
+Ste
 
   codes <- read_lang_codes(config)
   current_lang <- purrr::keep(codes, ~ .x[["name"]] == language_code)
