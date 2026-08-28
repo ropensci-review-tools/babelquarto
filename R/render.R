@@ -403,6 +403,31 @@ render_quarto_lang <- function(
   metadata <- list("yes")
   names(metadata) <- sprintf("lang-%s", language_code)
   withr::with_dir(proj_path, {
+
+    # ==================== PASS 2 SET DISTINCTION DIAGNOSTIC ====================
+    all_files <- fs::dir_ls(recurse = TRUE, regexp = "\\.(qmd|Rmd|ipynb)$")
+    
+    # 1. Target language files (e.g., *.en.qmd)
+    target_lang_regex <- sprintf("\\.%s\\.(qmd|Rmd|ipynb)$", language_code)
+    target_files <- fs::dir_ls(recurse = TRUE, regexp = target_lang_regex)
+    
+    # 2. Other non-primary language files (e.g., *.es.qmd when rendering 'en')
+    other_lang_regex <- "\\.[a-z]{2}(-[a-z]{2})?\\.(qmd|Rmd|ipynb)$"
+    all_translated_files <- fs::dir_ls(recurse = TRUE, regexp = other_lang_regex)
+    other_translated_files <- setdiff(all_translated_files, target_files)
+    
+    # 3. Base / primary files without language extension
+    base_files <- setdiff(all_files, all_translated_files)
+
+    cli::cli_alert_danger(sprintf("================ PASS 2 DIAGNOSTIC (%s) ================", language_code))
+    cli::cli_alert_info(sprintf("TOTAL input files in workspace : %d", length(all_files)))
+    cli::cli_alert_info(sprintf("SET A (Target .%s files)      : %d", language_code, length(target_files)))
+    cli::cli_alert_info(sprintf("SET B (Other translated files): %d", length(other_translated_files)))
+    cli::cli_alert_info(sprintf("SET C (Base / Primary files)  : %d", length(base_files)))
+    cli::cli_alert_danger("==========================================================")
+    # ============================================================================
+
+
     quarto::quarto_render(
       as_job = FALSE,
       metadata = metadata,
