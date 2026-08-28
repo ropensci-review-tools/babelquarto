@@ -507,10 +507,11 @@ use_lang_chapter <- function(
       chapters_list,
       language_code = language_code
     )
-    if (!fs::file_exists(file.path(directory, book_name, chapters_list))) {
+    missing_idx <- !fs::file_exists(file.path(directory, book_name, chapters_list))
+    if (any(missing_idx)) {
       fs::file_move(
-        original_chapters_list,
-        chapters_list
+        original_chapters_list[missing_idx],
+        chapters_list[missing_idx]
       )
     }
   }
