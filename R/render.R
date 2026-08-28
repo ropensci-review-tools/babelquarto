@@ -580,7 +580,6 @@ add_links <- function(
   }
 
   config <- utils::modifyList(df_to_list(config), df_to_list(lang_config))
-Ste
 
   codes <- read_lang_codes(config)
   current_lang <- purrr::keep(codes, ~ .x[["name"]] == language_code)
