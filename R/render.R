@@ -419,11 +419,11 @@ render_quarto_lang <- function(
     # 3. Base / primary files without language extension
     base_files <- setdiff(all_files, all_translated_files)
 
-    cli::cli_alert_danger(sprintf("================ PASS 2 DIAGNOSTIC (%s) ================", language_code))
-    cli::cli_alert_info(sprintf("TOTAL input files in workspace : %d", length(all_files)))
-    cli::cli_alert_info(sprintf("SET A (Target .%s files)      : %d", language_code, length(target_files)))
-    cli::cli_alert_info(sprintf("SET B (Other translated files): %d", length(other_translated_files)))
-    cli::cli_alert_info(sprintf("SET C (Base / Primary files)  : %d", length(base_files)))
+    cli::cli_alert_danger("================ PASS 2 DIAGNOSTIC ({language_code}) ================")
+    cli::cli_alert_info("TOTAL input files in workspace : {length(all_files)}")
+    cli::cli_alert_info("SET A (Target .{language_code} files)      : {length(target_files)}")
+    cli::cli_alert_info("SET B (Other translated files): {length(other_translated_files)}")
+    cli::cli_alert_info("SET C (Base / Primary files)  : {length(base_files)}")
     cli::cli_alert_danger("==========================================================")
     # ============================================================================
 
@@ -442,7 +442,7 @@ render_quarto_lang <- function(
       metadata = metadata,
       profile = c(language_code, profile)
     )
-    # remove CNAME is present
+    # remove CNAME if present
     # it should only be there for the main language
     cname_path <- file.path(output_dir, "CNAME")
     if (file.exists(cname_path)) {
