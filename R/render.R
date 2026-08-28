@@ -117,10 +117,14 @@ render <- function(
   profile <- profile %||% Sys.getenv("QUARTO_PROFILE") # ensures default profile = "",  not NULL
   fs::dir_copy(path, temporary_directory)
   withr::with_dir(file.path(temporary_directory, fs::path_file(path)), {
-    fs::file_delete(fs::dir_ls(
-      regexp = "\\...\\.qmd|\\...\\.Rmd|\\...\\.ipynb",
-      recurse = TRUE
-    ))
+    # DYNAMIC FIX: match files with suffixes for any language in `language_codes`
+    lang_pattern <- paste(language_codes, collapse = "|")
+    lang_regex <- sprintf("\\.(%s)\\.(qmd|Rmd|ipynb)$", lang_pattern)
+
+    files_to_delete <- fs::dir_ls(regexp = lang_regex, recurse = TRUE)
+    if (length(files_to_delete) > 0) {
+      fs::file_delete(files_to_delete)
+    }
     metadata <- list("true")
     names(metadata) <- sprintf("lang-%s", main_language)
     quarto::quarto_render(
@@ -128,7 +132,7 @@ render <- function(
       metadata = metadata,
       profile = c(main_language, profile)
     )
-  })
+    })
   fs::dir_copy(
     file.path(temporary_directory, fs::path_file(path), output_dir),
     path
