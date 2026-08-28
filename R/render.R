@@ -423,7 +423,7 @@ render_quarto_lang <- function(
     cli::cli_alert_info(sprintf("TOTAL input files in workspace : %d", length(all_files)))
     cli::cli_alert_info(sprintf("SET A (Target .%s files)      : %d", language_code, length(target_files)))
     cli::cli_alert_info(sprintf("SET B (Other translated files): %d", length(other_translated_files)))
-    cli::cli_alert_info(sprintf("SET C (Base / Primary files)  : %d", language_code, length(base_files)))
+    cli::cli_alert_info(sprintf("SET C (Base / Primary files)  : %d", length(base_files)))
     cli::cli_alert_danger("==========================================================")
     # ============================================================================
 
