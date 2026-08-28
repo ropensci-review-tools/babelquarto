@@ -427,16 +427,6 @@ render_quarto_lang <- function(
     cli::cli_alert_danger("==========================================================")
     # ============================================================================
 
-    # ==================== WORKSPACE HARMONIZATION ====================
-    # For each localized file (e.g. index.en.qmd), overwrite base (index.qmd)
-    # and remove the suffixed file so Linux Quarto CLI doesn't dual-glob.
-    for (f in target_files) {
-      base_file <- gsub(sprintf("\\.%s\\.(qmd|Rmd|ipynb)$", language_code), ".\\1", f)
-      fs::file_copy(f, base_file, overwrite = TRUE)
-      fs::file_delete(f)
-    }
-    # =================================================================
-
     quarto::quarto_render(
       as_job = FALSE,
       metadata = metadata,
@@ -545,11 +535,10 @@ use_lang_chapter <- function(
       chapters_list,
       language_code = language_code
     )
-    missing_idx <- !fs::file_exists(file.path(directory, book_name, chapters_list))
-    if (any(missing_idx)) {
+    if (!fs::file_exists(file.path(directory, book_name, chapters_list))) {
       fs::file_move(
-        original_chapters_list[missing_idx],
-        chapters_list[missing_idx]
+        original_chapters_list,
+        chapters_list
       )
     }
   }
