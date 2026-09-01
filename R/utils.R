@@ -82,6 +82,16 @@ config_file <- function(proj_path, profile) {
   config_path[1]
 }
 
-read_lang_codes <- function(config) {
-  config[["babelquarto"]][["languagecodes"]] |> split(~name)
+read_version_text <- function(config, language_code) {
+  languagecodes_config <- config[["babelquarto"]][["languagecodes"]]
+
+  if (is.null(languagecodes_config)) {
+    return(default_version_text(language_code))
+  }
+
+  languagecodes_config$text[languagecodes_config$name == language_code]
+}
+
+default_version_text <- function(language_code) {
+  sprintf("Version in %s", toupper(language_code))
 }

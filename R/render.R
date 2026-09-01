@@ -542,9 +542,6 @@ add_links <- function(
   lang_config <- q_inspect$config
   config <- utils::modifyList(config, lang_config)
 
-  codes <- read_lang_codes(config)
-  current_lang <- purrr::keep(codes, ~ .x[["name"]] == language_code)
-
   placement <- config[["babelquarto"]][["languagelinks"]] %||%
     switch(type, website = "navbar", book = "sidebar")
   sidebar_wanted <- (type == "website" && placement == "sidebar")
@@ -563,13 +560,6 @@ add_links <- function(
       "Can't find {.field {type}.navbar} in {length(config_files)} project configuration file{?s}: {config_files}",
       i = "You set the {.field babelquarto/languagelinks} to {.field navbar} but also don't have a navbar in your {type}." # nolint: line_length_linter
     ))
-  }
-
-  version_text <- if (length(current_lang) > 0L) {
-    current_lang[[1L]][["text"]] %||%
-      sprintf("Version in %s", toupper(language_code))
-  } else {
-    sprintf("Version in %s", toupper(language_code))
   }
 
   if (language_code == main_language) {
@@ -606,6 +596,7 @@ add_links <- function(
     if (no_translated_version) return()
   }
 
+  version_text <- read_version_text(config, language_code)
   languages_links <- xml2::xml_find_first(html, "//ul[@id='languages-links']")
   languages_links_div_exists <- (length(languages_links) > 0L)
 
@@ -672,7 +663,7 @@ add_links <- function(
 
     xml2::xml_text(button) <- sprintf(
       " %s",
-      find_language_name(path_language, config)
+      version_text
     )
 
     xml2::xml_add_child(
@@ -771,21 +762,4 @@ path_rel <- function(path, output_folder, lang, main_language) {
   } else {
     fs::path_rel(path, start = file.path(output_folder, lang))
   }
-}
-
-find_language_name <- function(language_code, config) {
-  codes <- read_lang_codes(config)
-
-  if (is.null(codes)) {
-    return(toupper(language_code))
-  }
-
-  language_names <- purrr::map_chr(codes, "name")
-  language_texts <- purrr::map_chr(codes, "text")
-
-  if (!language_code %in% language_names) {
-    return(toupper(language_code))
-  }
-
-  language_texts[language_names == language_code][1L]
 }
