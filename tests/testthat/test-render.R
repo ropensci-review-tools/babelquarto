@@ -884,3 +884,27 @@ test_that("render_website() works - quarto freeze for languages is working", {
   ))
   expect_true(bonjour_monde_present)
 })
+
+test_that("render_book() works -- no languagecodes", {
+  parent_dir <- withr::local_tempdir()
+  project_dir <- "blop"
+  quarto_multilingual_book(
+    parent_dir = parent_dir,
+    project_dir = project_dir,
+    further_languages = c("es", "fr"),
+    main_language = "en"
+  )
+
+  config_path <- file.path(parent_dir, project_dir, "_quarto.yml")
+  config_lines <- readLines(config_path)
+  config_lines <- config_lines[
+    -c(
+      grep("languagecodes", config_lines):(grep("mainlanguage", config_lines) -
+        1)
+    )
+  ]
+  writeLines(config_lines, config_path)
+
+  withr::with_dir(parent_dir, render_book(project_dir))
+  expect_dir_exists(file.path(parent_dir, project_dir, "_book"))
+})
