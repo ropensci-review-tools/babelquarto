@@ -663,7 +663,7 @@ add_links <- function(
 
     xml2::xml_text(button) <- sprintf(
       " %s",
-      version_text
+      read_version_text(config, xml2::xml_attr(html, "lang"))
     )
 
     xml2::xml_add_child(
