@@ -18,7 +18,7 @@ test_that("render_book() works", {
   index <- xml2::read_html(index_path)
   english_button <- xml2::xml_find_first(
     index,
-    '//button[@id="language-button"]'
+    '//button[@id="languages-button"]'
   )
   expect_match(xml2::xml_text(english_button), "Version in en")
   spanish_link <- xml2::xml_find_first(index, '//a[@id="language-link-es"]')
