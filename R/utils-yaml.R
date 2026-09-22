@@ -23,11 +23,7 @@ replace_true_false <- function(value) {
   if (is.list(value)) {
     value <- lapply(value, replace_true_false)
   } else if (is.logical(value)) {
-    if (value) {
-      value <- "true"
-    } else {
-      value <- "false"
-    }
+    value <- tolower(as.character(value))
     # Set class of this character vector to 'verbatim'
     # so that yaml::write_yaml() will not add quotation marks
     class(value) <- "verbatim"
