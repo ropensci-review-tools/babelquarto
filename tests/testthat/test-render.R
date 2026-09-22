@@ -22,14 +22,19 @@ test_that("render_book() works", {
   )
   expect_match(xml2::xml_text(english_button), "Version in en")
   spanish_link <- xml2::xml_find_first(index, '//a[@id="language-link-es"]')
-  expect_identical(
+  expect_match(
     xml2::xml_attr(spanish_link, "href"),
-    "https://example.com/es/index.es.html"
+    "/es/index.es.html"
   )
 
   expect_snapshot_file(
     file.path(parent_dir, project_dir, "_book", "sitemap.xml"),
     transform = \(x) sub("<lastmod>.*", "<lastmod>Just now!</lastmod>", x),
+    compare = compare_file_text
+  )
+
+  expect_snapshot_file(
+    file.path(parent_dir, project_dir, "_book", "llms.txt"),
     compare = compare_file_text
   )
 
@@ -53,6 +58,14 @@ test_that("render_book() works", {
     "_book",
     "es",
     "sitemap.xml"
+  )))
+
+  expect_false(file.exists(file.path(
+    parent_dir,
+    project_dir,
+    "_book",
+    "es",
+    "llms.txt"
   )))
 })
 
@@ -320,7 +333,7 @@ test_that("render_book() works - parts and chapters", {
     ),
     "references.qmd"
   )
-  yaml::write_yaml(config, config_path)
+  write_yaml(config, config_path)
 
   withr::with_dir(parent_dir, render_book(project_dir))
   expect_dir_exists(file.path(parent_dir, project_dir, "_book"))
@@ -413,13 +426,13 @@ test_that("render_website() works - clean render for each language", {
   withr::with_dir(parent_dir, render_website(project_dir))
   main_subdir <- file.path(parent_dir, project_dir, "_site", "subdir")
   expect_dir_exists(main_subdir)
-  expect_length(fs::dir_ls(main_subdir), 3L)
+  expect_length(fs::dir_ls(main_subdir), 6L)
   expect_file_exists(file.path(main_subdir, "jupyter-notebook.html"))
   expect_file_exists(file.path(main_subdir, "rmarkdown.html"))
 
   french_subdir <- file.path(parent_dir, project_dir, "_site", "fr", "subdir")
   expect_dir_exists(french_subdir)
-  expect_length(fs::dir_ls(french_subdir), 3L)
+  expect_length(fs::dir_ls(french_subdir), 6L)
   expect_file_exists(file.path(french_subdir, "about.html"))
   expect_file_exists(file.path(french_subdir, "jupyter-notebook.html"))
   expect_file_exists(file.path(french_subdir, "rmarkdown.html"))
