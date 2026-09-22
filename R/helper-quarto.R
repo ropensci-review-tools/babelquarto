@@ -117,7 +117,7 @@ quarto_multilingual_project <- function(
   where_project <- grep(sprintf("%s:", type), config_lines)
   config_lines <- append(
     config_lines,
-    sprintf("  site-url: %s", site_url),
+    c(sprintf("  site-url: %s", site_url), "  llms-txt: true"),
     after = where_project
   )
 

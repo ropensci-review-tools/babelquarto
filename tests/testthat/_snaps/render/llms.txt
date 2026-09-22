@@ -1,0 +1,26 @@
+# blop -- multilingual content, refer to the right language!
+
+### Pages in en
+
+- [blop](https://example.com/index.llms.md)
+- [[1]{.chapter-number}  [Introduction]{.chapter-title}](https://example.com/intro.llms.md)
+- [[2]{.chapter-number}  [Summary]{.chapter-title}](https://example.com/summary.llms.md)
+- [References](https://example.com/references.llms.md)
+
+## title in es
+
+### Pages in es
+
+- [title in es](https://example.com/es/index.es.llms.md)
+- [[1]{.chapter-number}  [Introduction]{.chapter-title}](https://example.com/es/intro.es.llms.md)
+- [[2]{.chapter-number}  [Summary]{.chapter-title}](https://example.com/es/summary.es.llms.md)
+- [References](https://example.com/es/references.es.llms.md)
+
+## title in fr
+
+### Pages in fr
+
+- [title in fr](https://example.com/fr/index.fr.llms.md)
+- [[1]{.chapter-number}  [Introduction]{.chapter-title}](https://example.com/fr/intro.fr.llms.md)
+- [[2]{.chapter-number}  [Summary]{.chapter-title}](https://example.com/fr/summary.fr.llms.md)
+- [References](https://example.com/fr/references.fr.llms.md)

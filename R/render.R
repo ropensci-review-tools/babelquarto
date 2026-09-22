@@ -168,6 +168,38 @@ render <- function(
     brio::write_lines(current_sitemap, sitemap_path)
   }
 
+  ##llms.txt fixing ---
+
+  llmstxt_path <- file.path(
+    path,
+    output_dir,
+    "llms.txt"
+  )
+
+  if (fs::file_exists(llmstxt_path)) {
+    locs <- purrr::map(
+      language_codes,
+      \(x) {
+        local_llmstxt_path <- file.path(path, output_dir, x, "llms.txt")
+        lines <- brio::read_lines(local_llmstxt_path)
+        fs::file_delete(local_llmstxt_path)
+        lines[1] <- sub("#", "##", lines[1])
+        lines[3] <- sprintf("### Pages in %s", x)
+        c("", lines)
+      }
+    ) |>
+      unlist()
+
+    current_llmstxt <- brio::read_lines(llmstxt_path)
+    current_llmstxt[1] <- sprintf(
+      "%s -- multilingual content, refer to the right language!",
+      current_llmstxt[1]
+    )
+    current_llmstxt[3] <- sprintf("### Pages in %s", main_language)
+    current_llmstxt <- append(current_llmstxt, locs)
+    brio::write_lines(current_llmstxt, llmstxt_path)
+  }
+
   # Add the language switching link to the sidebar ----
   ## For the main language ----
   # we need to recurse but not inside the language folders!
@@ -351,10 +383,7 @@ render_quarto_lang <- function(
     )
   }
 
-  # Replace TRUE and FALSE with 'true' and 'false'
-  # to avoid converting to "yes" and "no"
-  config_yaml <- replace_true_false(config_yaml)
-  yaml::write_yaml(config_yaml, file = config_path)
+  write_yaml(config_yaml, config_path)
 
   if (type == "website") {
     # only keep what's needed, includes .qmd & .ipynb files

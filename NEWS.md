@@ -3,6 +3,7 @@
 - Add support for language-specific abstract in books.
 - Improve support and documentation for quarto profiles (now using `quarto::quarto_inspect()` to obtain correct profile-specific configuration).
 - Fix and document behavior for `CNAME` files (#120, @luisDVA)
+- Add support for llms.txt, the different ones get merged into the main language one.
 
 # babelquarto 0.1.0
 
