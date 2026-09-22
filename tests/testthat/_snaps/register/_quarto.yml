@@ -3,6 +3,7 @@ project:
 
 book:
   site-url: https://example.com
+  llms-txt: true
   title: "blop"
   author: "Firstname Lastname"
   date: "01/01/2023"
